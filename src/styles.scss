@@ -1,0 +1,217 @@
+// custom css links
+@import "../public/assets/css/styles.css";
+@import "../public/assets/css/icons.css";
+
+// Plugins
+@import "../node_modules/@ng-select/ng-select/themes/default.theme.css";
+
+// angular material
+@import "../node_modules/@angular/cdk/overlay-prebuilt.css";
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import "../node_modules/font-awesome/css/font-awesome.css";
+@import "../node_modules/ngx-toastr/toastr.css";
+@import "../node_modules/overlayscrollbars/styles/overlayscrollbars.css";
+
+
+//flatpicker
+@import "../node_modules/flatpickr/dist/flatpickr.css";
+
+
+@import "../node_modules/leaflet/dist/leaflet.css";
+
+// font awsome
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+
+.modal {
+  z-index: 9999 !important;
+}
+
+.recent-customers-charts {
+  .apexcharts-grid line,
+  .apexcharts-xaxis line,
+  .apexcharts-grid-borders line {
+    stroke: transparent;
+  }
+}
+
+.os-scrollbar .os-scrollbar-handle:active,
+.os-scrollbar .os-scrollbar-handle:hover {
+  background-color: var(--light-rgb);
+}
+@media (min-width: 992px) {
+  .app-sidebar {
+    #sidebar-scroll [overlayscrollbars] {
+      position: inherit;
+    }
+    #sidebar-scroll {
+      position: static;
+    }
+  }
+}
+[data-theme-mode="dark"] {
+  .os-scrollbar .os-scrollbar-handle {
+    background: rgba(white, 0.2) !important;
+    border-radius: 0.3rem !important;
+    inset-inline-end: 0 !important;
+    width: 0.375rem;
+  }
+}
+.os-scrollbar .os-scrollbar-handle {
+  background: var(--gray-2) !important;
+  border-radius: 0.3rem !important;
+  inset-inline-end: 0 !important;
+  width: 0.375rem;
+}
+
+.os-scrollbar .os-scrollbar-handle:active,
+.os-scrollbar .os-scrollbar-handle:hover {
+  background-color: var(--light-rgb);
+}
+[data-nav-layout="horizontal"][data-nav-style="menu-hover"][data-toggled="menu-hover-closed"] {
+  @media (min-width: 992px) {
+    .app-sidebar {
+      #sidebar-scroll [overlayscrollbars] {
+        position: inherit;
+      }
+      #sidebar-scroll {
+        position: static;
+      }
+    }
+  }
+}
+[data-nav-layout="horizontal"] {
+  .os-scrollbar-handle {
+    display: none !important;
+  }
+}
+
+.app-sidebar .os-scrollbar-track {
+  inset-inline-end: -2px !important;
+}
+[data-theme-mode="dark"] {
+  .os-scrollbar .os-scrollbar-handle {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+[data-menu-styles="color"],
+[data-menu-styles="gradient"] {
+  .app-sidebar {
+    .os-scrollbar .os-scrollbar-handle {
+      background-color: rgba(201, 203, 235, 0.51) !important;
+    }
+  }
+}
+[data-theme-mode="light"][data-menu-styles="dark"]
+  .os-scrollbar
+  .os-scrollbar-handle {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+// [data-nav-layout="vertical"] .app-sidebar #sidebar-scroll [overlayscrollbars] {
+//   margin-top: -8px !important;
+// }
+
+[data-header-position="scrollable"][data-nav-layout="horizontal"][data-menu-position="fixed"] {
+  app-sidebar {
+    .app-sidebar.sticky {
+      position: sticky !important;
+      top: 0 !important;
+    }
+  }
+}
+[dir="rtl"] {
+  .ti-circle-arrow-left-filled:before {
+    content: "\f6fc";
+  }
+  .ti-circle-arrow-right-filled:before {
+    content: "\f6fa";
+  }
+}
+
+[data-nav-layout="horizontal"][data-theme-mode="dark"] {
+  &[data-bg-img="bgimg1"],
+  &[data-bg-img="bgimg2"],
+  &[data-bg-img="bgimg3"],
+  &[data-bg-img="bgimg4"],
+  &[data-bg-img="bgimg5"] {
+    .app-sidebar {
+      border-block-end: 0px !important;
+    }
+  }
+}
+
+// [data-theme-mode="light"][data-menu-styles="light"][data-nav-style="icon-click"][data-nav-layout="vertical"] {
+//   .app-sidebar .side-menu__item {
+//     &:hover {
+//       .iconclick {
+//         z-index: 0 !important;
+//       }
+//     }
+//   }
+// }
+
+[data-theme-mode="dark"] .landing-body {
+  .app-sidebar .slide-menu {
+    &.child1,
+    &.child2,
+    &.child3 {
+      .side-menu__item {
+        &.active {
+          &:before {
+            color: var(--primary-color) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  [data-nav-layout="horizontal"][data-menu-position="fixed"][data-header-position="scrollable"] {
+    app-sidebar {
+      position: sticky;
+      top: 0;
+      z-index: 103;
+    }
+  }
+}
+
+.collapse-main-card{
+    padding-block-end: 1rem !important;
+    padding-block-start: 1rem !important;
+}
+.collapse {
+  .card-body{
+    padding-block-start: 0;
+  }
+}
+.ngx-notifier .close {
+  line-height: 0.7;
+}
+.g-box{
+  .g-slider-content {
+    gallery-image img {
+      width: 50% !important;
+      display: flex;
+      margin: 0 auto;
+      justify-content: center;
+    }
+  }
+}
+[dir="rtl"] {
+  .form-select {
+    background-position: left 0.75rem center;
+  }
+}
+[data-nav-layout="vertical"] {
+  .main-menu{
+    margin: 0 !important;
+  }
+}
+
+.chartjs-chart {
+  width: 100% !important;
+}

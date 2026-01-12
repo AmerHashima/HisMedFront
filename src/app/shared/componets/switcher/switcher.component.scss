@@ -1,0 +1,22 @@
+::ng-deep{
+.ng-scroll-content{
+  display: block !important;
+}
+  .dropdown-toggle::after {
+      display: inline-block !important;
+  }
+
+// [data-menu-styles=dark] {
+//   --menu-bg: var(--custom-white);
+// }
+
+
+.horizontal-style {
+  display: block;  /* or any other styles you want for the horizontal component */
+}
+
+.vertical-style {
+  display: none;   /* or any other styles you want for the vertical component */
+}
+
+}      

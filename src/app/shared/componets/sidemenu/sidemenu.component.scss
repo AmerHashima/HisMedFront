@@ -1,0 +1,161 @@
+.slide.active.is-expanded{
+    background: none;
+}
+
+
+
+
+::ng-deep{
+
+    @media (min-width: 992px){
+        .horizontal-hover{
+            .has-sub{
+                pointer-events: none;
+            }
+        }
+        .leftbgimage1 .main-sidebar-header,
+        .leftbgimage2 .main-sidebar-header,
+        .leftbgimage3 .main-sidebar-header,
+        .leftbgimage4 .main-sidebar-header,
+        .leftbgimage5 .main-sidebar-header
+        {
+            transition: all 0.3s ease-in-out !important;
+        }
+
+        // .leftmenu-dark .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .desktop-logo,
+        // .leftmenu-color .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .desktop-logo,
+        // .leftmenu-gradient .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .desktop-logo
+        // {
+        //     display: none !important;
+        // }
+        // .app.sidenav-toggled.sidenav-toggled-open .app-sidebar {
+        //     overflow: hidden !important;
+        // }
+        .sidenav-toggled .side-menu__item .side-menu__icon i{
+            padding-left: 100%;
+        }
+        .sidenav-toggled.sidenav-toggled-open .side-menu__item .side-menu__icon i{
+            padding-left: 0%;
+        }
+        .leftmenu-dark .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .desktop-logo.logo-dark,
+        .leftmenu-dark .app.sidebar-mini .desktop-logo.logo-dark,
+        .leftmenu-color .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .desktop-logo.logo-dark,
+        .leftmenu-color .app.sidebar-mini .desktop-logo.logo-dark,
+        .leftmenu-gradient .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .desktop-logo.logo-dark,
+        .leftmenu-gradient .app.sidebar-mini .desktop-logo.logo-dark
+        {
+            display: block !important;
+        }
+        // .leftmenu-color .app.sidebar-mini.sidenav-toggled .desktop-logo.logo-dark,
+        // .leftmenu-dark .app.sidebar-mini.sidenav-toggled .desktop-logo.logo-dark,
+        // .leftmenu-gradient .app.sidebar-mini.sidenav-toggled .desktop-logo.logo-dark
+        // {
+        //     display: none !important;
+        // }
+        .leftmenu-dark .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .main-logo.dark-theme,
+        .leftmenu-dark .app.sidebar-mini .main-logo.dark-theme,
+        .leftmenu-color .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .main-logo.dark-theme,
+        .leftmenu-color .app.sidebar-mini .main-logo.dark-theme,
+        .leftmenu-gradient .app.sidebar-mini.sidenav-toggled.sidenav-toggled-open .main-logo.dark-theme,
+        .leftmenu-gradient .app.sidebar-mini .main-logo.dark-theme
+        {
+            display: block !important;
+        }
+
+        .leftmenu-color .app.sidenav-toggled .side-menu__label, 
+        .leftmenu-dark .app.sidenav-toggled .side-menu__label,
+        .leftmenu-gradient .app.sidenav-toggled .side-menu__label
+        {
+           color: rgba(255, 255, 255, 0.8) !important;
+        }
+        .leftbgimage1 .sidenav-toggled .app-sidebar:before,
+        .leftbgimage2 .sidenav-toggled .app-sidebar:before,
+        .leftbgimage3 .sidenav-toggled .app-sidebar:before,
+        .leftbgimage4 .sidenav-toggled .app-sidebar:before,
+        .leftbgimage5 .sidenav-toggled .app-sidebar:before
+        {
+            width: 80px !important;
+        }
+        
+        .leftbgimage1 .sidenav-toggled.sidenav-toggled-open .app-sidebar:before,
+        .leftbgimage2 .sidenav-toggled.sidenav-toggled-open .app-sidebar:before,
+        .leftbgimage3 .sidenav-toggled.sidenav-toggled-open .app-sidebar:before,
+        .leftbgimage4 .sidenav-toggled.sidenav-toggled-open .app-sidebar:before,
+        .leftbgimage5 .sidenav-toggled.sidenav-toggled-open .app-sidebar:before
+        {
+            width: 240px !important;
+        }
+
+    }
+    
+    .material-icons-two-tone{
+        // filter: invert(8%) sepia(94%) saturate(60189%) hue-rotate(208deg) brightness(101%) contrast(112%);
+        // filter: invert(40%) sepia(0) saturate(0%) hue-rotate(0deg) brightness(206%) contrast(17%) opacity(0.9 ) !important;
+        // filter: invert(0%) sepia(0) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(61%) opacity(0.8) !important;
+        filter: invert(4%) sepia(429%) saturate(9874%) hue-rotate(195deg) brightness(170%) contrast(25%) !important;
+    }
+
+    li.slide.active .material-icons-two-tone,
+    li.slide:hover .material-icons-two-tone{
+        filter:invert(6%) sepia(94%) saturate(10000%) hue-rotate(208deg) brightness(162%) contrast(112%) !important;
+    }
+
+    .leftmenu-color .material-icons-two-tone,
+    .leftmenu-gradient .material-icons-two-tone,
+    .leftmenu-dark .material-icons-two-tone{
+        filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(0deg) brightness(100%) opacity(0.7) contrast(100%) !important;
+    }
+
+    .leftmenu-color li.slide.active .material-icons-two-tone,
+    .leftmenu-color li.slide:hover .material-icons-two-tone,
+    // .leftmenu-dark li.slide.active .material-icons-two-tone,
+    // .leftmenu-dark li.slide:hover .material-icons-two-tone,
+    .leftmenu-gradient li.slide.active .material-icons-two-tone,
+    .leftmenu-gradient li.slide:hover .material-icons-two-tone
+    {
+        filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(0deg) brightness(100%) opacity(1) contrast(100%) !important;
+    }
+
+    .slide-menu .side-menu__icon{
+        margin-right: 12px !important;
+    }
+
+    .side-menu__label{
+        font-size: 0.876rem !important;
+    }
+
+    .app-sidebar{
+        touch-action: none;
+    }
+    
+    .slide-menu > li:not(:nth-child(2)) .side-item.side-item-category {
+        margin-top: 20px;
+    }
+    .gradient-menu, .color-menu {
+        li.slide.active .material-icons-two-tone,
+        li.slide:hover .material-icons-two-tone{
+            filter:invert(80%) sepia(94%) saturate(10000%) hue-rotate(208deg) brightness(162%) contrast(112%) !important;
+        }
+        li.slide .material-icons-two-tone,
+        li.slide .material-icons-two-tone{
+            filter:invert(78%) sepia(98%) saturate(10034%) hue-rotate(214deg) brightness(162%) contrast(112%) !important;
+        }
+    }
+    .dark-menu {
+        li.slide .material-icons-two-tone,
+        li.slide .material-icons-two-tone{
+            filter:invert(77%) sepia(107%) saturate(9911%) hue-rotate(192deg) brightness(162%) contrast(78%) !important;
+        }
+        li.slide.active .material-icons-two-tone, li.slide:hover .material-icons-two-tone {
+            filter: invert(6%) sepia(94%) saturate(10000%) hue-rotate(208deg) brightness(162%) contrast(112%) !important;
+        }
+    }
+}
+
+.main-sidemenu .slide-menu {
+    transition: margin-left 320ms ease, width 320ms ease;
+}
+
+.slide-menu .slide .slide-menu__item {
+    padding: 6px 20px 6px 22px;
+}

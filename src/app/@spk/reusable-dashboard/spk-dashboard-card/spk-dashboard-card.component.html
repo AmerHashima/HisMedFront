@@ -1,0 +1,24 @@
+<div class="card overflow-hidden sales-card" [ngClass]="bgClass">
+  <div class="px-3 pt-3 pb-2 pt-0">
+    <div>
+      <h6 class="mb-3 fs-12 text-fixed-white">{{ label }}</h6>
+    </div>
+    <div class="pb-0 mt-0">
+      <div class="d-flex">
+        <div>
+          <h4 class="fs-20 fw-bold mb-1 text-fixed-white">{{ amount }}</h4>
+          <p class="mb-0 fs-12 text-fixed-white op-7">{{ comparisonText }}</p>
+        </div>
+        <span class="float-end my-auto ms-auto">
+          <i [class]="icon + ' text-fixed-white'"></i>
+          <span class="text-fixed-white op-7">
+            {{ isPositive ? '+' : '-' }}{{ change }}
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div [id]="chartId">
+    <spk-apexcharts [chartOptions]="chartOptions"></spk-apexcharts>
+  </div>
+</div>

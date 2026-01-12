@@ -1,0 +1,1047 @@
+@use '../variables';
+.angular-editor .angular-editor-wrapper .angular-editor-textarea,
+.angular-editor-toolbar {
+  border: 1px solid var(--default-border) !important;
+}
+.angular-editor-toolbar {
+  border-bottom: 0 !important;
+}
+
+.angular-editor-toolbar .angular-editor-toolbar-set .angular-editor-button,
+.ae-font .ae-picker-label {
+  background-color: var(--custom-white) !important;
+  border: 1px solid var(--default-border) !important;
+  color: var(--default-text-color);
+}
+
+.ae-font .ae-picker-label:before {
+  background: var(--custom-white) !important;
+}
+
+.NgxEditor__MenuBar {
+  background-color: var(--custom-white) !important;
+}
+
+.NgxEditor__MenuBar {
+  border: 1px solid var(--default-border) !important;
+}
+
+.NgxEditor {
+  background: var(--custom-white) !important;
+  border-color: var(--default-border) !important;
+  color: var(--default-text-color) !important;
+  border-radius: 0 0 4px 4px !important;
+}
+
+.NgxEditor__Seperator {
+  border-left-color: var(--default-border) !important;
+}
+
+.NgxEditor__MenuBar {
+  border-bottom: 0px !important;
+}
+
+.angular-editor-textarea:focus-visible {
+  outline: none;
+}
+
+.NgxEditor__Content {
+  height: 12rem !important;
+}
+
+.angular-editor-toolbar {
+  background-color: var(--custom-white) !important;
+}
+
+.myNestedSwiper {
+  height: 350px; /* Adjust based on your layout */
+}
+swiper-container::part(button-next) {
+  width: 1rem !important;
+  height: 1rem !important;
+  color: #fff !important;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0.3rem;
+  padding: 5px;
+}
+swiper-container::part(button-prev) {
+  width: 1rem !important;
+  height: 1rem !important;
+  color: #fff !important;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0.3rem;
+  padding: 5px;
+  opacity: 1;
+}
+
+//ng-select styles
+.ng-select.ng-select-multiple
+  .ng-select-container
+  .ng-value-container
+  .ng-value {
+  background-color: var(--primary-color) !important;
+  border: 1px solid var(--primary-color) !important;
+  color: #fff !important;
+  margin-bottom: 0 !important;
+  padding: 0 3px !important;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input > input {
+  color: var(--default-text-color);
+}
+
+.ng-select.ng-select-multiple
+  .ng-select-container
+  .ng-value-container
+  .ng-value
+  .ng-value-icon.left {
+  border-inline-end-color: rgba(255, 255, 255, 0.1) !important;
+}
+.mat-horizontal-content-container {
+  background: var(--custom-white);
+}
+
+.ng-select .ng-select-container,
+.ng-dropdown-panel {
+  background-color: var(--custom-white) !important;
+  color: var(--default-text-color) !important;
+  border-color: var(--default-border) !important;
+}
+.ng-select .ng-select-container {
+  min-height: 20px !important;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  background-color: var(--custom-white);
+  color: var(--default-text-color);
+}
+.form-control.ng-select .ng-select-container {
+  border: 0px !important;
+}
+.ng-select .ng-select-container .ng-value-container .ng-placeholder {
+  color: var(--default-text-color) !important;
+  // opacity: 0.5 !important;
+}
+.ng-select .ng-select-container:hover {
+  box-shadow: none !important;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
+.ng-dropdown-panel
+  .ng-dropdown-panel-items
+  .ng-option.ng-option-selected.ng-option-marked {
+  color: #fff !important;
+  background-color: var(--primary-color) !important;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input > input {
+  color: var(--default-text-color) !important;
+}
+
+.ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+  box-shadow: none !important;
+}
+
+.ng-select.ng-select-multiple
+  .ng-select-container
+  .ng-value-container
+  .ng-value
+  .ng-value-icon:hover {
+  background-color: var(--primary-color) !important;
+}
+.ng-select.ng-select-multiple
+  .ng-select-container
+  .ng-value-container
+  .ng-placeholder {
+  top: 0px !important;
+}
+.form-select.ng-select-clearable {
+  background-image: none !important;
+  padding-inline-end: 1rem !important;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container {
+  padding: 0 !important;
+}
+.ng-select.ng-select-opened .ng-select-container,
+.ng-dropdown-panel {
+  z-index: 99 !important;
+}
+
+spk-flatpickr {
+  padding: 0 !important;
+}
+.input-group {
+  spk-flatpickr {
+    .form-control {
+      border: 0 !important;
+    }
+  }
+}
+// .flatpickr-input {
+//   border: none !important;
+// }
+
+.form-floating .mat-mdc-form-field {
+  display: inline !important;
+}
+.mat-elevation-z8,
+.mat-mdc-elevation-specific.mat-elevation-z8 {
+  box-shadow: none !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: var(--form-control-bg) !important;
+  border: 1px solid var(--input-border);
+}
+.mat-mdc-form-field:not(.mat-form-field-disabled)
+  .mat-mdc-floating-label.mdc-floating-label {
+  color: var(--default-text-color);
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled):not(
+    .mdc-text-field--focused
+  ):hover
+  .mdc-floating-label {
+  color: var(--default-text-color) !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,
+.mdc-text-field--filled:not(.mdc-text-field--disabled)
+  .mdc-text-field__input::placeholder {
+  color: var(--default-text-color) !important;
+}
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(
+    .mat-mdc-option-multiple
+  ) {
+  background-color: var(--default-background);
+}
+div.mat-mdc-select-panel {
+  background-color: var(--form-control-bg) !important;
+}
+
+.mat-mdc-table {
+  background-color: transparent !important;
+}
+
+.mat-mdc-table tbody,
+.mat-mdc-table tfoot,
+.mat-mdc-table thead,
+.mat-mdc-cell,
+.mat-mdc-footer-cell,
+.mat-mdc-header-row,
+.mat-mdc-row,
+.mat-mdc-footer-row,
+.mat-mdc-table .mat-mdc-header-cell {
+  background-color: var(--custom-white) !important;
+  color: var(--default-text-color) !important;
+  border-bottom-color: var(--default-border) !important;
+}
+
+.mat-mdc-header-cell {
+  border-bottom-color: var(--default-border) !important;
+}
+.mat-mdc-header-cell {
+  z-index: 99 !important;
+}
+
+.mat-mdc-paginator {
+  background-color: var(--custom-white) !important;
+  color: var(--default-text-color) !important;
+}
+
+[data-theme-mode="dark"] {
+  .mat-mdc-cell,
+  .mat-mdc-table .mat-mdc-header-cell {
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+.mat-mdc-icon-button,
+.mat-mdc-icon-button.mat-mdc-button-disabled,
+.mat-mdc-paginator-icon {
+  fill: var(--default-text-color) !important;
+}
+
+.basic-datatable input {
+  background-color: var(--custom-white);
+}
+
+.ngx-datatable.material
+  .datatable-body
+  .datatable-body-row
+  .datatable-body-cell {
+  background-color: var(--custom-white) !important;
+  color: var(--default-text-color) !important;
+}
+
+.ngx-datatable.fixed-header
+  .datatable-header
+  .datatable-header-inner
+  .datatable-header-cell {
+  background-color: var(--custom-white) !important;
+  color: var(--default-text-color);
+}
+
+.ngx-table__table--normal > tbody > tr > td,
+.ngx-table__table--normal > thead > tr > th {
+  border-bottom-color: var(--default-border) !important;
+}
+
+.ngx-table__table--hoverable > tbody tr:hover {
+  background: var(--primary01) !important;
+}
+
+#globalSearch {
+  background-color: transparent !important;
+  border: 1px solid var(--default-border) !important;
+  padding: 7px !important;
+  color: rgb(var(--default-text-color-rgb)) !important;
+}
+.table.table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: var(--default-background);
+  --bs-table-bg-state: var(--default-background);
+  color: var(--default-text-color);
+}
+
+.ngx-table {
+  border: 1px solid var(--default-border) !important;
+}
+
+.table tbody.table-group-divider {
+  border-top: 1px solid var(--default-border) !important;
+}
+.ngx-table {
+  color: var(--default-text-color) !important;
+}
+.mat-mdc-table {
+  border: 1px solid var(--default-border) !important;
+}
+.mat-mdc-paginator .mat-mdc-select,
+.mat-mdc-option .mdc-list-item__primary-text,
+.mat-mdc-select-arrow {
+  color: var(--default-text-color) !important;
+}
+.mdc-data-table__table {
+  .ng-star-inserted {
+    th {
+      z-index: 99 !important;
+    }
+  }
+}
+
+.customtab .tab-pane {
+  padding: 0 !important;
+  border: none !important;
+}
+
+.chat-tab .tab-pane {
+  padding: 0 !important;
+  border: none !important;
+}
+
+.iconclick {
+  display: inline-block;
+  cursor: pointer; /* Ensure cursor indicates it's clickable */
+  z-index: -1 !important;
+  position: relative !important;
+}
+
+app-switcher {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .switcher-canvas {
+    padding-bottom: 4.5rem !important;
+  }
+}
+
+.mat-tree {
+  background: var(--custom-white) !important;
+}
+
+.mat-tree-node,
+.mat-nested-tree-node {
+  color: var(--default-text-color-rgb) !important;
+}
+
+// .mat-tree-node, .mat-nested-tree-node {
+//   &:hover {
+//     color: var(--primary-color) !important;
+//   }
+// }
+
+.colored-toast.bg-primary .toast-header {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-success .toast-header {
+  background-color: var(--primary-tint1-color) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-info .toast-header {
+  background-color: var(--primary-tint2-color) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-secondary .toast-header {
+  background-color: var(--primary-tint3-color) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-secondary .toast-header {
+  background-color: rgb(var(--secondary-rgb)) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-warning .toast-header {
+  background-color: rgb(var(--warning-rgb)) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-success .toast-header {
+  background-color: rgb(var(--success-rgb)) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-danger .toast-header {
+  background-color: rgb(var(--danger-rgb)) !important;
+  color: #fff !important;
+}
+.colored-toast.bg-info .toast-header {
+  background-color: rgb(var(--info-rgb)) !important;
+  color: #fff !important;
+}
+
+.bg-primary-transparent .toast-header {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+.bg-success-transparent .toast-header {
+  background-color: var(--primary-tint1-color) !important;
+  color: #fff !important;
+}
+.bg-info-transparent .toast-header {
+  background-color: var(--primary-tint2-color) !important;
+  color: #fff !important;
+}
+.bg-secondary-transparent .toast-header {
+  background-color: var(--primary-tint3-color) !important;
+  color: #fff !important;
+}
+.bg-secondary-transparent .toast-header {
+  background-color: rgb(var(--secondary-rgb)) !important;
+  color: #fff !important;
+}
+
+.bg-warning-transparent .toast-header {
+  background-color: rgb(var(--warning-rgb)) !important;
+  color: #fff !important;
+}
+
+.bg-success-transparent .toast-header {
+  background-color: rgb(var(--success-rgb)) !important;
+  color: #fff !important;
+}
+
+.bg-danger-transparent .toast-header {
+  background-color: rgb(var(--danger-rgb)) !important;
+  color: #fff !important;
+}
+
+.bg-info-transparent .toast-header {
+  background-color: rgb(var(--info-rgb)) !important;
+  color: #fff !important;
+}
+
+@media (max-width: 420px) {
+  .aligning-toasts spk-toast {
+    width: 100%;
+  }
+}
+
+[dir="rtl"] {
+  .carousel-control-prev-icon {
+    transform: rotate(180deg);
+  }
+  .carousel-control-next-icon {
+    transform: rotate(180deg);
+  }
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  background-color: var(--custom-white) !important;
+  color: var(--default-text-color) !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+.color-picker-slider .noUi-target {
+  border: 0 !important;
+}
+.color-picker-slider .noUi-vertical {
+  width: 0 !important;
+}
+
+.ngx-table__table--hoverable > tbody tr:hover {
+  background: var(--black-1) !important;
+}
+.ngx-table__header-cell--draggable {
+  background-color: var(--bs-table-bg) !important;
+}
+.ngx-pagination-range-dropdown {
+  min-width: 60px;
+}
+.ngx-pagination-range-dropdown-button,
+.ngx-pagination-range-dropdown-button-item {
+  color: var(--default-text-color) !important;
+  border-color: var(--default-border) !important;
+}
+.ngx-icon {
+  margin-inline-start: 11px;
+}
+.ngx-pagination a:hover,
+.ngx-pagination button:hover,
+.ngx-pagination-range--selected {
+  background: var(--black-1) !important;
+}
+.ngx-menu {
+  background: var(--custom-white) !important;
+  border-color: var(--default-border) !important;
+  padding-inline-start: 0;
+}
+.ngx-table__table--normal > tbody > tr > td,
+.ngx-table__table--normal > thead > tr > th,
+.ngx-pagination li {
+  border-color: var(--default-border) !important;
+}
+.cdk-drag {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.dragable-sortable-list {
+  .cdk-drag {
+    background-color: var(--primary005) !important;
+  }
+}
+#globalSearch {
+  background-color: transparent !important;
+  border: 1px solid var(--default-border) !important;
+  padding: 7px !important;
+  color: rgb(var(--default-text-color-rgb)) !important;
+}
+//ngx-easy-table styless
+
+.ngx-tables {
+  overflow: auto;
+}
+
+.table[_ngcontent-ng-c283474303]
+  > [_ngcontent-ng-c283474303]:not(:last-child)
+  > [_ngcontent-ng-c283474303]:last-child
+  > *[_ngcontent-ng-c283474303] {
+  border-bottom-color: var(--default-border) !important;
+}
+.ngx-table__table--normal > tbody > tr > td,
+.ngx-table__table--normal > thead > tr > th,
+.ngx-pagination li {
+  border-color: var(--default-border) !important;
+}
+.ngx-table {
+  color: var(--default-text-color) !important;
+  text-align: start !important;
+}
+.ngx-table__table--hoverable > tbody tr:hover {
+  background: var(--black-1) !important;
+}
+.ngx-pagination a:hover,
+.ngx-pagination button:hover,
+.ngx-pagination-range--selected {
+  background: var(--black-1) !important;
+}
+.ngx-menu {
+  background: var(--custom-white) !important;
+  border-color: var(--default-border) !important;
+  padding-inline-start: 0;
+}
+.ngx-pagination-range-dropdown {
+  min-width: 60px;
+}
+.ngx-pagination-range-dropdown-button,
+.ngx-pagination-range-dropdown-button-item {
+  color: var(--default-text-color) !important;
+  border-color: var(--default-border) !important;
+}
+.ngx-icon {
+  margin-inline-start: 11px;
+}
+
+.ngx-table__table--hoverable > tbody tr:hover {
+  background-color: var(--primary01) !important;
+}
+
+#vmap {
+  z-index: 9 !important;
+}
+
+.ngx-tables,
+.ngx-table {
+  overflow: auto;
+}
+.mat-elevation-z8,
+.mat-mdc-elevation-specific.mat-elevation-z8 {
+  box-shadow: none;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: var(--form-control-bg) !important;
+  border: 1px solid var(--input-border);
+}
+.mat-mdc-form-field:not(.mat-form-field-disabled)
+  .mat-mdc-floating-label.mdc-floating-label {
+  color: var(--default-text-color);
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled):not(
+    .mdc-text-field--focused
+  ):hover
+  .mdc-floating-label {
+  color: var(--default-text-color) !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,
+.mdc-text-field--filled:not(.mdc-text-field--disabled)
+  .mdc-text-field__input::placeholder {
+  color: var(--default-text-color) !important;
+}
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(
+    .mat-mdc-option-multiple
+  ) {
+  background-color: var(--default-background);
+}
+div.mat-mdc-select-panel {
+  background-color: var(--form-control-bg) !important;
+}
+
+[data-header-position="scrollable"][data-nav-layout="horizontal"][data-menu-position="fixed"] {
+  app-sidebar {
+    .app-sidebar.sticky {
+      position: sticky !important;
+      top: 0 !important;
+    }
+  }
+}
+
+[data-nav-layout="horizontal"][data-nav-style="icon-hover"][data-toggled="icon-hover-closed"] {
+  .slide.has-sub .slide-menu {
+    &.child1 {
+      inset-inline-start: auto !important;
+    }
+  }
+}
+
+[data-nav-layout="horizontal"][data-nav-style="menu-hover"][data-toggled="menu-hover-closed"] {
+  .slide.has-sub .slide-menu {
+    &.child1 {
+      inset-inline-start: auto !important;
+    }
+  }
+}
+
+/* New Styles */
+// [dir="rtl"] {
+//   [data-popper-placement="bottom-end"] {
+//     inset: 0px auto auto 0px !important;
+//   }
+// }
+/* New Styles */
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+}
+.ng-select .ng-select-container .ng-value-container {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+.mat-step-header.cdk-keyboard-focused, .mat-step-header.cdk-program-focused,.mat-step-header:hover:not([aria-disabled]), .mat-step-header:hover[aria-disabled=false] {
+  background: transparent !important;
+}
+.mat-ripple-element  {
+  background: transparent !important;
+}
+
+
+[dir=rtl] .opened[_ngcontent-ng-c1814545840] {
+  left: 0;
+}
+
+//new styles-2
+.custom-alert-img .alert-dark.alert-img {
+  margin-bottom: 0 !important;
+}
+.custom-alert-svg .svg-danger{
+  margin-bottom: 0 !important;
+}
+.custom-accordion .accordion-flush .accordion-item .accordion-button{
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+.blog-edit .form-control {
+  background-color: var(--custom-white) !important;
+}
+[data-theme-mode="dark"] {
+  .NgxEditor__MenuItem--Icon .NgxEditor__Popup--Col input.ng-touched {
+    background: var(--custom-white) !important;
+    border: 1px solid var(--default-border) !important;
+    border-radius: 3px !important;
+  }
+  .custom-form .form-control {
+    background: none !important;
+  }
+}
+.validation-group-input{
+  flex-wrap: wrap !important;
+}
+// .custom-sidebar div {
+//   padding: 0px !important;
+// }
+// [data-nav-layout=vertical] .custom-sidebar .slide.has-sub.active .side-menu__item {
+//    margin-block: 0rem !important; 
+// }
+[dir="rtl"] {
+  .product-timeline ul.timeline-1:before {
+    inset-inline-start: 0px !important;
+  }
+  #result {
+    margin: 4.25rem 0 4.25rem 1rem !important;
+  }
+  .toast-close-button {
+    float: left !important;
+  }
+}
+[dir=rtl] { .slide.has-sub.open > .side-menu__item .side-menu__angle {
+    transform: rotate(0deg) !important;
+  }
+  .mat-tree .mat-tree-node.cdk-tree-node {
+    padding-right: 40px !important;
+  }
+  .example-tree .mat-nested-tree-node div[role=group] {
+    padding-right: 40px  !important;
+  }
+  .dropdown-menu .dropdown-menu-end {
+    inset: 0px 0px auto auto !important;
+  }
+  .bs-popover-auto[data-popper-placement^=left] .popover-arrow, .bs-popover-start .popover-arrow {
+    right: calc(-1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width)) !important;
+  }
+  .translate-middle-x {
+    transform: translateX(50%) !important;
+  }
+  .NgxEditor__Dropdown--Text:after { 
+    margin-right: 24px !important;
+    margin-left: 0px !important;
+
+  }
+  .form-floating > .form-control:not(:placeholder-shown) ~ label{
+    transform: scale(.85) translateY(-.5rem) translateX(1rem) !important;
+  }
+  .ngx-pagination-range-dropdown-button {
+    padding-bottom: 2px !important;
+  }
+  .todo-widget-header .dropdown-menu {
+    inset: 0px 0px auto auto !important;
+  }
+  .ngx-notifier{
+    position: fixed !important;
+    right: 16rem !important;
+  }
+  @media (min-width: 320px) {
+    .color-picker.open{
+      top: -27.5px !important;
+      left: -44px !important;
+      position: relative !important;
+    }
+  }
+}
+[dir=rtl] .bs-popover-end .popover-arrow {
+  left: calc(-1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width)) !important;
+}
+@media (max-width: 1200px) {
+  .custom-select .ng-value-container {
+    gap: 0.375rem !important;
+  }
+}
+@media (max-width: 320px) {
+  .custom-calendar .flatpickr-calendar {
+    width: 100% !important;
+  }
+  .custom-select2 .ng-value-container {
+    gap: 0.375rem !important;
+  }
+  .custom-gutter{
+    margin-bottom: 7px !important;
+  }
+  .custom-head-switcher {
+    padding-right: 0px !important;
+  }
+  .custom-alert-content {
+    font-size: 14px !important;
+  }
+}
+.chat-groups-tab .main-chat-list:last-child .media {
+  border-block-end: 0px !important;
+}
+.chat-groups-tab .media:last-child {
+  border-block-end: 0px !important;
+}
+.chat-calls-tab .media:last-child {
+  border-block-end: 0px !important; 
+}
+.product-checkout .mat-horizontal-stepper-header-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+.product-checkout .tab-style-2.nav-tabs .nav-link.active {
+  color: var(--primary-color) !important;
+  background-color: transparent !important;
+
+}
+.product-checkout .mat-stepper-vertical {
+  background-color: var(--custom-white) !important;
+}
+.custom-star .fa-star {
+  margin-inline: 0.2rem !important;
+}
+// @media (max-width: 1000px) {
+//   .custom-lan {
+//     margin-block-end: 0.5rem !important;
+//   }
+// }
+.custom-widgets .media:last-child {
+  border-bottom: 0px !important;
+}
+.browser-stats .item:last-child {
+  border-bottom: 0px !important;
+}
+.custom-products .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+  color: #a39d9dd6 !important;
+}
+.custom-range .noUi-handle:before{
+  background-color: #fff !important;
+}
+.custom-range .noUi-touch-area {
+  background-color: var(--primary-color) !important;
+}
+.custom-range .noUi-handle:after{
+  background-color: #fff !important;
+}
+#customRange3 #thumb {
+  transform: translate(-175px, 0px) !important;
+}
+.mat-mdc-no-data-row .mat-cell {
+  padding: 1rem !important;
+}
+.swiper-pagination-horizontal {
+  transform: translate(10px, 10px) !important;
+}
+@media (min-width: 1354px) {
+  [dir="rtl"] {
+    #apexchartsspark2, #apexchartsspark3, #apexchartsspark4, #apexchartsspark5, #apexchartsspark6{
+      transform: translateX(-43px) !important;
+    }
+  }
+}
+.bg-img[data-menu-styles=dark][data-nav-layout=horizontal] .app-sidebar .side-menu__item,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg1] .app-sidebar .side-menu__item,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg2] .app-sidebar .side-menu__item,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg3] .app-sidebar .side-menu__item,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg4] .app-sidebar .side-menu__item,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg5] .app-sidebar .side-menu__item {
+  color: rgb(var(--default-text-color-rgb)) !important;
+}
+.bg-img[data-menu-styles=dark][data-nav-layout=horizontal] .app-sidebar .side-menu__item:before,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg1] .app-sidebar .side-menu__item:before,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg2] .app-sidebar .side-menu__item:before,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg3] .app-sidebar .side-menu__item:before,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg4] .app-sidebar .side-menu__item:before,
+[data-menu-styles=dark][data-nav-layout=horizontal][data-bg-img=bgimg5] .app-sidebar .side-menu__item:before {
+  color: rgb(var(--default-text-color-rgb)) !important;
+}
+[dir=rtl] { 
+  .toast-container .ngx-toastr {
+    padding: 15px 50px 14px 15px !important;
+    background-position: 262px 22px !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .app-header .input-width {
+      width: 100% !important;
+  }
+}
+//end::new styles-2
+
+quill-editor{
+  display: inline !important;
+}
+
+.slide.has-sub .slide-menu {
+  transform: translate(0) !important;
+  visibility: visible !important;
+}
+
+.NgxEditor__MenuBar,.NgxEditor,.NgxEditor__Popup--Col input,
+.angular-editor-toolbar,
+.angular-editor-toolbar .angular-editor-toolbar-set .angular-editor-button,
+.ae-font .ae-picker-label{
+  background-color: variables.$custom-white !important;
+  color: variables.$default-text-color !important;
+  border-color: variables.$default-border !important;
+}
+
+//new styles-3
+@media (min-width: 1247px) {
+  [dir="rtl"] {
+    #apexchartsspark2, #apexchartsspark3, #apexchartsspark4, #apexchartsspark5, #apexchartsspark6{
+      transform: translateX(-24px) !important;
+    }
+  }
+}
+@media (min-width: 320px) {
+  [dir="rtl"] {
+    #apexchartsspark2, #apexchartsspark3, #apexchartsspark4, #apexchartsspark5, #apexchartsspark6{
+      transform: translateX(-30px) !important;
+    }
+  }
+}
+@media (min-width: 320px) {
+  [dir="rtl"] {
+    .custom-country-table {
+      border-inline-end: 1px solid var(--default-border) !important;
+    }
+  }
+}
+[dir="rtl"] {
+  .custom-user-card .dropdown-menu {
+    inset: 0px auto auto 0px !important;
+  }
+  .main-content-body-chat .dropdown-menu {
+    inset: 0px auto auto 0px !important;
+  }
+}
+.main-content-body-contacts .main-contact-info-header .main-img-user a:hover {
+  color: #fff !important;
+}
+.custom-widgets-list {
+  border-radius: 50% !important;
+  border: 1px solid var(--default-border) !important;
+  padding-inline: 3px !important;
+}
+[dir=rtl] .custom-breadcrumb .breadcrumb-item::before {
+  transform: rotate(179deg) !important;
+    margin-inline-end: 11px  !important;
+    padding-inline-end: 2px !important;
+}
+[data-theme-mode="dark"] {
+  .swal2-input{
+      border: 1px solid variables.$input-border;
+  }
+}
+@media (min-width: 320px) {
+  .custom-form-select .ng-arrow-wrapper {
+    display: none !important;
+  }
+  .custom-form-select .ng-clear-wrapper {
+    display: none !important;
+  }
+  .custom-form-select .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon.left {
+    display: none !important;
+  }
+}
+.product-checkout .tab-style-2.nav-tabs .nav-link.active i {
+  color: var(--primary-color) !important;
+}
+.product-checkout {
+  overflow: hidden !important;
+}
+.custom-lan-switcher {
+  border-inline-start: 1px solid #cccccc3d !important;
+}
+[data-theme-mode="dark"] {
+  .custom-lan-switcher {
+    border-inline-start: 1px solid #cccccc1a !important;
+  }
+  .custom-edit .ng-select-container {
+    background-color: var(--form-control-bg) !important;
+  }
+}
+
+[data-theme-mode=dark] {
+  [data-menu-styles=transparent][data-bg-img=bgimg5] .app-sidebar .slide.has-sub .slide-menu.child1,
+  [data-menu-styles=transparent][data-bg-img=bgimg4] .app-sidebar .slide.has-sub .slide-menu.child1,
+  [data-menu-styles=transparent][data-bg-img=bgimg3] .app-sidebar .slide.has-sub .slide-menu.child1, 
+  [data-menu-styles=transparent][data-bg-img=bgimg2] .app-sidebar .slide.has-sub .slide-menu.child1, 
+  [data-menu-styles=transparent][data-bg-img=bgimg1] .app-sidebar .slide.has-sub .slide-menu.child1 {
+    background: transparent !important;
+  } 
+}
+[data-menu-styles=transparent][data-theme-mode=dark][data-menu-styles=transparent][data-bg-img=bgimg5] .app-sidebar .slide.has-sub .slide-menu.child1, 
+[data-menu-styles=transparent][data-theme-mode=dark][data-menu-styles=transparent][data-bg-img=bgimg4] .app-sidebar .slide.has-sub .slide-menu.child1, 
+[data-menu-styles=transparent][data-theme-mode=dark][data-menu-styles=transparent][data-bg-img=bgimg3] .app-sidebar .slide.has-sub .slide-menu.child1, 
+[data-menu-styles=transparent][data-theme-mode=dark][data-menu-styles=transparent][data-bg-img=bgimg2] .app-sidebar .slide.has-sub .slide-menu.child1, 
+[data-menu-styles=transparent][data-theme-mode=dark][data-menu-styles=transparent][data-bg-img=bgimg1] .app-sidebar .slide.has-sub .slide-menu.child1 {
+  background: transparent !important;
+
+}
+.custom-form-validation .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  padding-left: 10px !important;
+  padding-right: 50px !important;
+}
+.custom-products .nav-link.active {
+   background-color: transparent !important;
+}
+@media (min-width: 320px) {
+  .ngx-notifier .alert {
+    margin-inline-start: 2rem !important;
+  }
+}
+[dir="rtl"] {
+  @media (min-width: 320px) {
+    .ngx-notifier .alert {
+      margin-inline-start: -15.5rem !important;
+      width: 300px !important;
+    }
+  }
+}
+[data-width=boxed] {
+  .color-picker-slider {
+    flex-wrap: wrap !important;
+    margin-bottom: 0px !important;
+  }
+}
+#result {
+  margin: 4.25rem 0 0.5rem 4rem !important;
+}
+[data-vertical-style=doublemenu] .slide.has-sub .slide-menu {
+  overflow: visible !important;
+  width: 192px !important;
+}
+//end::new styles-3
+
+.authentication-basic {
+  .nav-tabs {
+    background-color: variables.$light;
+    justify-content: center;
+    margin-bottom: 8px;
+    width: 120px;
+    margin-inline: auto; 
+    padding-block: 7px; 
+    border-radius: 0.5rem;
+  }
+  .nav-link.active {
+    background-color: variables.$primary;
+  }
+  .nav-link:hover {
+      border-color: transparent;
+  }
+  .nav-link {
+    padding: 0.5rem;
+  }
+  .tab-pane {
+    padding: 0;
+    border: 0;
+  }
+  .firebase {
+    width: 30px;
+    height: 30px;
+  }
+}
