@@ -52,7 +52,7 @@ sudo apt install -y git
 cd /opt
 
 # Clone the repository
-sudo git clone https://github.com/YOUR_USERNAME/HisMedFront.git
+sudo git clone https://github.com/AmerHashima/HisMedFront.git
 
 # Change ownership to your user
 sudo chown -R $USER:$USER HisMedFront
@@ -130,7 +130,7 @@ sudo ufw status
 Open your browser and navigate to:
 
 ```
-http://YOUR_SERVER_IP
+http://50.6.228.16
 ```
 
 ## Automated Deployment with GitHub Actions
