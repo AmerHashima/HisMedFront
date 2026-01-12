@@ -128,6 +128,7 @@ sudo ufw status
 ### 7. Access Your Application
 
 Open your browser and navigate to:
+
 ```
 http://YOUR_SERVER_IP
 ```
@@ -143,25 +144,25 @@ name: Deploy to Linux Server
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Deploy to server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cd /opt/HisMedFront
-          git pull origin main
-          docker compose down
-          docker compose up -d --build
-          docker image prune -f
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /opt/HisMedFront
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
+            docker image prune -f
 ```
 
 ### Configure GitHub Secrets
@@ -240,13 +241,13 @@ server {
 server {
     listen 443 ssl http2;
     server_name yourdomain.com;
-    
+
     ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
-    
+
     root /usr/share/nginx/html;
     index index.html;
-    
+
     location / {
         try_files $uri $uri/ /index.html;
     }
@@ -361,6 +362,7 @@ chmod -R 755 /opt/HisMedFront
 ## Support
 
 For issues or questions, refer to:
+
 - Angular Documentation: https://angular.io/docs
 - Docker Documentation: https://docs.docker.com
 - Nginx Documentation: https://nginx.org/en/docs
