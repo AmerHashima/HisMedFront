@@ -23,7 +23,7 @@
               "apexcharts"
             ],
             "outputPath": {
-              "base": "preview1"
+              "base": "dist/HisMedFront"
             },
             "index": "src/index.html",
             "polyfills": [
@@ -33,19 +33,20 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [ 
-            "src/favicon.ico",{
-              "glob": "**/*",
-               "input": "public"
-            },
+            "assets": [
+              "src/favicon.ico",
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
               "src/.htaccess"
-          ],
+            ],
             "styles": [
-              "src/styles.scss","./node_modules/swiper/swiper-bundle.min.css",
-               "./node_modules/ngx-toastr/toastr.css"
+              "src/styles.scss",
+              "./node_modules/swiper/swiper-bundle.min.css",
+              "./node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": [
-            ],
+            "scripts": [],
             "browser": "src/main.ts"
           },
           "configurations": {
@@ -69,14 +70,14 @@
               "extractLicenses": false,
               "sourceMap": false,
               "namedChunks": true,
-              "aot": true 
+              "aot": true
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {  
+          "configurations": {
             "production": {
               "buildTarget": "valex-v4:build:production"
             },
@@ -103,12 +104,16 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [ 
-            "src/favicon.ico",{
-              "glob": "**/*",
-              "input": "public"
-            }],
-            "styles": ["src/styles.scss"],
+            "assets": [
+              "src/favicon.ico",
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": []
           }
         }

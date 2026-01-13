@@ -1,33 +1,20 @@
-# Multi-stage build for Angular application
-
-# Stage 1: Build the Angular application
+# ===== Build Stage =====
 FROM node:20-alpine AS build
-
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
+RUN npm install
 
-# Install dependencies
-RUN npm ci --legacy-peer-deps
-
-# Copy application source
 COPY . .
+RUN npm run build -- --configuration production
 
-# Build the application for production
-RUN npm run build
-
-# Stage 2: Serve the application with Nginx
+# ===== Run Stage =====
 FROM nginx:alpine
 
-# Copy custom nginx configuration
+RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built application from build stage
-COPY --from=build /app/dist/valex4/browser /usr/share/nginx/html
+COPY --from=build /app/dist/HisMedFront /usr/share/nginx/html
 
-# Expose port 80
 EXPOSE 80
-
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
