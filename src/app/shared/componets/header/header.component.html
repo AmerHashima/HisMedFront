@@ -44,7 +44,7 @@
         <i class="header-icon fe fe-align-left"></i>
       </a>
 
-      <nav aria-label="breadcrumb" class="ps-2">
+      <!-- <nav aria-label="breadcrumb" class="ps-2">
         <ol class="breadcrumb breadcrumb-style2 mb-0">
           <li class="breadcrumb-item">
             <a [routerLink]="['/']"
@@ -58,8 +58,28 @@
           </li>
           <li class="breadcrumb-item active" aria-current="page">Create User</li>
         </ol>
-      </nav>
+      </nav> -->
 
+      <nav aria-label="breadcrumb" class="ps-2">
+        <ol class="breadcrumb breadcrumb-style2 mb-0">
+          <li
+            class="breadcrumb-item"
+            *ngFor="let crumb of breadcrumbs$ | async; let last = last"
+            [ngClass]="{ active: last }"
+            [attr.aria-current]="last ? 'page' : null"
+          >
+            <ng-container *ngIf="!last; else lastCrumb">
+              <a [routerLink]="[crumb.url]">
+                {{ crumb.label }}
+              </a>
+            </ng-container>
+
+            <ng-template #lastCrumb>
+              {{ crumb.label }}
+            </ng-template>
+          </li>
+        </ol>
+      </nav>
       <!-- <div class="main-header-center d-none d-lg-block">
         <input
           class="form-control"
