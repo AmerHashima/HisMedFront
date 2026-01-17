@@ -10,7 +10,7 @@ export default class UserService {
   constructor(private apiService: ApiService) { }
 
   getUsers(){
-    return this.apiService.get<ApiReponse>('SystemUser',{},this.token).pipe(
+    return this.apiService.get<ApiReponse>('SystemUser',this.token).pipe(
       map((responese: ApiReponse) => responese.data)
     )
   }

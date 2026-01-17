@@ -6,3 +6,152 @@
     <p class="mb-0 text-muted">Sales monitoring dashboard template.</p>
   </div>
 </div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-4">
+  <div class="row flex-wrap gy-2 ">
+    <div class="col-lg-3">
+      <app-input
+        formControlName="username"
+        label="Username"
+        type="text"
+        placeholder="John Doe"
+        icon="fa-solid fa-user"
+        [errorMessages]="{
+          required: 'username is required',
+          minlength: 'username is to short'
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="email"
+        label="Email Address"
+        type="email"
+        placeholder="email@gmail.com"
+        icon="fa-solid fa-envelope"
+        [errorMessages]="{
+          required: 'email is required',
+          email: 'this is invalid email'
+        }"
+      />
+    </div>
+     <div class="col-lg-3">
+      <app-input
+        formControlName="phone"
+        label="Phone Number"
+        type="text"
+        placeholder="012xxxxxxxx"
+        icon="fa-solid fa-phone"
+        [errorMessages]="{
+          required: 'phone is required',
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="password"
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+        icon="fa-solid fa-lock"
+        [errorMessages]="{
+          required: 'Password is required',
+          minlength: 'Password must be at least 8 characters'
+        }"
+      />
+    </div>
+     <div class="col-lg-3">
+      <app-input
+        formControlName="firstName"
+        label="First Name"
+        type="text"
+        placeholder="John"
+        icon="fa-solid fa-user"
+        [errorMessages]="{
+          required: 'First Name is required',
+          minlength: 'First Name is to short'
+        }"
+      />
+    </div>
+     <div class="col-lg-3">
+      <app-input
+        formControlName="middleName"
+        label="Middle Name"
+        type="text"
+        placeholder="John"
+        icon="fa-solid fa-user"
+        [errorMessages]="{
+          required: 'Middle Name is required',
+          minlength: 'Middle Name is to short'
+        }"
+      />
+    </div>
+     <div class="col-lg-3">
+      <app-input
+        formControlName="lastName"
+        label="Last Name"
+        type="text"
+        placeholder="John"
+        icon="fa-solid fa-user"
+        [errorMessages]="{
+          required: 'Last Name is required',
+          minlength: 'Last Name is to short'
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <spk-ng-select
+  formControlName="gender"
+  label="Gender"
+  [options]="genderOptions"
+  [multiple]="false"
+  placeholder="Choose gender"
+  selectClass="form-control"
+/>
+    </div>
+    <div class="col-3">
+        <!-- <app-date-picker
+        formControlName="birthDate"
+        label="Birth day"
+        ></app-date-picker> -->
+      <spk-flatpickr
+        formControlName="birthDate"
+        [enableTime]="true"
+        [dateFormat]="'Y-m-d H:i'"
+        placeholder="Choose Date"
+        label="Birth day"
+      ></spk-flatpickr>
+    </div>
+      <div class="col-12">
+  <h6>Upload Documents</h6>
+  <app-file-upload
+    #fileUpload
+    formControlName="files"
+    label="Drop Files here to upload...."
+    [multiple]="true">
+  </app-file-upload>
+
+  <!-- <app-file-upload
+    #fileUpload
+    [multiple]="true"
+    [label]="'Drop Files here to upload....'"
+    (filesChange)="onFilesChange($event)">
+  </app-file-upload> -->
+</div>
+  </div>
+  <div class="d-flex flex-column gap-2">
+      <app-toggle-btn
+        formControlName="isActive"
+        label="Set user as active user"
+      />
+     <app-toggle-btn
+        formControlName="twoFactorEnabled"
+        label="Enable Two Factor Authentication"
+      />
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+      <app-button btnLabel="Cancel" [mainBtn]="false"/>
+      <app-button btnLabel="Save Patient" buttonType="submit" [disabled]="form.invalid"/>
+  </div>
+</form>

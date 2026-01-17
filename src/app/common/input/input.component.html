@@ -1,0 +1,51 @@
+<!-- <div class="d-flex flex-column gap-1">
+@if(label()){
+<label  class="form-label mb-0">{{ label() }}</label>
+}
+<input
+  class="form-control"
+  [type]="type()"
+  [placeholder]="placeholder()"
+  [disabled]="isDisabled()"
+  [value]="value()"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+  [class.is-invalid]="showErrors()"
+/>
+@if(showErrors()){
+<div class="invalid-feedback">
+  {{ getErrorMessage() }}
+</div>
+}
+</div> -->
+
+
+<div class="d-flex flex-column gap-1">
+  @if (label()) {
+    <label class="form-label mb-0">{{ label() }}</label>
+  }
+
+  <div class="input-group">
+    @if (icon()) {
+      <span class="input-group-text">
+        <i class="{{ icon() }}"></i>
+      </span>
+    }
+    <input
+      class="form-control form-control-lg"
+      [type]="type()"
+      [placeholder]="placeholder()"
+      [disabled]="isDisabled()"
+      [value]="value()"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      [class.is-invalid]="showErrors()"
+    />
+  </div>
+
+  @if (showErrors()) {
+    <div class="invalid-feedback">
+      {{ getErrorMessage() }}
+    </div>
+  }
+</div>

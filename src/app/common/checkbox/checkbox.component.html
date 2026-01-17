@@ -1,0 +1,36 @@
+<!-- <div class="form-check">
+  <input
+    class="form-check-input"
+    type="checkbox"
+    [id]="effectiveId()"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="toggle()"
+    (blur)="onBlur()"
+  />
+  <label class="form-check-label" [for]="effectiveId()">
+    {{ label() }}
+  </label>
+</div> -->
+<div class="mb-3">
+  @if (label()) {
+    <label class="form-label">{{ label() }}</label>
+  }
+  @for( opt of options();track opt){
+     <div class="form-check" >
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [id]="'multi-' + opt.value"
+      [checked]="isChecked(opt.value)"
+      [disabled]="isDisabled()"
+      (change)="toggle(opt.value)"
+      (blur)="onBlur()"
+    />
+    <label class="form-check-label" [for]="'multi-' + opt.value">
+      {{ opt.label }}
+    </label>
+  </div>
+  }
+
+</div>

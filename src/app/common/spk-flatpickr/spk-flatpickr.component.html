@@ -1,0 +1,34 @@
+
+<div class="custom-card">
+  <div class="form-group">
+    @if (label(); as lbl) {
+      <label class="form-label mb-0">{{ lbl }}</label>
+    }
+
+    <div class="input-group">
+      <div class="input-group-text">
+        <i class="fa-solid fa-calendar"></i>
+      </div>
+
+      <input
+        type="text"
+        mwlFlatpickr
+        [(ngModel)]="value"
+        [disabled]="disabled"
+
+        [altInput]="altInput()"
+        [convertModelValue]="convertModelValue()"
+        [enableTime]="enableTime()"
+        [noCalendar]="noCalendar()"
+        [inline]="inline()"
+        [mode]="mode()"
+        [dateFormat]="dateFormat()"
+        [placeholder]="placeholder()"
+
+        (ngModelChange)="onValueChange($event)"
+
+        [class]="inputClasses()"
+      />
+    </div>
+  </div>
+</div>
