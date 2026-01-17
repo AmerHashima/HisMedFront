@@ -1,7 +1,9 @@
-import { Component, ElementRef, forwardRef, input, output, Renderer2 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, ElementRef, input, output, Renderer2 } from '@angular/core';
+import { ControlValueAccessor, FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CommonModule } from '@angular/common';
+import { Optional, Self } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 interface Option {
   label: string;
@@ -14,13 +16,7 @@ interface Option {
   imports: [NgSelectModule, FormsModule, CommonModule],
   templateUrl: './spk-ng-select.component.html',
   styleUrl: './spk-ng-select.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SpkNgSelectComponent),
-      multi: true
-    }
-  ]
+
 })
 export class SpkNgSelectComponent implements ControlValueAccessor {
   // ────────────────────────────────────────────────
@@ -59,8 +55,16 @@ export class SpkNgSelectComponent implements ControlValueAccessor {
   onChange: (value: any) => void = () => { };
   onTouched: () => void = () => { };
 
-  constructor(private renderer: Renderer2, private el: ElementRef) { }
 
+  constructor(
+    private renderer: Renderer2,
+    private el: ElementRef,
+    @Optional() @Self() public ngControl: NgControl
+  ) {
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
+  }
   // ────────────────────────────────────────────────
   // ControlValueAccessor
   // ────────────────────────────────────────────────
@@ -77,7 +81,6 @@ export class SpkNgSelectComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Input signal is read-only → form disable is handled by [disabled]
   }
 
   // ────────────────────────────────────────────────
@@ -112,5 +115,30 @@ export class SpkNgSelectComponent implements ControlValueAccessor {
   private isValidAttributeName(name: string): boolean {
     const invalid = [' ', '|', ':', '/', '\\', ';', ','];
     return !invalid.some(char => name.includes(char));
+  }
+
+  get control() {
+    return this.ngControl?.control;
+  }
+
+  get showErrors(): boolean {
+    return !!this.control && this.control.touched && this.control.invalid;
+  }
+
+  get errorMessages(): string[] {
+    if (!this.control?.errors) return [];
+    return Object.keys(this.control.errors).map(key => {
+      const err = this.control!.errors![key];
+      return this.getFriendlyError(key, err);
+    });
+  }
+
+  private getFriendlyError(key: string, errorObj: any): string {
+    switch (key) {
+      case 'required':
+        return 'Selection is required';
+      default:
+        return 'Invalid selection';
+    }
   }
 }

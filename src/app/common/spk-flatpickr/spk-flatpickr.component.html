@@ -1,11 +1,11 @@
 
 <div class="custom-card">
-  <div class="form-group">
+  <div class="form-group mb-2" >
     @if (label(); as lbl) {
       <label class="form-label mb-0">{{ lbl }}</label>
     }
 
-    <div class="input-group">
+    <div class="input-group" [class.validBorderError]="showErrors">
       <div class="input-group-text">
         <i class="fa-solid fa-calendar"></i>
       </div>
@@ -31,4 +31,14 @@
       />
     </div>
   </div>
+   @if(showErrors){
+  <div class="validationError">
+    @for(msg of errorMessagesList ; track msg){
+    <div >
+      {{ msg }}
+    </div>
+  }
+  </div>
+}
+
 </div>

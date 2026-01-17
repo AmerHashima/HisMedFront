@@ -1,9 +1,10 @@
-import { Component, forwardRef, input, computed } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FlatpickrModule, FlatpickrDefaults } from 'angularx-flatpickr';
+import { Component, input, computed } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
+import { FlatpickrModule } from 'angularx-flatpickr';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { Optional, Self } from '@angular/core';
+import { NgControl } from '@angular/forms';
 @Component({
   selector: 'spk-flatpickr',
   standalone: true,
@@ -13,14 +14,6 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   templateUrl: './spk-flatpickr.component.html',
-  providers: [
-    FlatpickrDefaults,
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SpkFlatpickrComponent),
-      multi: true
-    }
-  ]
 })
 export default class SpkFlatpickrComponent implements ControlValueAccessor {
   // ─── Input Signals ────────────────────────────────────────────────
@@ -51,6 +44,13 @@ export default class SpkFlatpickrComponent implements ControlValueAccessor {
     return base + extra;
   });
 
+  constructor(
+    @Optional() @Self() public ngControl: NgControl
+  ) {
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
+  }
   // ─── CVA Methods ──────────────────────────────────────────────────
   writeValue(value: Date | Date[] | null): void {
     this.value = value;
@@ -72,18 +72,36 @@ export default class SpkFlatpickrComponent implements ControlValueAccessor {
   onValueChange(newValue: Date | Date[] | null): void {
     this.value = newValue;
 
-    // Decide what to emit based on convertModelValue and mode
     let emitValue: Date | Date[] | null = newValue;
 
     if (this.convertModelValue()) {
       if (Array.isArray(newValue)) {
-        // For range → take first date, for multiple → first or whole array?
-        // Here we follow your original logic (take first)
         emitValue = newValue.length > 0 ? newValue[0] : null;
       }
     }
 
     this.onChange(emitValue);
     this.onTouched();
+  }
+
+  get control() {
+    return this.ngControl?.control;
+  }
+
+  get showErrors(): boolean {
+    return !!this.control && this.control.touched && this.control.invalid;
+  }
+
+  get errorMessagesList(): string[] {
+    if (!this.control?.errors) return [];
+    const errors = this.control.errors;
+    return Object.keys(errors).map(key => {
+      switch (key) {
+        case 'required':
+          return `This field is required`;
+        default:
+          return `${key} error`;
+      }
+    });
   }
 }

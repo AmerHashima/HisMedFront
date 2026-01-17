@@ -15,10 +15,8 @@
 @import "../node_modules/ngx-toastr/toastr.css";
 @import "../node_modules/overlayscrollbars/styles/overlayscrollbars.css";
 
-
 //flatpicker
 @import "../node_modules/flatpickr/dist/flatpickr.css";
-
 
 @import "../node_modules/leaflet/dist/leaflet.css";
 
@@ -179,19 +177,19 @@
   }
 }
 
-.collapse-main-card{
-    padding-block-end: 1rem !important;
-    padding-block-start: 1rem !important;
+.collapse-main-card {
+  padding-block-end: 1rem !important;
+  padding-block-start: 1rem !important;
 }
 .collapse {
-  .card-body{
+  .card-body {
     padding-block-start: 0;
   }
 }
 .ngx-notifier .close {
   line-height: 0.7;
 }
-.g-box{
+.g-box {
   .g-slider-content {
     gallery-image img {
       width: 50% !important;
@@ -207,7 +205,7 @@
   }
 }
 [data-nav-layout="vertical"] {
-  .main-menu{
+  .main-menu {
     margin: 0 !important;
   }
 }
@@ -225,14 +223,24 @@
   color: var(--bs-secondary-color);
 }
 
-
-.form-control{
-  border-radius: 8px ;
+.form-control {
+  border-radius: 8px;
 }
-.input-group-text{
- background-color: var(--form-control-bg);
+.input-group-text {
+  background-color: var(--form-control-bg);
+  border-start-start-radius: 8px;
+  border-end-start-radius: 8px;
 }
 
-.input-group-text i{
- color: var(--bs-placeholder-color) !important;
+.input-group-text i {
+  color: var(--bs-placeholder-color) !important;
+}
+
+.validationError {
+  color: var(--bs-form-invalid-color);
+  font-size: 0.875em;
+}
+.validBorderError {
+  border: 1px solid var(--bs-form-invalid-color);
+  border-radius: 8px;
 }

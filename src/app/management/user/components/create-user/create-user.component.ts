@@ -5,7 +5,7 @@ import { ButtonComponent } from 'src/app/common/button/button.component';
 import { InputComponent } from 'src/app/common/input/input.component';
 import { ToggleBtnComponent } from 'src/app/common/toggle-btn/toggle-btn.component';
 import { FileUploadComponent } from 'src/app/common/file-upload/file-upload.component';
-import  SpkFlatpickrComponent  from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
+import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
 @Component({
   selector: 'app-create-user',
   imports: [InputComponent, ReactiveFormsModule, ButtonComponent, ToggleBtnComponent,
@@ -29,7 +29,7 @@ export class CreateUserComponent {
     firstName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     middleName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     lastName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
-    twoFactorEnabled:[false,[Validators.required]],
+    twoFactorEnabled: [false, [Validators.requiredTrue]],
     isActive: [false],
     gender: ['', [Validators.required]],
     files: [[], [Validators.required]],
@@ -37,19 +37,18 @@ export class CreateUserComponent {
   });
 
   onSubmit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.fileUpload.uploadAll('');
     if (this.form.valid) {
       console.log('Form submitted:', this.form.value);
     }
   }
 
-
-
-  // selectedFiles: FilePond.FilePondFile[] = [];
-
-  // onFilesChange(files: FilePond.FilePondFile[]) {
-  //   this.selectedFiles = files;
-  //   console.log('Parent received files:', files.map(f => f.filename));
-  // }
-
+  cancel(){
+    this.form.markAsUntouched();
+    this.form.reset();
+  }
 }

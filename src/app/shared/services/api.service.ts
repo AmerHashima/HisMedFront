@@ -12,7 +12,7 @@ export default class ApiService {
   private createHeaders(token?: string): HttpHeaders {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
+      headers = headers.set('Authorization', `bearer ${token}`);
     }    return headers;
   }
 
