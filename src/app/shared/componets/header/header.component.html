@@ -43,7 +43,24 @@
       >
         <i class="header-icon fe fe-align-left"></i>
       </a>
-      <div class="main-header-center d-none d-lg-block">
+
+      <nav aria-label="breadcrumb" class="ps-2">
+        <ol class="breadcrumb breadcrumb-style2 mb-0">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']"
+              ><i class="ti ti-home-2 me-1 fs-15 d-inline-block"></i>Home</a
+            >
+          </li>
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/users']"
+              ><i class="fa-regular fa-user me-1 fs-15 d-inline-block"></i>Users</a
+            >
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Create User</li>
+        </ol>
+      </nav>
+
+      <!-- <div class="main-header-center d-none d-lg-block">
         <input
           class="form-control"
           placeholder="Search for anything..."
@@ -52,7 +69,7 @@
         <button class="btn" >
           <i class="fa fa-search d-none d-md-block"></i>
         </button>
-      </div>
+      </div> -->
       <!-- End::header-link -->
     </div>
     <!-- End::header-element -->
@@ -61,10 +78,21 @@
 
   <!-- Start::header-content-right -->
   <div class="header-content-right">
+    <div class="main-header-center d-none d-lg-block">
+      <input
+        class="form-control"
+        placeholder="Search for anything..."
+        type="search"
+      />
+      <button class="btn">
+        <i class="fa fa-search d-none d-md-block"></i>
+      </button>
+    </div>
     <div ngbDropdown class="header-element Search-element d-block d-lg-none">
       <!-- Start::header-link|dropdown-toggle -->
-      <a ngbDropdownToggle 
-        href="javascript:void(0);" 
+      <a
+        ngbDropdownToggle
+        href="javascript:void(0);"
         class="header-link dropdown-toggle"
         id="dropdownBasic1"
         data-bs-auto-close="outside"
@@ -81,22 +109,42 @@
         </svg>
       </a>
       <!-- End::header-link|dropdown-toggle -->
-      <ul ngbDropdownMenu aria-labelledby="dropdownBasic1" class="main-header-dropdown dropdown-menu dropdown-menu-end Search-element-dropdown"
-        data-popper-placement="none" style="min-width: 15rem;">
-          <li class="input-group input-width p-2 w-100">
-            <input [(ngModel)]="text" type="text" class="form-control w-100" placeholder="Search....">
-            <div class="btn btn-primary">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </div>
-          </li>
+      <ul
+        ngbDropdownMenu
+        aria-labelledby="dropdownBasic1"
+        class="main-header-dropdown dropdown-menu dropdown-menu-end Search-element-dropdown"
+        data-popper-placement="none"
+        style="min-width: 15rem"
+      >
+        <li class="input-group input-width p-2 w-100">
+          <input
+            [(ngModel)]="text"
+            type="text"
+            class="form-control w-100"
+            placeholder="Search...."
+          />
+          <div class="btn btn-primary">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </div>
+        </li>
       </ul>
     </div>
 
     <!-- Start::header-element -->
     <div ngbDropdown class="header-element country-selector">
       <!-- Start::header-link|dropdown-toggle -->
-      <a ngbDropdownToggle href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-auto-close="outside" data-bs-toggle="dropdown">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="flag-icon1">
+      <a
+        ngbDropdownToggle
+        href="javascript:void(0);"
+        class="header-link dropdown-toggle"
+        data-bs-auto-close="outside"
+        data-bs-toggle="dropdown"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          class="flag-icon1"
+        >
           <circle cx="256" cy="256" r="256" fill="#f0f0f0"></circle>
           <g fill="#0052b4">
             <path
@@ -114,12 +162,24 @@
         </svg>
       </a>
       <!-- End::header-link|dropdown-toggle -->
-      <ul ngbDropdownMenu class="main-header-dropdown dropdown-menu dropdown-menu-end country-dropdown" data-popper-placement="none">
+      <ul
+        ngbDropdownMenu
+        class="main-header-dropdown dropdown-menu dropdown-menu-end country-dropdown"
+        data-popper-placement="none"
+      >
         <li>
-          <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
+          <a
+            class="dropdown-item d-flex align-items-center"
+            href="javascript:void(0);"
+          >
             <span>
-              <img src="./assets/images/flags/french_flag.jpg" alt="img" class="avatar avatar-xs lh-1 me-2"/>
-            </span> French
+              <img
+                src="./assets/images/flags/french_flag.jpg"
+                alt="img"
+                class="avatar avatar-xs lh-1 me-2"
+              />
+            </span>
+            French
           </a>
         </li>
         <li>
@@ -187,7 +247,7 @@
     <!-- End::header-element -->
 
     <!-- Start::header-element -->
-    <div class="header-element header-theme-mode" >
+    <div class="header-element header-theme-mode">
       <!-- Start::header-link|layout-setting -->
       <a href="javascript:void(0);" class="header-link layout-setting">
         <span
@@ -208,8 +268,9 @@
             />
           </svg>
           <!-- End::header-link-icon -->
-        </span> 
-        <span class="dark-layout"
+        </span>
+        <span
+          class="dark-layout"
           data-hs-theme-click-value="light"
           (click)="updateTheme('light')"
         >
@@ -233,104 +294,170 @@
     </div>
     <!-- End::header-element -->
 
-     <!-- Start::header-element -->
-                    <div ngbDropdown class="header-element messages-dropdown">
-                        <!-- Start::header-link|dropdown-toggle -->
-                        <a ngbDropdownToggle href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-auto-close="outside" data-bs-toggle="dropdown">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="header-link-icon" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
-                            <span class="pulse-danger"></span>
-                        </a>
-                        <!-- End::header-link|dropdown-toggle -->
-                        <!-- Start::main-header-dropdown -->
-                        <div ngbDropdownMenu class="main-header-dropdown dropdown-menu dropdown-menu-end main-header-message" data-popper-placement="none">
-                            <div  class="menu-header-content bg-primary text-fixed-white">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h6 class="mb-0 fs-15 fw-semibold text-fixed-white">Messages</h6>
-                                    <span class="badge rounded-pill bg-warning pt-1 text-fixed-black">Mark All Read</span>
-                                </div>
-                                <p class="dropdown-title-text subtext mb-0 text-fixed-white op-6 pb-0 fs-12 ">You have 4 unread messages</p>
-                            </div>
-                            <div><hr class="dropdown-divider"></div>
-                            <ul  class="list-unstyled mb-0 overflow-auto" id="header-cart-items-scroll">
-                                <li ngbDropdownItem class="dropdown-item">
-                                    <div class="d-flex messages">
-                                        <span class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0">
-                                            <img src="./assets/images/faces/12.jpg" alt="img">
-                                        </span>
-                                        <div>
-                                            <div class="d-flex">
-                                                <a href="javascript:void(0);"><h6 class="mb-1 name">Petey Cruiser</h6></a>
-                                            </div>
-                                            <p class="mb-0 fs-12 desc">I'm sorry but i'm not sure how to help you with that......</p>
-                                            <p class="time mb-0 text-start float-start ms-2 mt-2">Mar 15 3:55 PM</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li ngbDropdownItem class="dropdown-item">
-                                    <div class="d-flex messages">
-                                        <span class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0">
-                                            <img src="./assets/images/faces/3.jpg" alt="img">
-                                        </span>
-                                        <div>
-                                            <div class="d-flex">
-                                                <a href="javascript:void(0);"><h6 class="mb-1 name">Jimmy Changa</h6></a>
-                                            </div>
-                                            <p class="mb-0 fs-12 desc">All set ! Now, time to get to you now......</p>
-                                            <p class="time mb-0 text-start float-start ms-2 mt-2">Mar 06 01:12 AM</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li ngbDropdownItem class="dropdown-item">
-                                    <div class="d-flex messages">
-                                        <span class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0">
-                                            <img src="./assets/images/faces/5.jpg" alt="img">
-                                        </span>
-                                        <div>
-                                            <div class="d-flex">
-                                                <a href="javascript:void(0);"><h6 class="mb-1 name">Graham Cracker</h6></a>
-                                            </div>
-                                            <p class="mb-0 fs-12 desc">Are you ready to pickup your Delivery...</p>
-                                            <p class="time mb-0 text-start float-start ms-2 mt-2">Feb 25 10:35 AM</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li ngbDropdownItem class="dropdown-item">
-                                    <div class="d-flex messages">
-                                        <span class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0">
-                                            <img src="./assets/images/faces/4.jpg" alt="img">
-                                        </span>
-                                        <div>
-                                            <div class="d-flex">
-                                                <a href="javascript:void(0);"><h6 class="mb-1 name">Donatella Nobatti</h6></a>
-                                            </div>
-                                            <p class="mb-0 fs-12 desc">Here are some products ...</p>
-                                            <p class="time mb-0 text-start float-start ms-2 mt-2">Feb 12 05:12 PM</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li ngbDropdownItem class="dropdown-item">
-                                    <div class="d-flex messages">
-                                        <span class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0">
-                                            <img src="./assets/images/faces/1.jpg" alt="img">
-                                        </span>
-                                        <div>
-                                            <div class="d-flex">
-                                                <a href="javascript:void(0);"><h6 class="mb-1 name">Anne Fibbiyon</h6></a>
-                                            </div>
-                                            <p class="mb-0 fs-12 desc">I'm sorry but i'm not sure how...</p>
-                                            <p class="time mb-0 text-start float-start ms-2 mt-2">Jan 29 03:16 PM</p>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="text-center dropdown-footer">
-                                <a href="javascript:void(0);" class="text-primary fs-13">VIEW ALL</a>
-                            </div>
-                        </div>
-                        <!-- End::main-header-dropdown -->
-                    </div>
-                    <!-- End::header-element -->
-
+    <!-- Start::header-element -->
+    <div ngbDropdown class="header-element messages-dropdown">
+      <!-- Start::header-link|dropdown-toggle -->
+      <a
+        ngbDropdownToggle
+        href="javascript:void(0);"
+        class="header-link dropdown-toggle"
+        data-bs-auto-close="outside"
+        data-bs-toggle="dropdown"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="header-link-icon"
+          height="24px"
+          viewBox="0 0 24 24"
+          width="24px"
+          fill="currentColor"
+        >
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path
+            d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"
+          />
+        </svg>
+        <span class="pulse-danger"></span>
+      </a>
+      <!-- End::header-link|dropdown-toggle -->
+      <!-- Start::main-header-dropdown -->
+      <div
+        ngbDropdownMenu
+        class="main-header-dropdown dropdown-menu dropdown-menu-end main-header-message"
+        data-popper-placement="none"
+      >
+        <div class="menu-header-content bg-primary text-fixed-white">
+          <div class="d-flex align-items-center justify-content-between">
+            <h6 class="mb-0 fs-15 fw-semibold text-fixed-white">Messages</h6>
+            <span class="badge rounded-pill bg-warning pt-1 text-fixed-black"
+              >Mark All Read</span
+            >
+          </div>
+          <p
+            class="dropdown-title-text subtext mb-0 text-fixed-white op-6 pb-0 fs-12"
+          >
+            You have 4 unread messages
+          </p>
+        </div>
+        <div><hr class="dropdown-divider" /></div>
+        <ul
+          class="list-unstyled mb-0 overflow-auto"
+          id="header-cart-items-scroll"
+        >
+          <li ngbDropdownItem class="dropdown-item">
+            <div class="d-flex messages">
+              <span
+                class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0"
+              >
+                <img src="./assets/images/faces/12.jpg" alt="img" />
+              </span>
+              <div>
+                <div class="d-flex">
+                  <a href="javascript:void(0);"
+                    ><h6 class="mb-1 name">Petey Cruiser</h6></a
+                  >
+                </div>
+                <p class="mb-0 fs-12 desc">
+                  I'm sorry but i'm not sure how to help you with that......
+                </p>
+                <p class="time mb-0 text-start float-start ms-2 mt-2">
+                  Mar 15 3:55 PM
+                </p>
+              </div>
+            </div>
+          </li>
+          <li ngbDropdownItem class="dropdown-item">
+            <div class="d-flex messages">
+              <span
+                class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0"
+              >
+                <img src="./assets/images/faces/3.jpg" alt="img" />
+              </span>
+              <div>
+                <div class="d-flex">
+                  <a href="javascript:void(0);"
+                    ><h6 class="mb-1 name">Jimmy Changa</h6></a
+                  >
+                </div>
+                <p class="mb-0 fs-12 desc">
+                  All set ! Now, time to get to you now......
+                </p>
+                <p class="time mb-0 text-start float-start ms-2 mt-2">
+                  Mar 06 01:12 AM
+                </p>
+              </div>
+            </div>
+          </li>
+          <li ngbDropdownItem class="dropdown-item">
+            <div class="d-flex messages">
+              <span
+                class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0"
+              >
+                <img src="./assets/images/faces/5.jpg" alt="img" />
+              </span>
+              <div>
+                <div class="d-flex">
+                  <a href="javascript:void(0);"
+                    ><h6 class="mb-1 name">Graham Cracker</h6></a
+                  >
+                </div>
+                <p class="mb-0 fs-12 desc">
+                  Are you ready to pickup your Delivery...
+                </p>
+                <p class="time mb-0 text-start float-start ms-2 mt-2">
+                  Feb 25 10:35 AM
+                </p>
+              </div>
+            </div>
+          </li>
+          <li ngbDropdownItem class="dropdown-item">
+            <div class="d-flex messages">
+              <span
+                class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0"
+              >
+                <img src="./assets/images/faces/4.jpg" alt="img" />
+              </span>
+              <div>
+                <div class="d-flex">
+                  <a href="javascript:void(0);"
+                    ><h6 class="mb-1 name">Donatella Nobatti</h6></a
+                  >
+                </div>
+                <p class="mb-0 fs-12 desc">Here are some products ...</p>
+                <p class="time mb-0 text-start float-start ms-2 mt-2">
+                  Feb 12 05:12 PM
+                </p>
+              </div>
+            </div>
+          </li>
+          <li ngbDropdownItem class="dropdown-item">
+            <div class="d-flex messages">
+              <span
+                class="avatar avatar-md me-2 online avatar-rounded flex-shrink-0"
+              >
+                <img src="./assets/images/faces/1.jpg" alt="img" />
+              </span>
+              <div>
+                <div class="d-flex">
+                  <a href="javascript:void(0);"
+                    ><h6 class="mb-1 name">Anne Fibbiyon</h6></a
+                  >
+                </div>
+                <p class="mb-0 fs-12 desc">I'm sorry but i'm not sure how...</p>
+                <p class="time mb-0 text-start float-start ms-2 mt-2">
+                  Jan 29 03:16 PM
+                </p>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="text-center dropdown-footer">
+          <a href="javascript:void(0);" class="text-primary fs-13">VIEW ALL</a>
+        </div>
+      </div>
+      <!-- End::main-header-dropdown -->
+    </div>
+    <!-- End::header-element -->
 
     <!-- Start::header-element -->
     <div
@@ -385,10 +512,15 @@
           </p>
         </div>
         <div><hr class="dropdown-divider" /></div>
-        <ul class="list-unstyled mb-0 overflow-auto" id="header-notification-scroll">
+        <ul
+          class="list-unstyled mb-0 overflow-auto"
+          id="header-notification-scroll"
+        >
           <li class="dropdown-item px-3">
             <div class="d-flex">
-              <span class="avatar avatar-md me-2 avatar-rounded flex-shrink-0 bg-pink">
+              <span
+                class="avatar avatar-md me-2 avatar-rounded flex-shrink-0 bg-pink"
+              >
                 <i class="la la-file-alt fs-20"></i>
               </span>
               <div class="ms-3">
@@ -518,9 +650,7 @@
           </li>
         </ul>
         <div class="text-center dropdown-footer">
-          <a  href="javascript:void(0);"  class="text-primary fs-13"
-            >VIEW ALL</a
-          >
+          <a href="javascript:void(0);" class="text-primary fs-13">VIEW ALL</a>
         </div>
       </div>
       <!-- End::main-header-dropdown -->
@@ -529,7 +659,11 @@
 
     <!-- Start::header-element -->
     <div class="header-element header-fullscreen" appFullscreen>
-      <a href="javascript:void(0);" class="header-link" (click)="toggleFullscreen()">
+      <a
+        href="javascript:void(0);"
+        class="header-link"
+        (click)="toggleFullscreen()"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="full-screen-open full-screen-icon header-link-icon"
@@ -539,10 +673,10 @@
           fill="currentColor"
           [ngClass]="{ 'd-none': isFullscreen }"
         >
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path
-          d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
-        />
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path
+            d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
+          />
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -553,9 +687,9 @@
           width="24"
           [ngClass]="{ 'd-none': !isFullscreen }"
         >
-        <path
-        d="M320-200v-120H200v-80h200v200h-80Zm240 0v-200h200v80H640v120h-80ZM200-560v-80h120v-120h80v200H200Zm360 0v-200h80v120h120v80H560Z"
-      />
+          <path
+            d="M320-200v-120H200v-80h200v200h-80Zm240 0v-200h200v80H640v120h-80ZM200-560v-80h120v-120h80v200H200Zm360 0v-200h80v120h120v80H560Z"
+          />
         </svg>
       </a>
     </div>
@@ -616,15 +750,15 @@
         class="main-header-dropdown dropdown-menu pt-0 header-profile-dropdown dropdown-menu-end main-profile-menu"
         aria-labelledby="mainHeaderProfile"
       >
-          <div
-            class="main-header-profile bg-primary menu-header-content text-fixed-white"
-          >
-            <div class="my-auto">
-              <h6 class="mb-0 lh-1 text-fixed-white">Petey Cruiser</h6>
-              <span class="fs-11 op-7 lh-1">Premium Member</span>
-            </div>
+        <div
+          class="main-header-profile bg-primary menu-header-content text-fixed-white"
+        >
+          <div class="my-auto">
+            <h6 class="mb-0 lh-1 text-fixed-white">Petey Cruiser</h6>
+            <span class="fs-11 op-7 lh-1">Premium Member</span>
           </div>
-        <li >
+        </div>
+        <li>
           <a class="dropdown-item d-flex" href="javascript:void(0);"
             ><i class="bx bx-user-circle fs-18 me-2 op-7"></i>Profile</a
           >
