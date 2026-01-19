@@ -24,24 +24,37 @@ export default class ApiService {
     });
   }
 
+  getSingle<T>(url: string, id: string,token?: string ): Observable<T> {
+    const fullUrl =`${this.baseUrl}/${url}/${id}`;
+    return this.http.get<T>(fullUrl, { headers: this.createHeaders(token) });
+  }
+
   post<T>(url: string, body: any, token?: string): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}/${url}`, body, {
       headers: this.createHeaders(token),
     });
   }
 
-  put<T>(url: string, body: any, token?: string): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}/${url}`, body, {
-      headers: this.createHeaders(token),
-    });
+
+  put<T>(url: string, id:string, body: any, token?: string,): Observable<T> {
+    const fullUrl = `${this.baseUrl}/${url}/${id}` ;
+    return this.http.put<T>(fullUrl, body, { headers: this.createHeaders(token) });
   }
 
   // delete<T>(url: string, params?: Record<string, any>, token?: string): Observable<T> {
-  delete<T>(url: string, token?: string): Observable<T> {
+  delete<T>(url: string, id: string ,token?: string): Observable<T> {
     // const httpParams = new HttpParams({ fromObject: params || {} });
-    return this.http.delete<T>(`${this.baseUrl}/${url}`, {
+    const fullUrl =`${this.baseUrl}/${url}/${id}`;
+    return this.http.delete<T>(fullUrl, {
       // params: httpParams,
       headers: this.createHeaders(token),
     });
   }
+
+  query<T>(url: string, body: any, token?: string): Observable<T> {
+    return this.http.post<T>(`${this.baseUrl}/${url}`, body, {
+      headers: this.createHeaders(token),
+    });
+  }
+
 }

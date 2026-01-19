@@ -41,7 +41,7 @@
     </div>
     <div class="col-lg-3">
       <app-input
-        formControlName="phone"
+        formControlName="mobile"
         label="Phone Number"
         type="text"
         placeholder="012xxxxxxxx"
@@ -111,6 +111,15 @@
         }"
       />
     </div>
+     <div class="col-lg-3">
+      <spk-flatpickr
+        formControlName="birthDate"
+        [enableTime]="true"
+        [dateFormat]="'Y-m-d H:i'"
+        placeholder="Choose Date"
+        label="Birth day"
+      ></spk-flatpickr>
+    </div>
     <div class="col-lg-3">
       <spk-ng-select
         formControlName="gender"
@@ -121,16 +130,8 @@
         selectClass="form-control"
       />
     </div>
-    <div class="col-3">
-      <spk-flatpickr
-        formControlName="birthDate"
-        [enableTime]="true"
-        [dateFormat]="'Y-m-d H:i'"
-        placeholder="Choose Date"
-        label="Birth day"
-      ></spk-flatpickr>
-    </div>
-    <div class="col-12">
+
+    <!-- <div class="col-12">
       <h6>Upload Documents</h6>
       <app-file-upload
         #fileUpload
@@ -139,7 +140,7 @@
         [multiple]="true"
       >
       </app-file-upload>
-    </div>
+    </div> -->
   </div>
   <div class="d-flex flex-column gap-2">
     <app-toggle-btn

@@ -8,6 +8,5 @@ export interface UserState {
   page: number;
   pageSize: number;
   total: number;
-
   search: string;
 }

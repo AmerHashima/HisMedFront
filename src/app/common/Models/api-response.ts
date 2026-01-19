@@ -1,8 +1,8 @@
-export interface ApiReponse {
+export interface ApiResponse<T> {
 
   success: boolean,
   message: string,
-  data: object | object[],
+  data: T,
   errors: string[],
   innerException: string,
   statusCode: number,

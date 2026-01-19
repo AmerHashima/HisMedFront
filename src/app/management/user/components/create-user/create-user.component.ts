@@ -24,7 +24,7 @@ export class CreateUserComponent {
   form: FormGroup = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(4),Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.email]],
-    phone: ['', [Validators.required]],
+    mobile: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     firstName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     middleName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],

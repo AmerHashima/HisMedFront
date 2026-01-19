@@ -1,4 +1,4 @@
-import { UserState } from "../interface/user-state";
+import { UserState } from "../models/user-state";
 
 export const initialUsersState: UserState = {
   users: [],
