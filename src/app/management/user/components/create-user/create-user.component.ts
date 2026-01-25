@@ -1,4 +1,4 @@
-// import { Component, inject, ViewChild } from '@angular/core';
+// src\app\management\user\components\create-user\create-user.component.ts
 // import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 // import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
 // import { ButtonComponent } from 'src/app/common/button/button.component';
@@ -13,7 +13,7 @@ import { UserFormComponent } from '../user-form/user-form.component';
   selector: 'app-create-user',
   // imports: [InputComponent, ReactiveFormsModule, ButtonComponent, ToggleBtnComponent,
   //   SpkNgSelectComponent, FileUploadComponent, SpkFlatpickrComponent, UserFormComponent],
-  imports: [ UserFormComponent],
+  imports: [UserFormComponent],
   templateUrl: './create-user.component.html',
   styleUrl: './create-user.component.scss'
 })

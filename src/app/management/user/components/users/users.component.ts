@@ -1,3 +1,4 @@
+// src\app\management\user\components\users\users.component.ts
 import { Component, computed, inject } from '@angular/core';
 import { UsersStore } from '../../userStore/userStore';
 import { ReusableMaterialTableComponent } from
@@ -17,7 +18,7 @@ import { Router } from '@angular/router';
 export class UsersComponent {
 
   private store = inject(UsersStore);
-  private router=inject(Router);
+  private router = inject(Router);
   users = computed(() => this.store.users());
   total = computed(() => this.store.total());
   pageSize = computed(() => this.store.pageSize());
@@ -58,17 +59,18 @@ export class UsersComponent {
 
   // 🔹 table event handlers
   onPageChange(event: PageEvent) {
-    console.log('pagination',event);
+    console.log('pagination', event);
     this.store.setPage(event.pageIndex + 1, event.pageSize);
     // this.store.setPage(event.pageIndex, event.pageSize);
   }
 
   onFilterChange(value: string) {
-    console.log('filter',value);
-    this.store.setSearch(value);  }
+    console.log('filter', value);
+    this.store.setSearch(value);
+  }
 
   onSortChange(sort: Sort) {
-    console.log('sort',sort);
+    console.log('sort', sort);
     this.store.setSort(sort);
   }
 
@@ -81,7 +83,7 @@ export class UsersComponent {
     this.store.deleteUser(row.oid)
   }
 
-  handleSingleUserNavigation(row:any){
+  handleSingleUserNavigation(row: any) {
     this.router.navigateByUrl(`/users/user/${row.oid}`);
 
   }

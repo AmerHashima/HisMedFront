@@ -1,3 +1,4 @@
+// src\app\management\user\userStore\userStore.ts
 import { signalStore, withState, withMethods, patchState, withHooks, withComputed } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { initialUsersState } from './user.slice';
@@ -96,7 +97,7 @@ export const UsersStore = signalStore(
             tap((response: { users: ApiUser[]; total: number }) => {
               patchState(store, (s) => ({
                 ...s,
-                users:response.users,
+                users: response.users,
                 total: response.total ?? 0
               }));
             }),

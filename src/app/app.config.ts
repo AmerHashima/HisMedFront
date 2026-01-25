@@ -1,7 +1,8 @@
+// src\app\app.config.ts
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {routes} from "./app.routes"
+import { routes } from "./app.routes"
 import { provideHttpClient } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { FlatpickrDefaults } from 'angularx-flatpickr';
@@ -13,7 +14,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from 'src/environments/environment';
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
     AngularFireModule,
@@ -25,13 +26,13 @@ export const appConfig: ApplicationConfig = {
       BrowserAnimationsModule,
       ColorPickerModule,
       AngularFireModule.initializeApp(environment.firebase),
-    ToastrModule.forRoot({
-      timeOut: 15000, // 15 seconds
-      closeButton: true,  
-      progressBar: true,
-    }),
+      ToastrModule.forRoot({
+        timeOut: 15000, // 15 seconds
+        closeButton: true,
+        progressBar: true,
+      }),
     )
-    ]
-    
+  ]
+
 };
 

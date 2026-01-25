@@ -1,3 +1,4 @@
+// src\app\management\user\service\user.service.ts
 import { Injectable } from '@angular/core';
 import ApiService from "./../../../shared/services/api.service";
 import { ApiResponse, ApiSearchResponse } from '../../../common/Models/api-response';
@@ -10,8 +11,8 @@ import { RequestWrapper } from '../../../common/Models/request';
 })
 export default class UserService {
 
-  private token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZWY2ZTQ0MC0zNWVhLTQ3ZDgtOWNkNy03MWM1NDI3ZjY1NWMiLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmciLCJyb2xlX2lkIjoiMCIsImp0aSI6IjRiYzVlYTE3LTkzZTYtNDg4Mi1hMzhmLWVlYzg2MTMxNmE3OCIsImlhdCI6MTc2OTM1NDQzMiwiZXhwIjoxNzY5MzU4MDMyLCJpc3MiOiJodHRwczovL2FwaS55b3VyZG9tYWluLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBpLnlvdXJkb21haW4uY29tIn0.wyHtof4M_bfAf70Ztd6Alzkgyh9UcdFo1h3F7XM697I";
-   constructor(private apiService: ApiService) { }
+  private token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZWY2ZTQ0MC0zNWVhLTQ3ZDgtOWNkNy03MWM1NDI3ZjY1NWMiLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmciLCJyb2xlX2lkIjoiMCIsImp0aSI6IjRiYzVlYTE3LTkzZTYtNDg4Mi1hMzhmLWVlYzg2MTMxNmE3OCIsImlhdCI6MTc2OTM1NDQzMiwiZXhwIjoxNzY5MzU4MDMyLCJpc3MiOiJodHRwczovL2FwaS55b3VyZG9tYWluLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBpLnlvdXJkb21haW4uY29tIn0.wyHtof4M_bfAf70Ztd6Alzkgyh9UcdFo1h3F7XM697I";
+  constructor(private apiService: ApiService) { }
 
 
   getUsers(): Observable<ApiUser[]> {
@@ -74,9 +75,9 @@ export default class UserService {
     return this.apiService
       .delete<ApiResponse<string>>('SystemUser', id, this.token)
       .pipe(
-        tap(data => console.log(data,data)),
+        tap(data => console.log(data, data)),
         map((response: ApiResponse<string>) => {
-          console.log('response',response);
+          console.log('response', response);
           if (!response.success) {
             const msg = response.errors?.join(', ') || response.message || 'API failed to delete user';
             throw new Error(msg);

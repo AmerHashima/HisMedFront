@@ -1,4 +1,4 @@
-// import { Component, Input, ViewChild, AfterViewInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
+// src\app\common\angular-material-reusable-table\angular-material-reusable-table.component.ts
 import { Component, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 
 import { CommonModule } from '@angular/common'; // <-- Needed for *ngIf and *ngFor

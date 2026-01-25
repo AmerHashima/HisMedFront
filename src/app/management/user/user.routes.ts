@@ -1,3 +1,4 @@
+// src\app\management\user\user.routes.ts
 import { Routes } from '@angular/router';
 
 export const USERS_ROUTES: Routes = [

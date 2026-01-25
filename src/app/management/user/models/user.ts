@@ -1,8 +1,9 @@
+// src\app\management\user\models\user.ts
 export interface User {
   oid?: string;
   username: string,
   password?: string,
-  email:string,
+  email: string,
   mobile: string,
   firstName: string,
   middleName: string,

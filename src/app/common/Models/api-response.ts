@@ -1,3 +1,4 @@
+// src\app\common\Models\api-response.ts
 export interface ApiResponse<T> {
 
   success: boolean,
