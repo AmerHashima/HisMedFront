@@ -1,0 +1,7 @@
+::ng-deep .ng-select{
+  border-radius: 8px !important;
+}
+::ng-deep .ng-select.form-control .ng-select-container,
+::ng-deep .ng-select.form-control.ng-select-single .ng-select-container {
+  height: calc(1.6rem + 2px) !important;
+}

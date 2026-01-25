@@ -8,7 +8,7 @@ import {
   inject,
   HostListener,
 } from '@angular/core';
-import { filter, Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
 import { Menu, NavService } from '../../services/nav.service';
 import { SidebarRightService } from '../../services/sidebar-right.service';
 import { SwitcherService } from '../../services/switcher.service';
@@ -19,6 +19,7 @@ import { FullscreenDirective } from '../../directives/fullscreen.directive';
 import { CommonModule, NgClass } from '@angular/common';
 import { AppStateService } from '../../services/app-state.service';
 import { SwitcherComponent } from '../switcher/switcher.component';
+import { BreadcrumbService, BreadcrumbItem } from '../../services/breadcrumb.service';
 interface Item {
   id: number;
   name: string;
@@ -34,12 +35,15 @@ interface Item {
     imports: [RouterLink, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, FormsModule, NgbDropdownItem, FullscreenDirective, NgClass,CommonModule]
 })
 export class HeaderComponent implements OnInit {
-    
+
   layoutSubscription: Subscription;
   public isCollapsed = true;
   themeType = 'dark';
+  breadcrumbs$: Observable<BreadcrumbItem[]>;
+
 
   constructor(
+    private breadcrumbService: BreadcrumbService,
     private sidebarRightservice: SidebarRightService,
     public navServices: NavService,private appStateService: AppStateService,
     public SwitcherService: SwitcherService, private router: Router,
@@ -47,13 +51,14 @@ export class HeaderComponent implements OnInit {
     public elementRef: ElementRef,
     public renderer: Renderer2
   ) {
+    this.breadcrumbs$ = breadcrumbService.breadcrumbs$;
     this.localStorageBackUp()
     this.layoutSubscription = sidebarRightservice.changeEmitted.subscribe(
       (direction) => {
         const dir = direction.direction;
       }
     );
-    
+
 
     const windowObject: any = window;
     if (windowObject.innerWidth <= '991') {
@@ -64,7 +69,7 @@ export class HeaderComponent implements OnInit {
   }
   localStorageBackUp() {
     let styleId = document.querySelector('#style');
-  
+
     let html = document.querySelector('html');
     //Theme Color Mode:
     if (localStorage.getItem('valexHeader') == 'dark') {
@@ -88,7 +93,7 @@ export class HeaderComponent implements OnInit {
   toggleFullscreen() {
     this.isFullscreen = !this.isFullscreen;
   }
-  
+
   selectedItem: string  | null ='selectedItem'
   ngOnInit(): void {
     let navbarForm: any = document.querySelector('.navbar-form');
@@ -141,7 +146,7 @@ export class HeaderComponent implements OnInit {
   toggleSidebarNotification() {
     this.sidebarRightservice.emitSidebarNotifyChange(true);
   }
- 
+
   togglesidebar() {
     let html = this.elementRef.nativeElement.ownerDocument.documentElement;
     if (html?.getAttribute('data-toggled') == 'true') {
@@ -179,7 +184,7 @@ export class HeaderComponent implements OnInit {
     }
     else if (html?.getAttribute('data-vertical-style') == 'overlay') {
       html?.setAttribute(
-        'data-vertical-style','overlay' 
+        'data-vertical-style','overlay'
       );
       html?.setAttribute(
         'data-toggled', html?.getAttribute('data-toggled') == 'icon-overlay-close'
@@ -215,7 +220,7 @@ export class HeaderComponent implements OnInit {
       );
     }else if (html?.getAttribute('data-vertical-style') == 'doublemenu') {
       html?.setAttribute('data-toggled', html?.getAttribute('data-toggled') == 'double-menu-close' && document.querySelector(".slide.open")?.classList.contains("has-sub") && document.querySelector('.double-menu-active') ? 'double-menu-open': 'double-menu-close' );
-    } 
+    }
 
     if (window.innerWidth <= 992) {
       // html?.setAttribute(
@@ -334,7 +339,7 @@ export class HeaderComponent implements OnInit {
       //  checking whether the menuItems having children property or not if there was no children the return
       if (!menuItems.children) return false;
       menuItems.children.filter((subItems:Menu) => {
-        if (!subItems?.title) return false; 
+        if (!subItems?.title) return false;
         if (subItems.type === 'link' && subItems.title.toLowerCase().includes(searchText)) {
           if( subItems.title.toLowerCase().startsWith(searchText)){         // If you want to get all the data with matching to letter entered remove this line(condition and leave items.push(subItems))
             items.push(subItems as Item);
@@ -346,7 +351,7 @@ export class HeaderComponent implements OnInit {
           if (subSubItems.title?.toLowerCase().includes(searchText)) {
             if( subSubItems.title.toLowerCase().startsWith(searchText)){ // If you want to get all the data with matching to letter entered remove this line(condition and leave items.push(subSubItems))
               items.push(subSubItems as Item);
-              
+
             }
           }
         });
@@ -367,7 +372,7 @@ export class HeaderComponent implements OnInit {
     this.modalService.open(SearchModal);
   }
   //  Used to clear previous search result
-  clearSearch() {    
+  clearSearch() {
     const headerSearch = document.querySelector('.header-search');
     if (headerSearch) {
         headerSearch.classList.remove('searchdrop');
@@ -376,7 +381,7 @@ export class HeaderComponent implements OnInit {
     this.menuItems = [];
     this.SearchResultEmpty = false;
     return this.text, this.menuItems;
-    
+
   }
   SearchHeader() {
     document

@@ -1,0 +1,9 @@
+.form-check-input.is-invalid {
+  border-color: var(--bs-form-invalid-border-color);
+  background-image: var(--bs-form-invalid-bg-image); /* Bootstrap invalid checkmark */
+}
+
+.form-check-input:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
