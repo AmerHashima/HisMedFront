@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import ApiService from "./../../../shared/services/api.service";
-import { ApiResponse } from '../../../common/Models/api-response';
-import { map, Observable } from 'rxjs';
+import { ApiResponse, ApiSearchResponse } from '../../../common/Models/api-response';
+import { map, Observable, tap } from 'rxjs';
 import { User } from '../models/user';
 import { ApiUser } from '../models/api-user';
 import { RequestWrapper } from '../../../common/Models/request';
@@ -9,8 +9,9 @@ import { RequestWrapper } from '../../../common/Models/request';
   providedIn: 'root'
 })
 export default class UserService {
-  private token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZWY2ZTQ0MC0zNWVhLTQ3ZDgtOWNkNy03MWM1NDI3ZjY1NWMiLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmciLCJyb2xlX2lkIjoiMCIsImp0aSI6ImJhODk1YzBjLWJlMmYtNGMwOC04MjU3LTM3M2U1OTMwMjRhZCIsImlhdCI6MTc2ODc2NDc3MywiZXhwIjoxNzY4NzY4MzczLCJpc3MiOiJodHRwczovL2FwaS55b3VyZG9tYWluLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBpLnlvdXJkb21haW4uY29tIn0.bgg95JDTfziyo9XwVTfMX68efv0grI8JOg3YfrNgeqg";
-  constructor(private apiService: ApiService) { }
+
+  private token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZWY2ZTQ0MC0zNWVhLTQ3ZDgtOWNkNy03MWM1NDI3ZjY1NWMiLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmciLCJyb2xlX2lkIjoiMCIsImp0aSI6IjRiYzVlYTE3LTkzZTYtNDg4Mi1hMzhmLWVlYzg2MTMxNmE3OCIsImlhdCI6MTc2OTM1NDQzMiwiZXhwIjoxNzY5MzU4MDMyLCJpc3MiOiJodHRwczovL2FwaS55b3VyZG9tYWluLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBpLnlvdXJkb21haW4uY29tIn0.wyHtof4M_bfAf70Ztd6Alzkgyh9UcdFo1h3F7XM697I";
+   constructor(private apiService: ApiService) { }
 
 
   getUsers(): Observable<ApiUser[]> {
@@ -47,6 +48,8 @@ export default class UserService {
             const msg = response.errors?.join(', ') || response.message || 'API failed to load user';
             throw new Error(msg);
           }
+          console.log('on get');
+
           return response.data;
         })
       );
@@ -67,29 +70,49 @@ export default class UserService {
   }
 
   deleteUser(id: string): Observable<string> {
+    console.log('indelete');
     return this.apiService
-      .put<ApiResponse<string>>('SystemUser', id, this.token)
+      .delete<ApiResponse<string>>('SystemUser', id, this.token)
       .pipe(
+        tap(data => console.log(data,data)),
         map((response: ApiResponse<string>) => {
+          console.log('response',response);
           if (!response.success) {
             const msg = response.errors?.join(', ') || response.message || 'API failed to delete user';
             throw new Error(msg);
           }
+          console.log(response.data);
           return response.data;
         })
       );
   }
 
-  search(body: RequestWrapper): Observable<ApiUser[]> {
+  // search(body: RequestWrapper): Observable<ApiUser[]> {
+  //   return this.apiService
+  //     .query<ApiResponse<{ data: ApiUser[] }>>('SystemUser/query', body, this.token)
+  //     .pipe(
+  //       map((response: ApiResponse<{ data: ApiUser[] }>) => {
+  //         if (!response.success) {
+  //           const msg = response.errors?.join(', ') || response.message || 'API failed to query';
+  //           throw new Error(msg);
+  //         }
+  //         return response.data.data;
+  //       })
+  //     );
+  // }
+  search(body: RequestWrapper): Observable<{ users: ApiUser[]; total: number }> {
     return this.apiService
-      .query<ApiResponse<{ data: ApiUser[] }>>('SystemUser/query', body, this.token)
+      .query<ApiSearchResponse<ApiUser>>('SystemUser/query', body, this.token)
       .pipe(
-        map((response: ApiResponse<{ data: ApiUser[] }>) => {
+        map((response: ApiSearchResponse<ApiUser>) => {
           if (!response.success) {
             const msg = response.errors?.join(', ') || response.message || 'API failed to query';
             throw new Error(msg);
           }
-          return response.data.data;
+          return {
+            users: response.data.data ?? [],
+            total: response.data.totalPages ?? 0,
+          };
         })
       );
   }

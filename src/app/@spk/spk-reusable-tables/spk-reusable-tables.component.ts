@@ -25,9 +25,10 @@ export class SpkReusableTablesComponent {
   @Input() showCheckbox :boolean=false;
   @Input() rows: { checked: boolean; [key: string]: any }[] = [];
   allTasksChecked!: boolean;
-  tableData: any;  
+  tableData: any;
   @Output() toggleSelectAll = new EventEmitter<boolean>();
   @Output() openDetails = new EventEmitter<any>();
+  @Output() navigateToSinglePage = new EventEmitter<any>();
 
   // Toggle select/deselect all checkboxes
   onToggleSelectAll(event: any) {
@@ -41,5 +42,12 @@ export class SpkReusableTablesComponent {
   // Update the "Select All" checkbox based on row selections
   updateSelectAllCheckbox(): void {
     this.allTasksChecked = this.data.every(row => row.checked); // Check if all rows are selected
+  }
+
+  onFirstCellClick(row: any) {
+    this.navigateToSinglePage.emit(row);
+    console.log('First data cell clicked:', row);
+    // example:
+    // this.handleEdit(row);
   }
 }

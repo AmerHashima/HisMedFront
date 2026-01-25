@@ -1,12 +1,15 @@
-<div
-  class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb"
+<div class="p-3">
+<app-reusable-material-table
+  [columns]="columns"
+  [data]="users()"
+  [totalCount]="total()"
+  [pageSize]="pageSize()"
+  (pageChange)="onPageChange($event)"
+  (filterChange)="onFilterChange($event)"
+  (sortChange)="onSortChange($event)"
+  (editRow)="handleEdit($event)"
+  (deleteRow)="handleDelete($event)"
+  (onFirstCellClickChange)="handleSingleUserNavigation($event)"
 >
-  <div>
-    <h4 class="mb-0">All Users</h4>
-    <p class="mb-0 text-muted">Sales monitoring dashboard template.</p>
+</app-reusable-material-table>
   </div>
-
-  <div>
-    {{users$ | async | json}}
-  </div>
-</div>

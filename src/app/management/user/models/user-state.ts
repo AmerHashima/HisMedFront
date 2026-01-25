@@ -9,4 +9,6 @@ export interface UserState {
   pageSize: number;
   total: number;
   search: string;
+  sortBy: string;
+  sortDirection: 'asc' | 'desc' | '';
 }

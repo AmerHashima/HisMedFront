@@ -53,7 +53,7 @@ export const getUser = (
   user: ApiUser
 ): PartialStateUpdater<UserState> => {
   const mappedUser: User = mapApiUserToUser(user);
-
+  console.log('mappedUser', mappedUser);
   return () => ({
     selectedUser:mappedUser
   });
@@ -63,7 +63,7 @@ export const getUser = (
 export const deleteUser = (
   id: string
 ): PartialStateUpdater<UserState> => {
-
+   console.log('delete');
   return (state) => ({
     users: [
       ...state.users.filter(u => u.oid !== id),
@@ -78,3 +78,25 @@ export const displaySearchResult = (users: ApiUser[]): PartialStateUpdater<UserS
     users: mappedUsers,
   });
 };
+
+export const setPageUpdater = (page: number, pageSize?:number): PartialStateUpdater<UserState> =>{
+return (state) => ({
+  page,
+  pageSize: pageSize ?? state.pageSize,
+});
+}
+
+export const setSearchUpdater = (value:string): PartialStateUpdater<UserState> => {
+  return (state) => ({
+    search: value.trim(),
+    page: 1,
+  });
+}
+
+export const setSortUpdater = (active: string, direction: 'asc' | 'desc' | ''): PartialStateUpdater<UserState> => {
+  return (state) => ({
+    sortBy: active || "",
+    sortDirection: direction || "",
+    page: 1,
+  });
+}
