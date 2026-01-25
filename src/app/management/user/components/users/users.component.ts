@@ -1,16 +1,17 @@
-// src\app\management\user\components\users\users.component.ts
-import { Component, computed, inject } from '@angular/core';
+
+import { Component, computed, inject, signal } from '@angular/core';
 import { UsersStore } from '../../userStore/userStore';
 import { ReusableMaterialTableComponent } from
   'src/app/common/angular-material-reusable-table/angular-material-reusable-table.component';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Router } from '@angular/router';
+import { UserFormComponent } from '../user-form/user-form.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [ReusableMaterialTableComponent],
+  imports: [ReusableMaterialTableComponent, UserFormComponent],
   providers: [UsersStore],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -23,7 +24,8 @@ export class UsersComponent {
   total = computed(() => this.store.total());
   pageSize = computed(() => this.store.pageSize());
   loading = computed(() => this.store.loading());
-
+  hidden=signal<boolean>(false);
+  oid:string='';
   // 🔹 table columns
   columns = [
     { field: 'username', header: 'Full Name', type: 'text' },
@@ -75,7 +77,9 @@ export class UsersComponent {
   }
 
   handleEdit(row: any) {
-    this.router.navigateByUrl(`/users/edit/${row.oid}`);
+    this.oid=row.oid;
+    this.handleAddNewUser();
+    // this.router.navigateByUrl(`/users/edit/${row.oid}`);
     // this.router.navigate(['/users/edit', row.oid]);
   }
 
@@ -83,8 +87,22 @@ export class UsersComponent {
     this.store.deleteUser(row.oid)
   }
 
-  handleSingleUserNavigation(row: any) {
-    this.router.navigateByUrl(`/users/user/${row.oid}`);
+// <<<<<<< Updated upstream
+//   handleSingleUserNavigation(row: any) {
+//     this.router.navigateByUrl(`/users/user/${row.oid}`);
 
+  // handleSingleUserNavigation(row:any){
+  //   this.router.navigateByUrl(`/users/user/${row.oid}`);
+  // }
+  handleSingleUserNavigation(row: any) {
+    this.oid = row.oid;
+    this.handleAddNewUser();
+    // this.router.navigateByUrl(`/users/user/${row.oid}`);
+  }
+  handleAddNewUser(){
+    this.hidden.update(state => !state);
+  }
+  onCancal(){
+    this.hidden.set(false);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsersStore } from '../../userStore/userStore';
 import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
@@ -15,16 +15,18 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './user-form.component.scss'
 })
 export class UserFormComponent {
-  type=input<string>('');
+  @Output() cancalEvent=new EventEmitter<any>();
+  oid=input<string>('');
   genderOptions = [
     { label: "Female", value: "f" },
     { label: "Male", value: "m" }
   ]
   fb = inject(FormBuilder);
   store = inject(UsersStore);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  // private route = inject(ActivatedRoute);
+  // private router = inject(Router);
   id:string='';
+
   form = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.email]],
@@ -40,11 +42,14 @@ export class UserFormComponent {
   });
 
   constructor() {
+
+    if (this.oid())
+      this.store.getUser(this.oid());
     // if (this.type() == "edit" || this.type() == "single"){
     effect(() => {
       const user = this.store.selectedUser();
+      console.log('user');
       if (user) {
-        console.log('existed User');
         this.form.patchValue({
           username: user.username,
           email: user.email,
@@ -62,13 +67,13 @@ export class UserFormComponent {
   // }
   }
 
-  ngOnInit() {
-    // if (this.type() == 'edit' || this.type() == 'single' ){
-    //   console.log('in here');
-     this.id = this.route.snapshot.paramMap.get('id')!;
-    if(this.id)
-      this.store.getUser(this.id);
-  }
+  // ngOnInit() {
+  //   // if (this.type() == 'edit' || this.type() == 'single' ){
+  //   //   console.log('in here');
+  //   //  this.id = this.route.snapshot.paramMap.get('id')!;
+  //   if(this.id)
+  //     this.store.getUser(this.id);
+  // }
 
   onSubmit() {
     if (this.form.invalid) {
@@ -86,9 +91,12 @@ export class UserFormComponent {
   cancel() {
     this.form.markAsUntouched();
     this.form.reset();
-    this.router.navigateByUrl("/users");
+    this.cancalEvent.emit();
+    // this.router.navigateByUrl("/users");
   }
   back(){
-    this.router.navigateByUrl("/users");
+    this.cancalEvent.emit();
+
+    // this.router.navigateByUrl("/users");
   }
 }

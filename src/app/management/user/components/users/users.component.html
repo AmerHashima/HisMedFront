@@ -1,15 +1,21 @@
 <div class="p-3">
-<app-reusable-material-table
-  [columns]="columns"
-  [data]="users()"
-  [totalCount]="total()"
-  [pageSize]="pageSize()"
-  (pageChange)="onPageChange($event)"
-  (filterChange)="onFilterChange($event)"
-  (sortChange)="onSortChange($event)"
-  (editRow)="handleEdit($event)"
-  (deleteRow)="handleDelete($event)"
-  (onFirstCellClickChange)="handleSingleUserNavigation($event)"
->
-</app-reusable-material-table>
+  <div [hidden]="hidden()">
+    <app-reusable-material-table
+      [columns]="columns"
+      [data]="users()"
+      [totalCount]="total()"
+      [pageSize]="pageSize()"
+      (pageChange)="onPageChange($event)"
+      (filterChange)="onFilterChange($event)"
+      (sortChange)="onSortChange($event)"
+      (editRow)="handleEdit($event)"
+      (deleteRow)="handleDelete($event)"
+      (onFirstCellClickChange)="handleSingleUserNavigation($event)"
+      (onAddNewChange)="handleAddNewUser()"
+    >
+    </app-reusable-material-table>
   </div>
+  <div>
+    <app-user-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/>
+  </div>
+</div>
