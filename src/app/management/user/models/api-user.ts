@@ -1,4 +1,5 @@
-export interface ApiUser{
+// src\app\management\user\models\api-user.ts
+export interface ApiUser {
   oid: string;
   username: string;
   email: string;

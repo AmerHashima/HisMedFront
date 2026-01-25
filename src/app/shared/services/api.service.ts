@@ -2,10 +2,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export default class ApiService {
-  baseUrl: string = 'http://50.6.228.16:5000/api';
+  private readonly baseUrl: string = environment.baseUrl;
 
   constructor(private http: HttpClient) { }
 
