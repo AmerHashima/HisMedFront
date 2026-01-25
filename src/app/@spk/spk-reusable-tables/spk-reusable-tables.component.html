@@ -3,7 +3,7 @@
     <tr>
       @if(showCheckbox){
       <th class="{{checkboxClass}}">
-        <input class="form-check-input"    
+        <input class="form-check-input"
         (change)="onToggleSelectAll($event)" type="checkbox" aria-label="...">
       </th>
       }
@@ -13,14 +13,14 @@
     </tr>
   </thead>
   <tbody class="{{tableBody}}">
-    @for(row of data;track $index){
+    <!-- @for(row of data;track $index){
 
       <tr>
     @if(showCheckbox){
     <td>
-      <input 
-        class="form-check-input" 
-        type="checkbox" 
+      <input
+        class="form-check-input"
+        type="checkbox"
         [checked]="allTasksChecked" [(ngModel)]="row.checked" >
     </td>
     @for(column of columns;track $index){
@@ -30,9 +30,31 @@
       </td>
     }
     }
-  
+
   </tr>
+    } -->
+  @for (row of data; track $index) {
+  <tr>
+    @if (showCheckbox) {
+      <td>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="row.checked"
+        />
+      </td>
     }
+
+    @for (column of columns; track $index; let colIndex = $index) {
+      <td
+        (click)="colIndex === 0 && onFirstCellClick(row)"
+        [class.cursor-pointer]="colIndex === 0"
+      >
+        {{ row[column.field] }}
+      </td>
+    }
+  </tr>
+}
     <ng-content></ng-content>
   </tbody>
   @if(showFooter==true){

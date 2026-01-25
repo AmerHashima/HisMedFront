@@ -1,4 +1,5 @@
 import { UserState } from "../models/user-state";
+import { User } from '../models/user';
 
 export const initialUsersState: UserState = {
   users: [],
@@ -10,5 +11,7 @@ export const initialUsersState: UserState = {
   pageSize: 10,
   total: 0,
 
-  search: ''
+  search: '',
+  sortBy: 'username',
+  sortDirection: 'asc',
 };
