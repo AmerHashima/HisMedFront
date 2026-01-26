@@ -65,23 +65,34 @@ export class AuthService {
       });
   }
 
+  // loginWithEmail(email: string, password: string) {
+  //   return this.afu
+  //     .signInWithEmailAndPassword(email, password)
+  //     .then((user: any) => {
+  //       this.authState = user;
+  //     })
+  //     .catch((_error: any) => {
+  //       console.log(_error);
+  //       throw _error;
+  //     });
+  // }
   loginWithEmail(email: string, password: string) {
     return this.afu
       .signInWithEmailAndPassword(email, password)
-      .then((user: any) => {
-        this.authState = user;
+      .then((credential) => {
+        this.authState = credential;
+        return credential; // ✅ RETURN IT
       })
-      .catch((_error: any) => {
-        console.log(_error);
-        throw _error;
+      .catch((error) => {
+        console.error(error);
+        throw error; // keep rejection
       });
   }
-
   singout(): void {
     this.afu.signOut();
     this.router.navigate(['/login']);
   }
-  
+
 
     // Sign up with email/password
     SignUp(email:any, password:any) {

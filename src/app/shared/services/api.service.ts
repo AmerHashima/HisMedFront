@@ -7,55 +7,59 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export default class ApiService {
   private readonly baseUrl: string = environment.baseUrl;
-
+  private token='';
   constructor(private http: HttpClient) { }
 
   // Helper to create headers with optional token
-  private createHeaders(token?: string): HttpHeaders {
+  private createHeaders(): HttpHeaders {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    if (token) {
-      headers = headers.set('Authorization', `bearer ${token}`);
+    if (this.token) {
+      headers = headers.set('Authorization', `bearer ${this.token}`);
     } return headers;
+  }
+
+  setToken(token:string){
+    this.token=token;
   }
 
   // get<T>(url: string, params?: Record<string, any>, token?: string): Observable<T> {
   // const httpParams = new HttpParams({ fromObject: params || {} });
-  get<T>(url: string, token?: string): Observable<T> {
+  get<T>(url: string): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}/${url}`, {
-      headers: this.createHeaders(token),
+      headers: this.createHeaders(),
     });
   }
 
-  getSingle<T>(url: string, id: string, token?: string): Observable<T> {
+  getSingle<T>(url: string, id: string, ): Observable<T> {
     const fullUrl = `${this.baseUrl}/${url}/${id}`;
-    return this.http.get<T>(fullUrl, { headers: this.createHeaders(token) });
+    return this.http.get<T>(fullUrl, { headers: this.createHeaders() });
   }
 
-  post<T>(url: string, body: any, token?: string): Observable<T> {
+  post<T>(url: string, body: any): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}/${url}`, body, {
-      headers: this.createHeaders(token),
+      headers: this.createHeaders(),
     });
   }
 
 
-  put<T>(url: string, id: string, body: any, token?: string,): Observable<T> {
+  put<T>(url: string, id: string, body: any): Observable<T> {
     const fullUrl = `${this.baseUrl}/${url}/${id}`;
-    return this.http.put<T>(fullUrl, body, { headers: this.createHeaders(token) });
+    return this.http.put<T>(fullUrl, body, { headers: this.createHeaders() });
   }
 
   // delete<T>(url: string, params?: Record<string, any>, token?: string): Observable<T> {
-  delete<T>(url: string, id: string, token?: string): Observable<T> {
+  delete<T>(url: string, id: string): Observable<T> {
     // const httpParams = new HttpParams({ fromObject: params || {} });
     const fullUrl = `${this.baseUrl}/${url}/${id}`;
     return this.http.delete<T>(fullUrl, {
       // params: httpParams,
-      headers: this.createHeaders(token),
+      headers: this.createHeaders(),
     });
   }
 
-  query<T>(url: string, body: any, token?: string): Observable<T> {
+  query<T>(url: string, body: any): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}/${url}`, body, {
-      headers: this.createHeaders(token),
+      headers: this.createHeaders(),
     });
   }
 

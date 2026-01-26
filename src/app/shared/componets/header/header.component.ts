@@ -42,6 +42,8 @@ export class HeaderComponent implements OnInit {
   breadcrumbs$: Observable<BreadcrumbItem[]>;
 
 
+
+
   constructor(
     private breadcrumbService: BreadcrumbService,
     private sidebarRightservice: SidebarRightService,
@@ -66,6 +68,10 @@ export class HeaderComponent implements OnInit {
     } else {
       // document.querySelector('html')?.removeAttribute('data-toggled');
     }
+  }
+
+  onBreadcrumbClick(crumb: BreadcrumbItem) {
+    this.breadcrumbService.notifyBreadcrumbClick(crumb);
   }
   localStorageBackUp() {
     let styleId = document.querySelector('#style');

@@ -53,7 +53,6 @@ export const getUser = (
   user: ApiUser
 ): PartialStateUpdater<UserState> => {
   const mappedUser: User = mapApiUserToUser(user);
-  console.log('mappedUser', mappedUser);
   return () => ({
     selectedUser:mappedUser
   });
@@ -63,7 +62,6 @@ export const getUser = (
 export const deleteUser = (
   id: string
 ): PartialStateUpdater<UserState> => {
-   console.log('delete');
   return (state) => ({
     users: [
       ...state.users.filter(u => u.oid !== id),

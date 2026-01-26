@@ -10,13 +10,12 @@ import { RequestWrapper } from '../../../common/Models/request';
   providedIn: 'root'
 })
 export default class UserService {
-  private token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZWY2ZTQ0MC0zNWVhLTQ3ZDgtOWNkNy03MWM1NDI3ZjY1NWMiLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmciLCJyb2xlX2lkIjoiMCIsImp0aSI6ImIyZGU0ZThhLTEzMGYtNGJhMS05MjU5LTFmM2I3Yjk0YTNkZCIsImlhdCI6MTc2OTM3NTYyMSwiZXhwIjoxNzY5Mzc5MjIxLCJpc3MiOiJodHRwczovL2FwaS55b3VyZG9tYWluLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBpLnlvdXJkb21haW4uY29tIn0.FhalR4agg3p1qJAhirfGIpBpBpYc-zgiAE5k8aNVtnk";
 
    constructor(private apiService: ApiService) { }
 
 
   getUsers(): Observable<ApiUser[]> {
-    return this.apiService.get<ApiResponse<ApiUser[]>>('SystemUser', this.token).pipe(
+    return this.apiService.get<ApiResponse<ApiUser[]>>('SystemUser').pipe(
       map((response: ApiResponse<ApiUser[]>) => {
         if (!response.success) {
           throw new Error(response.message || 'API failed to load users');
@@ -28,7 +27,7 @@ export default class UserService {
 
   createUser(body: User): Observable<ApiUser> {
     return this.apiService
-      .post<ApiResponse<ApiUser>>('SystemUser', body, this.token)
+      .post<ApiResponse<ApiUser>>('SystemUser', body)
       .pipe(
         map((response: ApiResponse<ApiUser>) => {
           if (!response.success) {
@@ -42,15 +41,13 @@ export default class UserService {
 
   getUser(id: string): Observable<ApiUser> {
     return this.apiService
-      .getSingle<ApiResponse<ApiUser>>('SystemUser', id, this.token)
+      .getSingle<ApiResponse<ApiUser>>('SystemUser', id)
       .pipe(
         map((response: ApiResponse<ApiUser>) => {
           if (!response.success) {
             const msg = response.errors?.join(', ') || response.message || 'API failed to load user';
             throw new Error(msg);
           }
-          console.log('on get');
-
           return response.data;
         })
       );
@@ -58,7 +55,7 @@ export default class UserService {
 
   updateUser(id: string, body: User): Observable<ApiUser> {
     return this.apiService
-      .put<ApiResponse<ApiUser>>('SystemUser', id, body, this.token)
+      .put<ApiResponse<ApiUser>>('SystemUser', id, body)
       .pipe(
         map((response: ApiResponse<ApiUser>) => {
           if (!response.success) {
@@ -71,18 +68,14 @@ export default class UserService {
   }
 
   deleteUser(id: string): Observable<string> {
-    console.log('indelete');
     return this.apiService
-      .delete<ApiResponse<string>>('SystemUser', id, this.token)
+      .delete<ApiResponse<string>>('SystemUser', id)
       .pipe(
-        tap(data => console.log(data, data)),
         map((response: ApiResponse<string>) => {
-          console.log('response', response);
           if (!response.success) {
             const msg = response.errors?.join(', ') || response.message || 'API failed to delete user';
             throw new Error(msg);
           }
-          console.log(response.data);
           return response.data;
         })
       );
@@ -103,7 +96,7 @@ export default class UserService {
   // }
   search(body: RequestWrapper): Observable<{ users: ApiUser[]; total: number }> {
     return this.apiService
-      .query<ApiSearchResponse<ApiUser>>('SystemUser/query', body, this.token)
+      .query<ApiSearchResponse<ApiUser>>('SystemUser/query', body)
       .pipe(
         map((response: ApiSearchResponse<ApiUser>) => {
           if (!response.success) {

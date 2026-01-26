@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, inject, Inject, OnInit, Renderer2 } from '@angular/core';
 
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 import { Router, RouterLink,RouterModule } from '@angular/router';
@@ -10,6 +10,7 @@ import { AuthService } from '../shared/services/auth.service';
 import { FirebaseService } from '../shared/services/firebase.service';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
+
 @Component({
     selector: 'app-authentication',
     standalone:true,
@@ -18,8 +19,8 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     imports: [
       CommonModule,
       RouterLink,
-      NgbNavModule, 
-      RouterModule, 
+      NgbNavModule,
+      RouterModule,
       FormsModule,
       ReactiveFormsModule,
       MaterialModuleModule,
@@ -51,20 +52,20 @@ constructor(
   private formBuilder: FormBuilder,
   private renderer: Renderer2,
   private firebaseService: FirebaseService,
-  private toastr: ToastrService 
+  private toastr: ToastrService
 ) {
   // AngularFireModule.initializeApp(environment.firebase);
   document.body.classList.add('authentication-background');
    const bodyElement = this.renderer.selectRootElement('body', true);
   //  this.renderer.setAttribute(bodyElement, 'class', 'cover1 justify-center');
-  
+
 }
 // firestoreModule = this.firebaseService.getFirestore();
 // databaseModule = this.firebaseService.getDatabase();
 // authModule = this.firebaseService.getAuth();
 
 ngOnDestroy(): void {
-  document.body.classList.remove('authentication-background');    
+  document.body.classList.remove('authentication-background');
 }
 ngOnInit(): void {
   this.loginForm = this.formBuilder.group({
@@ -93,9 +94,10 @@ login() {
   // this.disabled = "btn-loading"
   this.clearErrorMessage();
   if (this.validateForm(this.email, this.password)) {
-    this.authservice
+  this.authservice
       .loginWithEmail(this.email, this.password)
-      .then(() => {
+      .then((cred) => {
+        console.log(cred);
         this.router.navigate(['/dashboard']);
         console.clear();
         this.toastr.success('login successful','Valex', {
@@ -107,7 +109,7 @@ login() {
         this._error = _error;
         this.router.navigate(['/']);
       });
-   
+
   }
   else {
     this.toastr.error('Invalid details','Valex', {
@@ -135,7 +137,7 @@ validateForm(email: string, password: string) {
 
   this.errorMessage = '';
   return true;
-  
+
 }
 
 //angular
@@ -147,7 +149,6 @@ get form() {
 }
 
 Submit() {
-  // console.log(this.loginForm)
   if (
     this.loginForm.controls['username'].value === 'spruko@admin.com' &&
     this.loginForm.controls['password'].value === 'sprukoadmin'

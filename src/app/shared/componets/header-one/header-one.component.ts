@@ -73,7 +73,7 @@ export class HeaderOneComponent implements OnInit {
   }
 
   ngAfterViewInit(){
-    
+
     // const chat:any = document.querySelector('.chat-scroll');
     // let ps1 = new PerfectScrollbar(chat,{
     //   wheelPropagation: false,
@@ -89,10 +89,9 @@ export class HeaderOneComponent implements OnInit {
     // });
   }
 
-  SearchActive = "Notactive" 
+  SearchActive = "Notactive"
   searchClass(item:any){
     // this.SearchActive=="nonactive"? "active":"nonactive"
-    console.log(item);
     if (item=="active") {
       this.SearchActive = "active"
     }

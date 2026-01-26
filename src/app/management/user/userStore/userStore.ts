@@ -199,7 +199,6 @@ export const UsersStore = signalStore(
     onInit(store) {
       effect(() => {
         const req = store.queryRequest();
-        console.log('in effect');
         store.queryUsers(req);
       });
     },

@@ -1,13 +1,12 @@
 <div class="d-flex align-item-center justify-content-between">
   <mat-form-field *ngIf="showFilter" appearance="outline">
-  <mat-label>Search</mat-label>
   <input
     matInput
     placeholder="Search..."
     (keyup)="onFilter($event)"
   />
 </mat-form-field>
-  <app-button btnLabel="Add New" [mainBtn]="false" (click)="onAddNew()" />
+  <app-button btnLabel="Add New" [mainBtn]="true" (click)="onAddNew()" />
 </div>
 
 <table mat-table [dataSource]="data" matSort class="mat-elevation-z8">

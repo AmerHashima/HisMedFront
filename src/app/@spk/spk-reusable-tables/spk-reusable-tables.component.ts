@@ -46,7 +46,6 @@ export class SpkReusableTablesComponent {
 
   onFirstCellClick(row: any) {
     this.navigateToSinglePage.emit(row);
-    console.log('First data cell clicked:', row);
     // example:
     // this.handleEdit(row);
   }
