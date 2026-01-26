@@ -20,6 +20,7 @@ import { CommonModule, NgClass } from '@angular/common';
 import { AppStateService } from '../../services/app-state.service';
 import { SwitcherComponent } from '../switcher/switcher.component';
 import { BreadcrumbService, BreadcrumbItem } from '../../services/breadcrumb.service';
+import { AuthService } from '../../services/auth.service';
 interface Item {
   id: number;
   name: string;
@@ -45,6 +46,7 @@ export class HeaderComponent implements OnInit {
 
 
   constructor(
+    private authServuce:AuthService,
     private breadcrumbService: BreadcrumbService,
     private sidebarRightservice: SidebarRightService,
     public navServices: NavService,private appStateService: AppStateService,
@@ -404,5 +406,8 @@ export class HeaderComponent implements OnInit {
     this.isInputFocused = false;
   }
 
+  logout(){
+    this.authServuce.logout();
+  }
 }
 

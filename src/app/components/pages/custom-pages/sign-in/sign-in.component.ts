@@ -59,7 +59,8 @@ this.apiService
           return response.data;
         })
       ).subscribe((data) => {
-        this.apiService.setToken(data.token);
+        this.authservice.setToken(data.token);
+        // this.apiService.setToken(data.token);
         this.router.navigate(['/dashboard']);
       });
   }

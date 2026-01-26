@@ -3,24 +3,28 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export default class ApiService {
   private readonly baseUrl: string = environment.baseUrl;
-  private token='';
-  constructor(private http: HttpClient) { }
+  // private token='';
+  constructor(private http: HttpClient,private authService:AuthService) {
+
+   }
 
   // Helper to create headers with optional token
   private createHeaders(): HttpHeaders {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    if (this.token) {
-      headers = headers.set('Authorization', `bearer ${this.token}`);
+    const token = this.authService.getToken();
+    if (token) {
+      headers = headers.set('Authorization', `bearer ${token}`);
     } return headers;
   }
 
-  setToken(token:string){
-    this.token=token;
-  }
+  // setToken(token:string){
+  //   this.token=token;
+  // }
 
   // get<T>(url: string, params?: Record<string, any>, token?: string): Observable<T> {
   // const httpParams = new HttpParams({ fromObject: params || {} });

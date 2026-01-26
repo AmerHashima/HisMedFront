@@ -9,6 +9,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AuthService } from '../shared/services/auth.service';
 import { FirebaseService } from '../shared/services/firebase.service';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { ApiResponse } from '../common/Models/api-response';
+import { map } from 'rxjs';
+import ApiService from '../shared/services/api.service';
 
 
 @Component({
@@ -27,9 +30,8 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
       ToastrModule]
 })
 export class AuthenticationComponent implements OnInit {
-
+  private apiService = inject(ApiService);
   public showPassword: boolean = false;
-
   toggleClass = 'off-line';
   active="Angular";
   firestoreModule: any;
@@ -90,35 +92,61 @@ clearErrorMessage() {
   this._error = { name: '', message: '' };
 }
 
-login() {
-  // this.disabled = "btn-loading"
-  this.clearErrorMessage();
-  if (this.validateForm(this.email, this.password)) {
-  this.authservice
-      .loginWithEmail(this.email, this.password)
-      .then((cred) => {
-        console.log(cred);
+// login() {
+//   // this.disabled = "btn-loading"
+//   this.clearErrorMessage();
+//   if (this.validateForm(this.email, this.password)) {
+//   this.authservice
+//       .loginWithEmail(this.email, this.password)
+//       .then((cred) => {
+//         console.log(cred);
+//         this.router.navigate(['/dashboard']);
+//         console.clear();
+//         this.toastr.success('login successful','Valex', {
+//           timeOut: 3000,
+//           positionClass: 'toast-top-right',
+//         });
+//       })
+//       .catch((_error: any) => {
+//         this._error = _error;
+//         this.router.navigate(['/']);
+//       });
+
+//   }
+//   else {
+//     this.toastr.error('Invalid details','Valex', {
+//       timeOut: 3000,
+//       positionClass: 'toast-top-right',
+//     });
+//   }
+// }
+
+  login() {
+    // this.disabled = "btn-loading"
+    // this.clearErrorMessage();
+    // if (this.validateForm(this.email, this.password)) {
+    console.log('login');
+    const body = {
+      username: "string",
+      password: "string",
+      rememberMe: true
+    }
+this.apiService
+      .post<ApiResponse<any>>('Auth/login', body)
+      .pipe(
+        map((response: ApiResponse<any>) => {
+          if (!response.success) {
+            const msg = response.errors?.join(', ') || response.message || 'API failed to create user';
+            throw new Error(msg);
+          }
+          return response.data;
+        })
+      ).subscribe((data) => {
+        this.authservice.setToken(data.token);
+        // this.apiService.setToken(data.token);
         this.router.navigate(['/dashboard']);
-        console.clear();
-        this.toastr.success('login successful','Valex', {
-          timeOut: 3000,
-          positionClass: 'toast-top-right',
-        });
-      })
-      .catch((_error: any) => {
-        this._error = _error;
-        this.router.navigate(['/']);
       });
-
   }
-  else {
-    this.toastr.error('Invalid details','Valex', {
-      timeOut: 3000,
-      positionClass: 'toast-top-right',
-    });
-  }
-}
-
 validateForm(email: string, password: string) {
   if (email.length === 0) {
     this.errorMessage = 'please enter email id';
@@ -149,22 +177,22 @@ get form() {
 }
 
 Submit() {
-  if (
-    this.loginForm.controls['username'].value === 'spruko@admin.com' &&
-    this.loginForm.controls['password'].value === 'sprukoadmin'
-  ) {
-    this.router.navigate(['/dashboard']);
-    this.toastr.success('login successful','Valex', {
-      timeOut: 3000,
-      positionClass: 'toast-top-right',
-    });
-  } else {
-    this.toastr.error('Invalid details','Valex', {
-      timeOut: 3000,
-      positionClass: 'toast-top-right',
-    });
-  }
-
+  // if (
+  //   this.loginForm.controls['username'].value === 'spruko@admin.com' &&
+  //   this.loginForm.controls['password'].value === 'sprukoadmin'
+  // ) {
+  //   this.router.navigate(['/dashboard']);
+  //   this.toastr.success('login successful','Valex', {
+  //     timeOut: 3000,
+  //     positionClass: 'toast-top-right',
+  //   });
+  // } else {
+  //   this.toastr.error('Invalid details','Valex', {
+  //     timeOut: 3000,
+  //     positionClass: 'toast-top-right',
+  //   });
+  // }
+  this.login();
 }
 
 }
