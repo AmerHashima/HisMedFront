@@ -1,3 +1,4 @@
+// src\app\components\pages\custom-pages\sign-in\sign-in.component.ts
 import { Component, ElementRef, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -7,16 +8,16 @@ import ApiService from 'src/app/shared/services/api.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
-    selector: 'app-sign-in',
-    standalone:true,
-    templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.scss'],
-    imports: [RouterLink]
+  selector: 'app-sign-in',
+  standalone: true,
+  templateUrl: './sign-in.component.html',
+  styleUrls: ['./sign-in.component.scss'],
+  imports: [RouterLink]
 })
 export class SignInComponent implements OnInit {
   private apiService = inject(ApiService);
   constructor(private elementRef: ElementRef, public authservice: AuthService,
-     private router: Router, private toastr: ToastrService
+    private router: Router, private toastr: ToastrService
 
   ) {
 
@@ -43,12 +44,12 @@ export class SignInComponent implements OnInit {
     // this.clearErrorMessage();
     // if (this.validateForm(this.email, this.password)) {
     const body = {
-      username: "string",
-      password: "string",
+      username: "testName",
+      password: "testNameUser123@",
       rememberMe: true
     }
     console.log('login');
-this.apiService
+    this.apiService
       .post<ApiResponse<any>>('Auth/login', body)
       .pipe(
         map((response: ApiResponse<any>) => {

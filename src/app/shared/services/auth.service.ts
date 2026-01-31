@@ -1,4 +1,5 @@
-import { Injectable,NgZone } from '@angular/core';
+// src\app\shared\services\auth.service.ts
+import { Injectable, NgZone } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
@@ -18,9 +19,9 @@ export class AuthService {
   authState: any;
   afAuth: any;
   afs: any;
-  public showLoader:boolean=false;
+  public showLoader: boolean = false;
 
-  constructor(private afu: AngularFireAuth, private router: Router,public ngZone: NgZone) {
+  constructor(private afu: AngularFireAuth, private router: Router, public ngZone: NgZone) {
     this.afu.authState.subscribe((auth: any) => {
       this.authState = auth;
     });
@@ -94,28 +95,28 @@ export class AuthService {
   }
 
 
-    // Sign up with email/password
-    SignUp(email:any, password:any) {
-      return this.afAuth.createUserWithEmailAndPassword(email, password)
-        .then((result:any) => {
-          /* Call the SendVerificaitonMail() function when new user sign
-          up and returns promise */
-          this.SendVerificationMail();
-          this.SetUserData(result.user);
-        }).catch((error:any) => {
-          window.alert(error.message)
-        })
-    }
+  // Sign up with email/password
+  SignUp(email: any, password: any) {
+    return this.afAuth.createUserWithEmailAndPassword(email, password)
+      .then((result: any) => {
+        /* Call the SendVerificaitonMail() function when new user sign
+        up and returns promise */
+        this.SendVerificationMail();
+        this.SetUserData(result.user);
+      }).catch((error: any) => {
+        window.alert(error.message)
+      })
+  }
 
 
-    // main verification function
-    SendVerificationMail() {
-      return this.afAuth.currentUser.then((u:any) => u.sendEmailVerification()).then(() => {
-          this.router.navigate(['/dashboard/sales']);
-        })
-    }
-      // Set user
-  SetUserData(user:any) {
+  // main verification function
+  SendVerificationMail() {
+    return this.afAuth.currentUser.then((u: any) => u.sendEmailVerification()).then(() => {
+      this.router.navigate(['/dashboard/sales']);
+    })
+  }
+  // Set user
+  SetUserData(user: any) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const userData: User = {
       email: user.email,
@@ -124,38 +125,38 @@ export class AuthService {
       photoURL: user.photoURL || 'src/favicon.ico',
       emailVerified: user.emailVerified
     };
-    userRef.delete().then(function () {})
-          .catch(function (error:any) {});
+    userRef.delete().then(function () { })
+      .catch(function (error: any) { });
     return userRef.set(userData, {
       merge: true
     });
   }
- // sign in function
- SignIn(email:any, password:any) {
-  return this.afAuth.signInWithEmailAndPassword(email, password)
-    .then((result:any) => {
-      if (result.user.emailVerified !== true) {
-        this.SetUserData(result.user);
-        this.SendVerificationMail();
-        this.showLoader = true;
-      } else {
-        this.showLoader = false;
-        this.ngZone.run(() => {
-          this.router.navigate(['/auth/login']);
-        });
-      }
-    }).catch((error:any) => {
-      throw error;
-    })
-}
-ForgotPassword(passwordResetEmail:any) {
-  return this.afAuth.sendPasswordResetEmail(passwordResetEmail)
-    .then(() => {
-      window.alert('Password reset email sent, check your inbox.');
-    }).catch((error:any) => {
-      window.alert(error);
-    });
-}
+  // sign in function
+  SignIn(email: any, password: any) {
+    return this.afAuth.signInWithEmailAndPassword(email, password)
+      .then((result: any) => {
+        if (result.user.emailVerified !== true) {
+          this.SetUserData(result.user);
+          this.SendVerificationMail();
+          this.showLoader = true;
+        } else {
+          this.showLoader = false;
+          this.ngZone.run(() => {
+            this.router.navigate(['/auth/login']);
+          });
+        }
+      }).catch((error: any) => {
+        throw error;
+      })
+  }
+  ForgotPassword(passwordResetEmail: any) {
+    return this.afAuth.sendPasswordResetEmail(passwordResetEmail)
+      .then(() => {
+        window.alert('Password reset email sent, check your inbox.');
+      }).catch((error: any) => {
+        window.alert(error);
+      });
+  }
 
   private TOKEN_KEY = 'auth_token';
 
@@ -175,7 +176,7 @@ ForgotPassword(passwordResetEmail:any) {
     localStorage.removeItem(this.TOKEN_KEY);
   }
 
-  logout(){
+  logout() {
     this.removeToken();
     this.router.navigate(['/login']);
   }
