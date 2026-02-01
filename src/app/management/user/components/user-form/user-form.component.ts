@@ -7,43 +7,48 @@ import { InputComponent } from 'src/app/common/input/input.component';
 import { ToggleBtnComponent } from 'src/app/common/toggle-btn/toggle-btn.component';
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
 import { User } from '../../models/user';
+import { passwordStrengthValidator } from 'src/app/common/validators/passwordStrengthValidator';
+import { notInFutureValidator } from 'src/app/common/validators/notInFutureValidator';
 @Component({
   selector: 'app-user-form',
   imports: [SpkNgSelectComponent, ButtonComponent, InputComponent, ToggleBtnComponent, SpkFlatpickrComponent, ReactiveFormsModule],
-  providers: [UsersStore],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss'
 })
 export class UserFormComponent {
-  @Output() cancalEvent=new EventEmitter<any>();
-  oid=input<string>('');
+  @Output() cancalEvent = new EventEmitter<any>();
+  oid = input<string>('');
   genderOptions = [
     { label: "Female", value: "f" },
     { label: "Male", value: "m" }
   ]
   roleOptions = [
-    { label: "Admin", value: 0 },
-    { label: "Client", value: 1 }
+    { label: "Admin", value: '3fa85f64-5717-4562-b3fc-2c963f66afa6' },
   ]
   fb = inject(FormBuilder);
   store = inject(UsersStore);
-  id:string='';
+  id: string = '';
 
   form = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.email]],
     mobile: ['', [Validators.required]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: [''],
     firstName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     middleName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     lastName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     twoFactorEnabled: [false],
     isActive: [false],
     gender: ['', Validators.required],
-    birthDate: ['', Validators.required],
+    birthDate: ['', [Validators.required, notInFutureValidator()]],
     roleID: [0, Validators.required],
   });
 
+  private backendErrorKeyMap: Record<string, string[]> = {
+    username: ['username', 'user name'],
+    email: ['email', 'e-mail'],
+    phone: ['phone', 'mobile'],
+  };
   constructor() {
 
     effect(() => {
@@ -73,17 +78,106 @@ export class UserFormComponent {
         });
       }
     });
+
+
+    effect(() => {
+      const isEdit = !!this.oid();
+
+      const passwordCtrl = this.form.get('password');
+      if (!passwordCtrl) return;
+
+      if (isEdit) {
+        passwordCtrl.clearValidators();
+        passwordCtrl.reset();
+      } else {
+        passwordCtrl.setValidators([
+          Validators.required,
+          Validators.minLength(8),
+          passwordStrengthValidator()
+        ]);
+      }
+
+      passwordCtrl.updateValueAndValidity();
+    });
+
+    effect(() => {
+      const error = this.store.error();
+
+      if (!error ) {
+        this.clearAllFieldErrors();
+      } else {
+        this.getApiErrorMessage(error);
+      }
+    });
+
+    effect(() => {
+      const success = this.store.success();
+      if (success)
+        this.cancel();
+        this.store.setSuccess(false);
+    });
+
   }
 
+  apiFieldErrors: Record<string, string> = {};
 
+  getApiErrorMessage(error: string) {
+    this.apiFieldErrors = {};
+    if (!error) return;
 
- formatDateOnly(value: string | Date): string {
-  const d = new Date(value);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+    const message = error.toLowerCase();
+
+    for (const field in this.backendErrorKeyMap) {
+      const keywords = this.backendErrorKeyMap[field];
+
+      if (keywords.some(k => message.includes(k))) {
+        this.applyBackendErrorToControl(field, error);
+        return;
+      }
+    }
+
+    this.form.setErrors({ backendError: true });
+  }
+
+  applyBackendErrorToControl(field: string, message: string) {
+    const control = this.form.get(field);
+    if (!control) return;
+
+    this.apiFieldErrors[field] = message;
+
+    control.setErrors({
+      ...(control.errors ?? {}),
+      backendError: true
+    });
+
+    control.markAsTouched();
+  }
+  private clearAllFieldErrors() {
+    // clear all backend API errors
+    this.apiFieldErrors = {};
+
+    // clear form-level errors
+    this.form.setErrors(null);
+
+    Object.keys(this.form.controls).forEach((field) => {
+      const control = this.form.get(field);
+      if (!control) return;
+
+      // remove ALL errors (required, minlength, backendError, etc.)
+      control.setErrors(null);
+
+      // reset state flags
+      control.markAsUntouched();
+      control.markAsPristine();
+    });
+  }
+  formatDateOnly(value: string | Date): string {
+    const d = new Date(value);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
 
   onSubmit() {
@@ -98,14 +192,16 @@ export class UserFormComponent {
       this.editUser();
     }
   }
-  createUser(){
+  createUser() {
     this.store.addUser(this.getPayload());
   }
   editUser() {
-    this.store.updateUser({id:this.oid(),body:this.getPayload()});
+    console.log('in edit');
+    this.store.updateUser({ id: this.oid(), body: this.getPayload() });
+
   }
 
-  getPayload(){
+  getPayload() {
     const v = this.form.getRawValue();
     const birthday = this.formatDateOnly(v.birthDate!)
     const payload: User = {
@@ -113,7 +209,8 @@ export class UserFormComponent {
       username: v.username!,
       email: v.email!,
       mobile: v.mobile!,
-      password: v.password!,
+      // password: v.password!,
+      ...(this.oid() ? {} : { password: v.password! }),
       firstName: v.firstName!,
       middleName: v.middleName!,
       lastName: v.lastName!,
@@ -131,7 +228,7 @@ export class UserFormComponent {
     this.cancalEvent.emit();
     // this.router.navigateByUrl("/users");
   }
-  back(){
+  back() {
     this.cancalEvent.emit();
 
     // this.router.navigateByUrl("/users");

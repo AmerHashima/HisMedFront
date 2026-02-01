@@ -5,9 +5,9 @@ import { User } from '../models/user';
 export const initialUsersState: UserState = {
   users: [],
   selectedUser: null,
+success:false,
   loading: false,
   error: null,
-
   page: 1,
   pageSize: 10,
   total: 0,

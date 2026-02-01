@@ -18,6 +18,8 @@ export const deactivateLoading: PartialStateUpdater<UserState> = (state) => ({
 export const setError = (err: any): PartialStateUpdater<UserState> => {
   return () => ({ error: err });
 };
+
+
 export const setUsers = (users: ApiUser[]): PartialStateUpdater<UserState> => {
   const mappedUsers = mapApiUsersToUsers(users)
   return () => ({
@@ -26,27 +28,27 @@ export const setUsers = (users: ApiUser[]): PartialStateUpdater<UserState> => {
 };
 
 
-export const addUser = (
-  user: ApiUser
-): PartialStateUpdater<UserState> => {
-  const mappedUser:User = mapApiUserToUser(user);
-  return (state) => ({
-    users: [...state.users, mappedUser],
-  });
-};
+// export const addUser = (
+//   user: ApiUser
+// ): PartialStateUpdater<UserState> => {
+//   const mappedUser:User = mapApiUserToUser(user);
+//   return (state) => ({
+//     users: [...state.users, mappedUser],
+//     newUser:true
+//   });
+// };
 
-export const updateUser = (
-  user: ApiUser
-): PartialStateUpdater<UserState> => {
-  const mappedUser: User = mapApiUserToUser(user);
-
-  return (state) => ({
-    users: [
-      ...state.users.filter(u => u.oid !== mappedUser.oid),
-      mappedUser,
-    ],
-  });
-};
+// export const updateUser = (
+//   user: ApiUser
+// ): PartialStateUpdater<UserState> => {
+//   const mappedUser: User = mapApiUserToUser(user);
+//   return (state) => ({
+//     users: [
+//       ...state.users.filter(u => u.oid !== mappedUser.oid),
+//       mappedUser,
+//     ],
+//   });
+// };
 
 
 export const getUser = (
@@ -83,6 +85,12 @@ return (state) => ({
   pageSize: pageSize ?? state.pageSize,
 });
 }
+
+export const setSuccess = (success: boolean): PartialStateUpdater<UserState> => {
+  return (state) => ({
+    success: success,
+  });
+};
 
 export const setSearchUpdater = (value:string): PartialStateUpdater<UserState> => {
   return (state) => ({

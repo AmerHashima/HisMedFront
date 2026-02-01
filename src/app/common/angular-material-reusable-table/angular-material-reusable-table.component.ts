@@ -66,7 +66,6 @@ export class ReusableMaterialTableComponent implements AfterViewInit {
   }
 
   onFirstCellClick(row: any, rowIndex: number, colIndex: number) {
-    console.log(`First cell of row ${rowIndex} clicked`, row);
     this.onFirstCellClickChange.emit(row);
   }
 
@@ -83,7 +82,6 @@ export class ReusableMaterialTableComponent implements AfterViewInit {
     this.deleteRow.emit(row);
   }
   onAddNew(){
-    console.log('add new');
     this.onAddNewChange.emit();
   }
 

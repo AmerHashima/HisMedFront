@@ -4,6 +4,7 @@ import { User } from "./user";
 export interface UserState {
   users: User[];
   selectedUser: User | null;
+  success:boolean
   loading: boolean;
   error: string | null;
   page: number;

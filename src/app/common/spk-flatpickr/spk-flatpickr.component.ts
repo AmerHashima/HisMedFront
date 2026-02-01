@@ -84,6 +84,27 @@ export default class SpkFlatpickrComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
+  // onValueChange(newValue: Date | Date[] | null): void {
+  //   let emitValue: Date | null = null;
+
+  //   if (Array.isArray(newValue)) {
+  //     emitValue = newValue.length > 0 ? newValue[0] : null;
+  //   } else if (newValue instanceof Date) {
+  //     emitValue = newValue;
+  //   }
+
+  //   this.value = emitValue;
+
+  //   if (this.control) {
+  //     this.control.setValue(emitValue);
+  //     this.control.markAsTouched();
+  //     this.control.updateValueAndValidity();
+  //   }
+
+  //   this.onChange(emitValue);
+  //   this.onTouched();
+  // }
+
   get control() {
     return this.ngControl?.control;
   }
@@ -99,6 +120,8 @@ export default class SpkFlatpickrComponent implements ControlValueAccessor {
       switch (key) {
         case 'required':
           return `This field is required`;
+        case 'notInFuture':
+          return `Date must be in the past`;
         default:
           return `${key} error`;
       }

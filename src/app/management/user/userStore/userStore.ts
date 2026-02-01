@@ -4,10 +4,11 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { initialUsersState } from './user.slice';
 import {
   activateLoading, deactivateLoading, setUsers, setError,
-  addUser, updateUser, getUser, deleteUser, displaySearchResult,
+   getUser, deleteUser,
   setSearchUpdater,
   setPageUpdater,
-  setSortUpdater
+  setSortUpdater,
+  setSuccess
 } from "./store.updaters";
 import UserService from '../service/user.service';
 import { computed, effect, inject } from '@angular/core';
@@ -15,9 +16,7 @@ import { catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, of, pi
 import { User } from '../models/user';
 import { ApiUser } from '../models/api-user';
 import { Filter, Pagination, RequestWrapper, Sort } from '../../../common/Models/request';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { createQueryRequest } from './store.helpers';
-import { active } from 'sortablejs';
 
 type UpdateUserPayload = {
   id: string;
@@ -85,12 +84,16 @@ export const UsersStore = signalStore(
     clearSort() {
       patchState(store, setSortUpdater("", ""));
     },
+    setSuccess(success: boolean) {
+      patchState(store, setSuccess(success));
+    },
+
   })),
   withMethods((store, userService = inject(UserService)) => ({
     queryUsers: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(350),
-        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        // distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
         tap(() => patchState(store, activateLoading)),
         switchMap((request: RequestWrapper) =>
           userService.search(request).pipe(
@@ -134,12 +137,18 @@ export const UsersStore = signalStore(
       // },
       addUser: rxMethod<User>(
         pipe(
-          tap(() => patchState(store, activateLoading)),
+          tap(() => { patchState(store, activateLoading);
+            //  patchState(store, setError(null))
+            }),
           switchMap((body) =>
             userService.createUser(body).pipe(
-              tap((user: ApiUser) => patchState(store, addUser(user))),
+              // tap((user: ApiUser) => patchState(store, addUser(user))),
+              tap(() => {
+                patchState(store, setSuccess(true));
+                store.queryUsers(store.queryRequest());
+              }),
               catchError((err) => {
-                patchState(store, setError(err?.msg ?? 'Failed to add user'));
+                patchState(store, setError(err?.error.message ?? 'Failed to add user'));
                 return EMPTY;
               }),
               finalize(() => patchState(store, deactivateLoading))
@@ -149,12 +158,16 @@ export const UsersStore = signalStore(
       ),
       updateUser: rxMethod<UpdateUserPayload>(
         pipe(
-          tap(() => patchState(store, activateLoading)),
+          tap(() => { patchState(store, activateLoading); }),
           switchMap(({ id, body }) =>
             userService.updateUser(id, body).pipe(
-              tap((user: ApiUser) => patchState(store, updateUser(user))),
+              // tap(() => patchState(store, setError(''))),
+              tap(() => {
+                patchState(store, setSuccess(true));
+                store.queryUsers(store.queryRequest());
+              }),
               catchError((err) => {
-                patchState(store, setError(err?.msg ?? 'Failed to update user'));
+                patchState(store, setError(err?.error.message ?? 'Failed to update user'));
                 return EMPTY;
               }),
               finalize(() => patchState(store, deactivateLoading))
@@ -203,13 +216,6 @@ export const UsersStore = signalStore(
       });
     },
   })
-  // withHooks({
-  //   onInit(store) {
-  //     store.loadUsers()
-  //       .pipe(takeUntilDestroyed())
-  //       .subscribe();
-  //   }
-  // })
 );
 
 

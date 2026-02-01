@@ -48,7 +48,6 @@ export class SignInComponent implements OnInit {
       password: "testNameUser123@",
       rememberMe: true
     }
-    console.log('login');
     this.apiService
       .post<ApiResponse<any>>('Auth/login', body)
       .pipe(

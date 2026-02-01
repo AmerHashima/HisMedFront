@@ -61,7 +61,6 @@ export class AuthService {
         this.authState = user;
       })
       .catch((_error: any) => {
-        console.log(_error);
         throw _error;
       });
   }
