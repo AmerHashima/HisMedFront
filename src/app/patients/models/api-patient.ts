@@ -1,2 +1,33 @@
 export interface ApiPatient {
+  oid: string,
+  mrn: string,
+  identityTypeLookupId:string,
+  identityNumber: string,
+  identityTypeName: string,
+  firstNameAr: string,
+  middleNameAr: string,
+  lastNameAr: string,
+  fullNameAr: string,
+  firstNameEn: string,
+  middleNameEn: string,
+  lastNameEn: string,
+  fullNameEn: string,
+  genderLookupId: string
+  genderName: string,
+  birthDate: string,
+  age: number,
+  nationalityLookupId: string,
+  nationalityName: string,
+  maritalStatusLookupId: string,
+  maritalStatusName: string,
+  bloodGroupLookupId: string,
+  bloodGroupName: string,
+  mobile: string,
+  phone: string,
+  email: string,
+  branchId: string,
+  branchName: string,
+  isActive: boolean,
+  createdAt: string
+  updatedAt: string
 }
