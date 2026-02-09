@@ -1,4 +1,5 @@
 export interface Speciality {
+  oid?:string,
   code: string,
   nameAr: string,
   nameEn: string,

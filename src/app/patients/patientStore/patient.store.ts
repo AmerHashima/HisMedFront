@@ -28,7 +28,7 @@ export const PatientStore = signalStore(
 
       if (search().trim()) {
         filters.push({
-          propertyName: 'username',
+          propertyName: 'mrn',
           value: search().trim(),
           operation: 3,
         });

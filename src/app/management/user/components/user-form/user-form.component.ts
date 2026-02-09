@@ -11,6 +11,7 @@ import { passwordStrengthValidator } from 'src/app/common/validators/passwordStr
 import { notInFutureValidator } from 'src/app/common/validators/notInFutureValidator';
 import { LookupService } from 'src/app/common/service/lookup.service';
 import { AsyncPipe } from '@angular/common';
+import { RoleService } from 'src/app/common/service/role.service';
 @Component({
   selector: 'app-user-form',
   imports: [SpkNgSelectComponent, ButtonComponent, InputComponent, ToggleBtnComponent,
@@ -20,13 +21,13 @@ import { AsyncPipe } from '@angular/common';
 })
 export class UserFormComponent {
   private lookupService=inject(LookupService);
+  private roleService = inject(RoleService);
+
   @Output() cancalEvent = new EventEmitter<any>();
   oid = input<string>('');
   genderOptions$ = this.lookupService.getGender();
 
-  roleOptions = [
-    { label: "Admin", value: '3fa85f64-5717-4562-b3fc-2c963f66afa6' },
-  ]
+  roleOptions$ = this.roleService.getRoles();
   fb = inject(FormBuilder);
   store = inject(UsersStore);
   id: string = '';

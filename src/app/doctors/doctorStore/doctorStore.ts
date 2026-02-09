@@ -35,7 +35,7 @@ export const DoctorStore = signalStore(
 
       if (search().trim()) {
         filters.push({
-          propertyName: 'username',
+          propertyName: 'licenseNumber',
           value: search().trim(),
           operation: 3,
         });
