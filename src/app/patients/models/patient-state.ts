@@ -1,8 +1,11 @@
-import { Patient } from "./patient";
+// import { Patient } from "./patient";
+import { PatientVM } from "./patient-vm";
 
 export interface PatientState {
-  patients:Patient[]
-  selectedPatient: Patient | null;
+  // patients:Patient[]
+  // selectedPatient: Patient | null;
+  patients: PatientVM[];
+  selectedPatient: PatientVM | null;
   success: boolean
   loading: boolean;
   error: string | null;

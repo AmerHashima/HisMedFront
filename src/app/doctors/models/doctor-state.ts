@@ -1,8 +1,12 @@
-import { Doctor } from "./doctor";
+// import { Doctor } from "./doctor";
+
+import { DoctorVM } from "./doctor-vm";
 
 export interface DoctorState {
-    doctors:Doctor[]
-  selectedDoctor: Doctor | null;
+  //   doctors:Doctor[]
+  // selectedDoctor: Doctor | null;
+  doctors: DoctorVM[];
+  selectedDoctor: DoctorVM | null;
     success: boolean
     loading: boolean;
     error: string | null;
