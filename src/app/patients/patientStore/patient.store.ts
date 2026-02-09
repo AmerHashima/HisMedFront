@@ -166,9 +166,9 @@ export const PatientStore = signalStore(
       patchState(store, setPageUpdater(page, pageSize));
     },
 
-    setSort(sortBy: string, direction: 'asc' | 'desc' | '') {
-      patchState(store, setSortUpdater(sortBy, direction));
-    },
+    setSort(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
+        patchState(store, setSortUpdater(sort.active, sort.direction));
+      },
     clearSort() {
       patchState(store, setSortUpdater("", ""));
     },

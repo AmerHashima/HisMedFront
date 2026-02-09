@@ -28,14 +28,24 @@ export default class ApiService {
 
   // get<T>(url: string, params?: Record<string, any>, token?: string): Observable<T> {
   // const httpParams = new HttpParams({ fromObject: params || {} });
-  get<T>(url: string): Observable<T> {
+  get<T>(url: string, params?: Record<string, any>): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}/${url}`, {
       headers: this.createHeaders(),
+      params
     });
   }
 
-  getSingle<T>(url: string, id: string, ): Observable<T> {
+  getSingle<T>(url: string, id: string, params?: Record<string, any>
+ ): Observable<T> {
     const fullUrl = `${this.baseUrl}/${url}/${id}`;
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          httpParams = httpParams.set(key, String(value));
+        }
+      });
+    }
     return this.http.get<T>(fullUrl, { headers: this.createHeaders() });
   }
 

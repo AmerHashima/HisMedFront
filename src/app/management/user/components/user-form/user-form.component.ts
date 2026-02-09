@@ -9,19 +9,21 @@ import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.co
 import { User } from '../../models/user';
 import { passwordStrengthValidator } from 'src/app/common/validators/passwordStrengthValidator';
 import { notInFutureValidator } from 'src/app/common/validators/notInFutureValidator';
+import { LookupService } from 'src/app/common/service/lookup.service';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-user-form',
-  imports: [SpkNgSelectComponent, ButtonComponent, InputComponent, ToggleBtnComponent, SpkFlatpickrComponent, ReactiveFormsModule],
+  imports: [SpkNgSelectComponent, ButtonComponent, InputComponent, ToggleBtnComponent,
+    SpkFlatpickrComponent, ReactiveFormsModule,AsyncPipe],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss'
 })
 export class UserFormComponent {
+  private lookupService=inject(LookupService);
   @Output() cancalEvent = new EventEmitter<any>();
   oid = input<string>('');
-  genderOptions = [
-    { label: "Female", value: "f" },
-    { label: "Male", value: "m" }
-  ]
+  genderOptions$ = this.lookupService.getGender();
+
   roleOptions = [
     { label: "Admin", value: '3fa85f64-5717-4562-b3fc-2c963f66afa6' },
   ]

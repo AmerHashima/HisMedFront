@@ -14,7 +14,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
   selector: 'app-users',
   standalone: true,
   imports: [ReusableMaterialTableComponent, UserFormComponent],
-  providers: [UsersStore],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -38,11 +37,12 @@ export class UsersComponent {
       type: 'text',
       formatter: (value?: string) => {
         if (!value) return '-';
-        return value.toLowerCase() === 'm'
-          ? 'Male'
-          : value.toLowerCase() === 'f'
-            ? 'Female'
-            : '-';
+        return value;
+        // return value.toLowerCase() === 'm'
+        //   ? 'Male'
+        //   : value.toLowerCase() === 'f'
+        //     ? 'Female'
+        //     : '-';
       }
     },
     { field: 'birthDate', header: 'Birth Date', type: 'date', format: 'dd/MM/yyyy' },

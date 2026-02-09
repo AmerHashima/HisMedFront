@@ -15,6 +15,14 @@ export const DOCTOR_ROUTES: Routes = [
           import('./component/doctors/doctors.component')
             .then(m => m.DoctorsComponent),
       },
+      {
+        path: 'create',
+        loadComponent: () =>
+          import('./component/create-doctor/create-doctor.component')
+            .then(m => m.CreateDoctorComponent),
+        data: { breadcrumb: 'Create Doctor' }
+
+      },
     ],
   },
 ];
