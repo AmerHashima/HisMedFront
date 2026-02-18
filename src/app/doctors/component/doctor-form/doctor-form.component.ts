@@ -9,13 +9,13 @@ import { UsersStore } from 'src/app/management/user/userStore/userStore';
 import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
 import { LookupService } from 'src/app/common/service/lookup.service';
 import { AsyncPipe } from '@angular/common';
-import { HospitalBranchService } from 'src/app/common/service/hospital-branch.service';
-import { SpecialityService } from 'src/app/common/service/speciality.service';
+import { HospitalBranchService } from 'src/app/Hospital/Services/hospital-branch.service';
+import { SpecialityService } from 'src/app/Hospital/Services/speciality.service';
 
 @Component({
   selector: 'app-doctor-form',
-  imports: [ButtonComponent,ToggleBtnComponent,InputComponent,
-    SpkNgSelectComponent  ,ReactiveFormsModule,AsyncPipe],
+  imports: [ButtonComponent, ToggleBtnComponent, InputComponent,
+    SpkNgSelectComponent, ReactiveFormsModule, AsyncPipe],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
   providers: [UsersStore]
@@ -26,11 +26,11 @@ export class DoctorFormComponent {
   oid = input<string>('');
   fb = inject(FormBuilder);
   store = inject(DoctorStore);
-  userStore=inject(UsersStore);
+  userStore = inject(UsersStore);
   lookupService = inject(LookupService);
   branchService = inject(HospitalBranchService);
-  specialityService=inject(SpecialityService);
-  users=computed(()=> this.userStore.users());
+  specialityService = inject(SpecialityService);
+  users = computed(() => this.userStore.users());
   departments$ = this.lookupService.getDepartment();
   branches$ = this.branchService.getBranches();
   specialities$ = this.specialityService.getSpecialities();

@@ -194,6 +194,94 @@ export class NavService implements OnDestroy {
       ],
     },
     {
+      title: 'Hospital',
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
+  <path d="M0 0h24v24H0z" fill="none"/>
+  <path d="M17.5 10.5h-1v1h1v-1zm-2.5 0h-1v1h1v-1zm-5.5 4h-1v1h1v-1zm-2.5 0h-1v1h1v-1zm9-10h-1v1h1v-1zm-2.5 0h-1v1h1v-1zm-5.5 4h-1v1h1v-1zm-2.5 0h-1v1h1v-1zm14-6h-20v20h20v-20zm-2 18h-16v-16h16v16zm-11-13h-1v1h1v-1zm-2.5 0h-1v1h1v-1zm5.5 0h-1v1h1v-1zm2.5 0h-1v1h1v-1zm-10 4h-1v1h1v-1zm2.5 0h-1v1h1v-1zm5.5 0h-1v1h1v-1zm2.5 0h-1v1h1v-1z" opacity=".3"/>
+  <path d="M10 4H6v16h12V4h-4v2h-4V4zM8 18v-2h8v2H8zm0-4v-2h8v2H8zm0-4V8h8v2H8z"/>
+</svg>`,
+      dirchange: false,
+      type: 'sub',
+      active: false,
+      children: [
+        {
+          title: 'Appointment',
+          dirchange: false,
+          type: 'sub',
+          active: false,
+          children: [
+            {
+              path: '/hospital/appointments',
+              title: 'All Appointments',
+              dirchange: false,
+              type: 'link',
+              active: false,
+              selected: false,
+            },
+            {
+              path: '/hospital/appointments/create',
+              title: 'Add New Appointment',
+              dirchange: false,
+              type: 'link',
+              active: false,
+              selected: false,
+            },
+
+          ],
+        },
+        {
+          title: 'Branches',
+          dirchange: false,
+          type: 'sub',
+          active: false,
+          children: [
+            {
+              path: '/hospital/branches',
+              title: 'All Branches',
+              dirchange: false,
+              type: 'link',
+              active: false,
+              selected: false,
+            },
+            {
+              path: '/hospital/branches/create',
+              title: 'Add New branch',
+              dirchange: false,
+              type: 'link',
+              active: false,
+              selected: false,
+            },
+
+          ],
+        },
+        {
+          title: 'Speciality',
+          dirchange: false,
+          type: 'sub',
+          active: false,
+          children: [
+            {
+              path: '/hospital/specialities',
+              title: 'All Specialities',
+              dirchange: false,
+              type: 'link',
+              active: false,
+              selected: false,
+            },
+            {
+              path: '/hospital/specialities/create',
+              title: 'Add New Speciality',
+              dirchange: false,
+              type: 'link',
+              active: false,
+              selected: false,
+            },
+
+          ],
+        },
+      ],
+    },
+    {
       title: 'Menu-levels',
       icon: `<svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M5 9h14V5H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5S7.83 8.5 7 8.5 5.5 7.83 5.5 7 6.17 5.5 7 5.5zM5 19h14v-4H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" opacity=".3"></path><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm-1 6H5v-4h14v4zm-12-.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-1 6H5V5h14v4zM7 8.5c.83 0 1.5-.67 1.5-1.5S7.83 5.5 7 5.5 5.5 6.17 5.5 7 6.17 8.5 7 8.5z"></path></svg>`,
       dirchange: false,

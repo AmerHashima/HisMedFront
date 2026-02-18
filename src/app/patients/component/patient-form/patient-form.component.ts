@@ -2,7 +2,7 @@ import { Component, effect, EventEmitter, inject, input, Output } from '@angular
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PatientStore } from '../../patientStore/patient.store';
 import { LookupService } from 'src/app/common/service/lookup.service';
-import { HospitalBranchService } from 'src/app/common/service/hospital-branch.service';
+import { HospitalBranchService } from 'src/app/Hospital/Services/hospital-branch.service';
 import { notInFutureValidator } from 'src/app/common/validators/notInFutureValidator';
 import { Patient } from '../../models/patient';
 import { ButtonComponent } from 'src/app/common/button/button.component';
@@ -13,8 +13,8 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-patient-form',
-  imports: [ButtonComponent,SpkFlatpickrComponent,SpkNgSelectComponent,
-    InputComponent,AsyncPipe,ReactiveFormsModule],
+  imports: [ButtonComponent, SpkFlatpickrComponent, SpkNgSelectComponent,
+    InputComponent, AsyncPipe, ReactiveFormsModule],
   templateUrl: './patient-form.component.html',
   styleUrl: './patient-form.component.scss'
 })
@@ -26,13 +26,13 @@ export class PatientFormComponent {
   lookupService = inject(LookupService);
   branchService = inject(HospitalBranchService);
   branches$ = this.branchService.getBranches();
-  bloodGroups$=this.lookupService.getBloodGroup();
+  bloodGroups$ = this.lookupService.getBloodGroup();
   maritalStatues$ = this.lookupService.getMaritalStatus();
   natiinalities$ = this.lookupService.getNationality();
   identityTypes$ = this.lookupService.getIdentityType();
   gender$ = this.lookupService.getGender();
 
-    form = this.fb.group({
+  form = this.fb.group({
     branchId: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', [Validators.required]],

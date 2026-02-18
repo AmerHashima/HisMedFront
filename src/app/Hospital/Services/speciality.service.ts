@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import ApiService from 'src/app/shared/services/api.service';
-import { ApiResponse, ApiSearchResponse } from '../Models/api-response';
-import { APISpeciality, Speciality } from '../Models/speciality';
-import { RequestWrapper } from '../Models/request';
+import { ApiResponse, ApiSearchResponse } from '../../common/Models/api-response';
+import { RequestWrapper } from '../../common/Models/request';
+import { APISpeciality, Speciality } from 'src/app/Hospital/models/speciality';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpecialityService {
- constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) { }
   getSpecialities(): Observable<APISpeciality[]> {
-    return this.apiService.get<ApiResponse<APISpeciality[]>>('Specialty', { activeOnly :true}).pipe(
+    return this.apiService.get<ApiResponse<APISpeciality[]>>('Specialty', { activeOnly: true }).pipe(
       map((response: ApiResponse<APISpeciality[]>) => {
         if (!response.success) {
           throw new Error(response.message || 'API failed to load specialities');

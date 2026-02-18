@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import ApiService from 'src/app/shared/services/api.service';
-import { APIHospitalBranch, HospitalBranch } from '../Models/hospital-branch';
-import { ApiResponse, ApiSearchResponse } from '../Models/api-response';
-import { RequestWrapper } from '../Models/request';
+import { ApiResponse, ApiSearchResponse } from '../../common/Models/api-response';
+import { RequestWrapper } from '../../common/Models/request';
+import { APIHospitalBranch, Branch } from 'src/app/Hospital/models/branch';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HospitalBranchService {
-constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) { }
 
 
   getBranches(): Observable<APIHospitalBranch[]> {
-    return this.apiService.get<ApiResponse<APIHospitalBranch[]>>('HospitalBranch', { activeOnly :true}).pipe(
+    return this.apiService.get<ApiResponse<APIHospitalBranch[]>>('HospitalBranch', { activeOnly: true }).pipe(
       map((response: ApiResponse<APIHospitalBranch[]>) => {
         if (!response.success) {
           throw new Error(response.message || 'API failed to load branches');
@@ -23,7 +23,7 @@ constructor(private apiService: ApiService) { }
     );
   }
 
-  createBranch(body: HospitalBranch): Observable<APIHospitalBranch> {
+  createBranch(body: Branch): Observable<APIHospitalBranch> {
     return this.apiService
       .post<ApiResponse<APIHospitalBranch>>('HospitalBranch', body)
       .pipe(
@@ -51,7 +51,7 @@ constructor(private apiService: ApiService) { }
       );
   }
 
-  updateBranch(id: string, body: HospitalBranch): Observable<APIHospitalBranch> {
+  updateBranch(id: string, body: Branch): Observable<APIHospitalBranch> {
     return this.apiService
       .put<ApiResponse<APIHospitalBranch>>('HospitalBranch', id, body)
       .pipe(
