@@ -1,1 +1,95 @@
-<p>appotntment-form works!</p>
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="d-flex flex-column gap-4 p-3"
+>
+  <div class="row flex-wrap gy-2">
+    <div class="col-lg-3">
+      <spk-ng-select
+        formControlName="patientId"
+        label="Patient Id"
+        [options]="$any(patients())"
+        bindLabel="firstName"
+        bindValue="oid"
+        [multiple]="false"
+        placeholder="Choose Patient"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-lg-3">
+      <spk-ng-select
+        formControlName="doctorId"
+        label="Doctor Id"
+        [options]="$any(doctors())"
+        bindLabel="doctorFullName"
+        bindValue="oid"
+        [multiple]="false"
+        placeholder="Choose Doctor"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-lg-3">
+      <spk-flatpickr
+        formControlName="appointmentDate"
+        [enableTime]="true"
+        [dateFormat]="'Y-m-d H:i'"
+        placeholder="Choose Date"
+        label="Appointment Date"
+      ></spk-flatpickr>
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="appointmentType"
+        label="Appointment Type"
+        type="text"
+        placeholder=""
+        icon="bi bi-card-text"
+        [errorMessages]="{
+          required: 'Appointment Type is required',
+          backendError: apiFieldErrors['appointmentType'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <spk-ng-select
+        formControlName="status"
+        label="Appointment Status"
+        [options]="$any((appointmentStatues$ | async) ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="oid"
+        [multiple]="false"
+        placeholder="Choose Status"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-lg-3">
+      <spk-ng-select
+        formControlName="branchId"
+        label="Branch Id"
+        [options]="$any(branches())"
+        bindLabel="name"
+        bindValue="oid"
+        [multiple]="false"
+        placeholder="Choose Branch"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="reason"
+        label="Reason"
+        type="text"
+        placeholder=""
+        icon="bi bi-card-text"
+        [errorMessages]="{
+          required: 'Reason is required',
+          backendError: apiFieldErrors['reason'],
+        }"
+      />
+    </div>
+  </div>
+  <div class="d-flex justify-content-end gap-2">
+    <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
+    <app-button btnLabel="Save Appointment" buttonType="submit" />
+  </div>
+</form>
