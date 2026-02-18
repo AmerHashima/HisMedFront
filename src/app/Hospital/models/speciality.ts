@@ -17,7 +17,6 @@ export interface APISpeciality {
 
   defaultVisitDuration: number,
   defaultPrice: number,
-
   isActive: boolean,
   createdAt: string,
   updatedAt: string
@@ -25,15 +24,15 @@ export interface APISpeciality {
 }
 
 
-export interface SpecialityVm extends Speciality {
+export interface SpecialityVM extends Speciality {
   createdAt: string;
   updatedAt: string;
 }
 
 
 export interface SpecialityState {
-  specialities: SpecialityVm[];
-  selectedSpeciality: SpecialityVm | null;
+  specialities: SpecialityVM[];
+  selectedSpeciality: SpecialityVM | null;
   success: boolean
   loading: boolean;
   error: string | null;
