@@ -1,3 +1,4 @@
+import { BaseCrudState } from "src/app/common/Models/base-crud-state";
 
 export interface Branch {
   oid?: string,
@@ -28,21 +29,24 @@ export interface APIHospitalBranch {
 
 
 export interface HospitalBranchVm extends Branch {
+  oid:string,
   createdAt: string;
   updatedAt: string;
 }
 
 
-export interface HospitalBranchState {
-  branches: HospitalBranchVm[];
-  selectedBranch: HospitalBranchVm | null;
-  success: boolean
-  loading: boolean;
-  error: string | null;
-  page: number;
-  pageSize: number;
-  total: number;
-  search: string;
-  sortBy: string;
-  sortDirection: 'asc' | 'desc' | '';
-}
+// export interface HospitalBranchState {
+//   branches: HospitalBranchVm[];
+//   selectedBranch: HospitalBranchVm | null;
+//   success: boolean
+//   loading: boolean;
+//   error: string | null;
+//   page: number;
+//   pageSize: number;
+//   total: number;
+//   search: string;
+//   sortBy: string;
+//   sortDirection: 'asc' | 'desc' | '';
+// }
+export type HospitalBranchState = BaseCrudState<HospitalBranchVm>;
+

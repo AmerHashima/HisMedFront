@@ -2,9 +2,11 @@
 import { SpecialityState } from "../../models/speciality";
 
 export const initialSecialityState: SpecialityState = {
-  specialities: [],
-  selectedSpeciality: null,
-success:false,
+  // specialities: [],
+  // selectedSpeciality: null,
+  items: [],
+  selectedItem: null,
+  success: false,
   loading: false,
   error: null,
   page: 1,

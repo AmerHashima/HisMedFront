@@ -1,5 +1,5 @@
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from "@ngrx/signals";
-import { initialSecialityState } from "./speciality,slice";
+import { initialSecialityState } from "./speciality.slice";
 import { computed, effect, inject } from "@angular/core";
 import { Filter, Pagination, RequestWrapper, Sort } from "src/app/common/Models/request";
 import { createQueryRequest } from "src/app/management/user/userStore/store.helpers";
@@ -7,7 +7,7 @@ import { SpecialityService } from "../../Services/speciality.service";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { catchError, debounceTime, EMPTY, finalize, of, pipe, switchMap, tap } from "rxjs";
 import { APISpeciality, Speciality, SpecialityVM } from "../../models/speciality";
-import { activateLoading, deactivateLoading, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
+import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiSpecialitiesToSpecialityVMs, mapApiSpecialityToSpecialityVM } from "./speciality.mapper";
 
 type UpdatePayload = {
@@ -24,7 +24,7 @@ export const SpecialityStore = signalStore(
 
       if (search().trim()) {
         filters.push({
-          propertyName: 'licenseNumber',
+          propertyName: 'nameEn',
           value: search().trim(),
           operation: 3,
         });
@@ -206,29 +206,29 @@ export const SpecialityStore = signalStore(
     ),
 
     // ❌ DELETE
-    // deleteSpeciality: rxMethod<string>(
-    //   pipe(
-    //     switchMap(id =>
-    //       service.deleteSpeciality(id).pipe(
+    deleteSpeciality: rxMethod<string>(
+      pipe(
+        switchMap(id =>
+          service.deleteSpecialty(id).pipe(
 
-    //         tap(() =>
-    //           patchState(
-    //             store,
-    //             deleteItem<SpecialityVM>(id)
-    //           )
-    //         ),
+            tap(() =>
+              patchState(
+                store,
+                deleteItem<SpecialityVM>(id)
+              )
+            ),
 
-    //         catchError(err => {
-    //           patchState(
-    //             store,
-    //             setError<SpecialityVM>(err.message)
-    //           );
-    //           return of(null);
-    //         })
-    //       )
-    //     )
-    //   )
-    // ),
+            catchError(err => {
+              patchState(
+                store,
+                setError<SpecialityVM>(err.message)
+              );
+              return of(null);
+            })
+          )
+        )
+      )
+    ),
 
     // 🎛 UI HELPERS
 
@@ -253,12 +253,12 @@ export const SpecialityStore = signalStore(
       );
     },
 
-    // setPage(page: number, pageSize?: number) {
-    //   patchState(
-    //     store,
-    //     setPageUpdater<SpecialityVM>(page, pageSize)
-    //   );
-    // },
+    setPage(page: number, pageSize?: number) {
+      patchState(
+        store,
+        setPageUpdater<SpecialityVM>(page, pageSize)
+      );
+    },
 
     setSort(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
       patchState(

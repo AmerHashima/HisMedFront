@@ -1,167 +1,193 @@
-import { signalStore, withState } from "@ngrx/signals";
+import { patchState, signalStore, withComputed, withMethods, withState } from "@ngrx/signals";
 import { initialAppointmentState } from './appointment.slice';
+import { Appointment, AppointmentVM } from "../../models/appointment";
+import { computed, inject } from "@angular/core";
+import { Filter, Pagination, RequestWrapper, Sort } from "src/app/common/Models/request";
+import { createQueryRequest } from "src/app/management/user/userStore/store.helpers";
+import { AppointmentService } from "../../Services/appointment.service";
+import { rxMethod } from "@ngrx/signals/rxjs-interop";
+import { catchError, debounceTime, EMPTY, finalize, of, pipe, switchMap, tap } from "rxjs";
+import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
+import { mapApiAppointmentToAppointmentVM } from "./appointment.mapper";
 
+type UpdatePayload = {
+  id: string;
+  body: Appointment;
+};
 export const AppointmentStore = signalStore(
   withState(initialAppointmentState),
 
-  // withComputed(({ page, pageSize, search, sortBy, sortDirection, total }) => ({
-  //   queryRequest: computed<RequestWrapper>(() => {
-  //     const filters: Filter[] = [];
+  withComputed(({ page, pageSize, search, sortBy, sortDirection, total }) => ({
+    queryRequest: computed<RequestWrapper>(() => {
 
-  //     if (search().trim()) {
-  //       filters.push({
-  //         propertyName: 'licenseNumber',
-  //         value: search().trim(),
-  //         operation: 3,
-  //       });
-  //     }
+      const filters: Filter[] = [];
+      if (search().trim()) {
+        filters.push({
+          propertyName: 'appointmentType',
+          value: search().trim(),
+          operation: 3,
+        });
+      }
 
-  //     const sort: Sort[] = [];
+      const sort: Sort[] = [];
+      if (sortBy() && sortDirection()) {
+        sort.push({
+          sortBy: sortBy(),
+          sortDirection: sortDirection()!.toUpperCase(),
+        });
+      }
 
-  //     if (sortBy() && sortDirection()) {
-  //       sort.push({
-  //         sortBy: sortBy(),
-  //         sortDirection: sortDirection()!.toUpperCase(),
-  //       });
-  //     }
+      const pagination: Pagination = {
+        getAll: false,
+        pageNumber: page() - 1,
+        pageSize: pageSize(),
+      };
 
-  //     const pagination: Pagination = {
-  //       getAll: false,
-  //       pageNumber: page() - 1,
-  //       pageSize: pageSize(),
-  //     };
+      return createQueryRequest({
+        filters,
+        sort,
+        pagination,
+        columns: [],
+      });
+    }),
 
-  //     return createQueryRequest({
-  //       filters,
-  //       sort,
-  //       pagination,
-  //       columns: [],
-  //     });
-  //   }),
+    hasSearch: computed(() => !!search().trim()),
+    isFirstPage: computed(() => page() <= 1),
+    isLastPage: computed(() => page() * pageSize() >= total()),
+  })),
 
-  //   // Optional: nicer API for template / debugging
-  //   hasSearch: computed(() => !!search().trim()),
-  //   isFirstPage: computed(() => page() <= 1),
-  //   isLastPage: computed(() => {
-  //     const loaded = page() * pageSize();
-  //     return loaded >= total();
-  //   }),
-  // })),
-
-  // withMethods((store, service = inject(DoctorService)) => ({
-  //   queryDoctors: rxMethod<RequestWrapper>(
+  // withMethods((store, service = inject(AppointmentService)) => ({
+  //   // 🔎 SEARCH
+  //   queryAppointments: rxMethod<RequestWrapper>(
   //     pipe(
   //       debounceTime(300),
-  //       tap(() => patchState(store, activateLoading)),
+  //       tap(() => patchState(store, activateLoading<AppointmentVM>())),
   //       switchMap(req =>
   //         service.search(req).pipe(
-  //           tap(res => patchState(store, setDoctors(res.doctors, res.total))),
+  //           tap(res =>
+  //             patchState(store,
+  //               setItems<AppointmentVM>(mapApiAppointmentsToAppointmentVMs(res.appointments), res.total)
+  //             )
+  //           ),
   //           catchError(err => {
-  //             patchState(store, setError(err.message));
-  //             return of({ doctors: [], total: 0 });
+  //             patchState(store, setError<AppointmentVM>(err.message));
+  //             return of({ appointments: [], total: 0 });
   //           }),
-  //           finalize(() => patchState(store, deactivateLoading))
+  //           finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
   //         )
   //       )
   //     )
   //   ),
 
   // })),
-  // withMethods((store, service = inject(DoctorService)) => ({
 
-  //   getDoctor: rxMethod<string>(
-  //     pipe(
-  //       tap(() => patchState(store, activateLoading)),
-  //       switchMap(id =>
-  //         service.getDoctor(id).pipe(
-  //           tap(d => patchState(store, setSelectedDoctor(d))),
-  //           catchError(err => {
-  //             patchState(store, setError(err.message));
-  //             return of(null);
-  //           }),
-  //           finalize(() => patchState(store, deactivateLoading))
-  //         )
-  //       )
-  //     )
-  //   ),
+  withMethods((store, service = inject(AppointmentService)) => ({
 
-  //   addDoctor: rxMethod<Doctor>(
-  //     pipe(
-  //       tap(() => {
-  //         patchState(store, activateLoading);
-  //         //  patchState(store, setError(null))
-  //       }),
-  //       switchMap((body) =>
-  //         service.createDoctor(body).pipe(
-  //           // tap((user: ApiUser) => patchState(store, addUser(user))),
-  //           tap(() => {
-  //             patchState(store, setSuccess(true));
-  //             store.queryDoctors(store.queryRequest());
-  //           }),
-  //           catchError((err) => {
-  //             patchState(store, setError(err?.error.message ?? 'Failed to add doctor'));
-  //             return EMPTY;
-  //           }),
-  //           finalize(() => patchState(store, deactivateLoading))
-  //         )
-  //       )
-  //     )
-  //   ),
-  //   updateDoctor: rxMethod<UpdatePayload>(
-  //     pipe(
-  //       tap(() => { patchState(store, activateLoading); }),
-  //       switchMap(({ id, body }) =>
-  //         service.updateDoctor(id, body).pipe(
-  //           // tap(() => patchState(store, setError(''))),
-  //           tap(() => {
-  //             patchState(store, setSuccess(true));
-  //             store.queryDoctors(store.queryRequest());
-  //           }),
-  //           catchError((err) => {
-  //             patchState(store, setError(err?.error.message ?? 'Failed to update doctor'));
-  //             return EMPTY;
-  //           }),
-  //           finalize(() => patchState(store, deactivateLoading))
-  //         )
-  //       )
-  //     )
-  //   ),
-  //   deleteDoctor: rxMethod<string>(
-  //     pipe(
-  //       switchMap(id =>
-  //         service.deleteDoctor(id).pipe(
-  //           tap(() => patchState(store, deleteDoctor(id))),
-  //           catchError(err => {
-  //             patchState(store, setError(err.message));
-  //             return of(null);
-  //           })
-  //         )
-  //       )
-  //     )
-  //   ),
 
-  //   clearSort() {
-  //     patchState(store, setSortUpdater("", ""));
-  //   },
-  //   setSuccess(success: boolean) {
-  //     patchState(store, setSuccess(success));
-  //   },
-  //   setSearch(value: string) {
-  //     patchState(store, setSearchUpdater(value));
-  //   },
+    // 📄 GET BY ID
+    getAppointment: rxMethod<string>(
+      pipe(
+        tap(() => patchState(store, activateLoading<AppointmentVM>())),
+        switchMap(id =>
+          service.getAppointment(id).pipe(
+            tap(apiAppointment =>
+              patchState(store, setSelectedItem<AppointmentVM>(mapApiAppointmentToAppointmentVM(apiAppointment)))
+            ),
+            catchError(err => {
+              patchState(store, setError<AppointmentVM>(err.message));
+              return of(null);
+            }),
+            finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
+          )
+        )
+      )
+    ),
 
-  //   setPage(page: number, pageSize?: number) {
-  //     patchState(store, setPageUpdater(page, pageSize));
-  //   },
-  //   setSort(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
-  //     patchState(store, setSortUpdater(sort.active, sort.direction));
-  //   },
-  // })),
+    // ➕ ADD
+    addAppointment: rxMethod<Appointment>(
+      pipe(
+        tap(() => patchState(store, activateLoading<AppointmentVM>())),
+        switchMap(body =>
+          service.createAppointment(body).pipe(
+            tap(() => {
+              patchState(store, setSuccess<AppointmentVM>(true));
+              console.log('update appointment');
+              // store.queryAppointments(store.queryRequest());
+            }),
+            catchError(err => {
+              patchState(store, setError<AppointmentVM>(err?.error?.message ?? 'Failed to add appointment'));
+              return EMPTY;
+            }),
+            finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
+          )
+        )
+      )
+    ),
+
+    // ✏ UPDATE
+    updateAppointment: rxMethod<UpdatePayload>(
+      pipe(
+        tap(() => patchState(store, activateLoading<AppointmentVM>())),
+        switchMap(({ id, body }) =>
+          service.updateAppointment(id, body).pipe(
+            tap(() => {
+              patchState(store, setSuccess<AppointmentVM>(true));
+              console.log('update appointment');
+
+              // store.queryAppointments(store.queryRequest());
+            }),
+            catchError(err => {
+              patchState(store, setError<AppointmentVM>(err?.error?.message ?? 'Failed to update appointment'));
+              return EMPTY;
+            }),
+            finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
+          )
+        )
+      )
+    ),
+
+    // ❌ DELETE
+    deleteAppointment: rxMethod<string>(
+      pipe(
+        switchMap(id =>
+          service.getAppointment(id).pipe(
+            tap(() => patchState(store, deleteItem<AppointmentVM>(id))),
+            catchError(err => {
+              patchState(store, setError<AppointmentVM>(err.message));
+              return of(null);
+            })
+          )
+        )
+      )
+    ),
+
+    // 🎛 UI HELPERS
+    setSearch(value: string) {
+      patchState(store, setSearchUpdater<AppointmentVM>(value));
+    },
+
+    setPage(page: number, pageSize?: number) {
+      patchState(store, setPageUpdater<AppointmentVM>(page, pageSize));
+    },
+
+    setSort(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
+      patchState(store, setSortUpdater<AppointmentVM>(sort.active, sort.direction));
+    },
+
+    clearSort() {
+      patchState(store, setSortUpdater<AppointmentVM>("", ""));
+    },
+
+    setSuccess(success: boolean) {
+      patchState(store, setSuccess<AppointmentVM>(success));
+    },
+
+  })),
 
   // withHooks({
   //   onInit(store) {
   //     effect(() => {
-  //       store.queryDoctors(store.queryRequest());
+  //       store.queryAppointments(store.queryRequest());
   //     });
   //   },
   // })

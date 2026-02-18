@@ -1,3 +1,5 @@
+import { BaseCrudState } from "src/app/common/Models/base-crud-state";
+
 export interface Appointment {
   oid?:string,
   patientId: string,
@@ -29,6 +31,7 @@ export interface APIAppointment {
 
 
 export interface AppointmentVM extends Appointment {
+  oid:string,
   patientName: string,
   patientMRN: string,
   doctorName: string,
@@ -39,16 +42,18 @@ export interface AppointmentVM extends Appointment {
 }
 
 
-export interface AppointmentState {
-  appointments: AppointmentVM[];
-  selectedAppointment: AppointmentVM | null;
-    success: boolean
-    loading: boolean;
-    error: string | null;
-    page: number;
-    pageSize: number;
-    total: number;
-    search: string;
-    sortBy: string;
-    sortDirection: 'asc' | 'desc' | '';
-}
+// export interface AppointmentState {
+//   appointments: AppointmentVM[];
+//   selectedAppointment: AppointmentVM | null;
+//     success: boolean
+//     loading: boolean;
+//     error: string | null;
+//     page: number;
+//     pageSize: number;
+//     total: number;
+//     search: string;
+//     sortBy: string;
+//     sortDirection: 'asc' | 'desc' | '';
+// }
+
+export type AppointmentState = BaseCrudState<AppointmentVM>;

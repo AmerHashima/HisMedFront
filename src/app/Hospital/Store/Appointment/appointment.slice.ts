@@ -3,8 +3,10 @@ import { AppointmentState } from "../../models/appointment";
 import { HospitalBranchState } from "../../models/branch";
 
 export const initialAppointmentState: AppointmentState = {
-  appointments: [],
-  selectedAppointment: null,
+  // appointments: [],
+  // selectedAppointment: null,
+  items: [],
+  selectedItem: null,
   success: false,
   loading: false,
   error: null,

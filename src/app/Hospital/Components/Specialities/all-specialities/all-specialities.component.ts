@@ -16,7 +16,8 @@ import { SpecialityFormComponent } from '../speciality-form/speciality-form.comp
 export class AllSpecialitiesComponent {
   private breadcrumb = inject(BreadcrumbService);
   private store = inject(SpecialityStore);
-  specialities = computed(() => this.store.specialities());
+  // specialities = computed(() => this.store.specialities());
+  specialities = computed(() => this.store.items());
   total = computed(() => this.store.total());
   pageSize = computed(() => this.store.pageSize());
   loading = computed(() => this.store.loading());

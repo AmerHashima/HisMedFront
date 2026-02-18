@@ -1,1 +1,110 @@
-<p>branch-form works!</p>
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="d-flex flex-column gap-4 p-3"
+>
+  <div class="row flex-wrap gy-2">
+    <div class="col-lg-3">
+      <app-input
+        formControlName="code"
+        label="code"
+        type="text"
+        placeholder=""
+        icon="bi bi-upc-scan"
+        [errorMessages]="{
+          required: 'code is required',
+          backendError: apiFieldErrors['code'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="name"
+        label="Name"
+        type="text"
+        placeholder=""
+        icon="bi bi-card-text"
+        [errorMessages]="{
+          required: 'Name is required',
+          backendError: apiFieldErrors['name'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="address"
+        label="Address"
+        type="text"
+        placeholder=""
+        icon="bi bi-geo-alt"
+        [errorMessages]="{
+          required: 'Address is required',
+          backendError: apiFieldErrors['address'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="city"
+        label="City"
+        type="text"
+        placeholder=""
+        icon="bi bi-building"
+        [errorMessages]="{
+          required: 'City is required',
+          backendError: apiFieldErrors['city'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="state"
+        label="State"
+        type="text"
+        placeholder=""
+        icon="bi bi-flag"
+        [errorMessages]="{
+          required: 'State is required',
+          backendError: apiFieldErrors['state'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="country"
+        label="Country"
+        type="text"
+        placeholder=""
+        icon="bi bi-globe"
+        [errorMessages]="{
+          required: 'Country is required',
+          backendError: apiFieldErrors['country'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="postalCode"
+        label="Postal Code"
+        type="text"
+        placeholder=""
+        icon="bi bi-mailbox"
+        [errorMessages]="{
+          required: 'Postal Code is required',
+          backendError: apiFieldErrors['postalCode'],
+        }"
+      />
+    </div>
+
+    <div class="py-2 px-3">
+      <app-toggle-btn
+        formControlName="isActive"
+        label="Set Speciality as Active"
+      />
+    </div>
+  </div>
+  <div class="d-flex justify-content-end gap-2">
+    <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
+    <app-button btnLabel="Save Branch" buttonType="submit" />
+  </div>
+</form>

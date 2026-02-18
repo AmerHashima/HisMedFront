@@ -17,8 +17,8 @@ export class SpecialityFormComponent {
   oid = input<string>('');
   fb = inject(FormBuilder);
   store = inject(SpecialityStore);
-  specialities = computed(() => this.store.specialities());
-
+  // specialities = computed(() => this.store.specialities());
+  specialities = computed(() => this.store.items());
   form = this.fb.group({
     code: ['', Validators.required],
     nameAr: ['', Validators.required],
@@ -47,7 +47,8 @@ export class SpecialityFormComponent {
     });
 
     effect(() => {
-      const speciality = this.store.selectedSpeciality();
+      // const speciality = this.store.selectedSpeciality();
+      const speciality = this.store.selectedItem();
       if (speciality) {
         this.form.patchValue({
           code: speciality.code,

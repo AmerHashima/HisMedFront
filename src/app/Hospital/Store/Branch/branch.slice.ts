@@ -2,9 +2,11 @@
 import { HospitalBranchState } from "../../models/branch";
 
 export const initialBranchState: HospitalBranchState = {
-  branches: [],
-  selectedBranch: null,
+  // branches: [],
+  // selectedBranch: null,
 success:false,
+items:[],
+selectedItem:null,
   loading: false,
   error: null,
   page: 1,
