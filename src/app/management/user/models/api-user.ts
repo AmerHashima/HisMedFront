@@ -8,9 +8,11 @@ export interface ApiUser {
   middleName: string;
   lastName: string;
   fullName: string;
-  gender: string;
+  genderLookupId: string;
+  genderName: string;
   birthDate: string;
-  roleID: number;
+  roleId: number;
+  roleName:string,
   isActive: boolean;
   lastLogin: string;
   failedLoginCount: number;

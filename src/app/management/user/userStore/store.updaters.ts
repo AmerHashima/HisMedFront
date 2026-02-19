@@ -1,8 +1,8 @@
 import { PartialStateUpdater } from "@ngrx/signals";
 import { UserState } from "../models/user-state";
 import { ApiUser } from "../models/api-user";
-import { mapApiUsersToUsers, mapApiUserToUser } from "./user.mapper";
-import { User } from "../models/user";
+import { mapApiUsersToUsers, mapApiUserToUser, mapApiUsersToUserVMs, mapApiUserToUserVM } from "./user.mapper";
+import { User, UserVM } from "../models/user";
 export const activateLoading: PartialStateUpdater<UserState> = (state) => ({
   loading: true,
 });
@@ -21,7 +21,9 @@ export const setError = (err: any): PartialStateUpdater<UserState> => {
 
 
 export const setUsers = (users: ApiUser[]): PartialStateUpdater<UserState> => {
-  const mappedUsers = mapApiUsersToUsers(users)
+  // const mappedUsers = mapApiUsersToUsers(users)
+  const mappedUsers = mapApiUsersToUserVMs(users)
+
   return () => ({
     users: mappedUsers,
   });
@@ -54,7 +56,9 @@ export const setUsers = (users: ApiUser[]): PartialStateUpdater<UserState> => {
 export const getUser = (
   user: ApiUser
 ): PartialStateUpdater<UserState> => {
-  const mappedUser: User = mapApiUserToUser(user);
+  // const mappedUser: User = mapApiUserToUser(user);
+  const mappedUser: UserVM = mapApiUserToUserVM(user);
+
   return () => ({
     selectedUser:mappedUser
   });
@@ -73,7 +77,8 @@ export const deleteUser = (
 
 
 export const displaySearchResult = (users: ApiUser[]): PartialStateUpdater<UserState> => {
-  const mappedUsers = mapApiUsersToUsers(users)
+  // const mappedUsers = mapApiUsersToUsers(users)
+  const mappedUsers = mapApiUsersToUserVMs(users)
   return () => ({
     users: mappedUsers,
   });

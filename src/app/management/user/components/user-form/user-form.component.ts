@@ -42,9 +42,9 @@ export class UserFormComponent {
     lastName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     twoFactorEnabled: [false],
     isActive: [false],
-    gender: ['', Validators.required],
+    genderLookupId: ['', Validators.required],
     birthDate: ['', [Validators.required, notInFutureValidator()]],
-    roleID: [0, Validators.required],
+    roleId: [0, Validators.required],
   });
 
   private backendErrorKeyMap: Record<string, string[]> = {
@@ -75,8 +75,8 @@ export class UserFormComponent {
           lastName: user.lastName,
           twoFactorEnabled: user.twoFactorEnabled,
           isActive: user.isActive,
-          gender: user.gender ? user.gender.toLowerCase() : null,
-          roleID: user.roleID,
+          genderLookupId: user.genderLookupId ? user.genderLookupId : null,
+          roleId: user.roleId,
           birthDate: user.birthDate,
         });
       }
@@ -219,8 +219,8 @@ export class UserFormComponent {
       lastName: v.lastName!,
       twoFactorEnabled: v.twoFactorEnabled ?? false,
       isActive: v.isActive ?? true,
-      gender: v.gender!,
-      roleID: v.roleID!,
+      genderLookupId: v.genderLookupId!,
+      roleId: v.roleId!,
       birthDate: birthday
     };
     return payload;

@@ -1,9 +1,11 @@
 // src\app\management\user\models\user-state.ts
-import { User } from "./user";
+import { User, UserVM } from "./user";
 
 export interface UserState {
-  users: User[];
-  selectedUser: User | null;
+  // users: User[];
+  // selectedUser: User | null;
+  users: UserVM[];
+  selectedUser: UserVM | null;
   success:boolean
   loading: boolean;
   error: string | null;

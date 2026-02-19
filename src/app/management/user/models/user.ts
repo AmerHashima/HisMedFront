@@ -8,9 +8,27 @@ export interface User {
   firstName: string,
   middleName: string,
   lastName: string,
-  gender: string,
+  genderLookupId: string,
   birthDate: string,
-  roleID: number,
+  roleId: number,
   isActive: boolean,
   twoFactorEnabled: boolean
 }
+
+export interface UserVM extends User {
+  oid:string,
+  fullName:string,
+  genderName:string,
+  roleName:string,
+  lastLogin:string,
+  failedLoginCount:number,
+  lockoutEnd:string,
+  passwordExpiry:string,
+  createdAt:string,
+  updatedAt:string
+}
+
+
+
+
+

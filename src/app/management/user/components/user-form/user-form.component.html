@@ -121,7 +121,7 @@
     </div>
     <div class="col-lg-3">
       <spk-ng-select
-        formControlName="gender"
+        formControlName="genderLookupId"
         label="Gender"
         [options]="$any((genderOptions$ | async)?.lookupDetails ?? [])"
         bindLabel="valueNameEn"
@@ -133,7 +133,7 @@
     </div>
     <div class="col-lg-3">
       <spk-ng-select
-        formControlName="roleID"
+        formControlName="roleId"
         label="Role"
         [options]="$any((roleOptions$ | async) ?? [])"
         bindLabel="name"
