@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import ApiService from 'src/app/shared/services/api.service';
-import { ApiResponse } from '../Models/api-response';
+import { ApiResponse, ApiSearchResponse } from '../Models/api-response';
 import { ApiLookup } from '../Models/lookup';
+import { APILookupDetail, APILookUPMaster, LookupDetail, LookUPMaster } from 'src/app/management/LookUp/models/lookup';
+import { RequestWrapper } from '../Models/request';
 
 export const LOOKUP_CODES = {
   DEPARTMENT: 'DEPARTMENT',
@@ -37,6 +39,79 @@ export class LookupService {
       );
   }
 
+  getDetailsByLookupMasterId(masterId: string): Observable<APILookupDetail[]> {
+    const url =`AppLookup/${masterId}/details`
+    return this.apiService
+      .get<ApiResponse<APILookupDetail[]>>(url)
+      .pipe(
+        map((response: ApiResponse<APILookupDetail[]>) => {
+          if (!response.success) {
+            const msg = response.errors?.join(', ') || response.message || 'API failed to load details';
+            throw new Error(msg);
+          }
+          return response.data;
+        })
+      );
+  }
+
+  getLookUpByMasterId(code: string): Observable<ApiLookup> {
+    return this.apiService
+      .getSingle<ApiResponse<ApiLookup>>('AppLookup', code, { includeDetails: true }
+      )
+      .pipe(
+        map((response: ApiResponse<ApiLookup>) => {
+          if (!response.success) {
+            const msg = response.errors?.join(', ') || response.message || 'API failed to load user';
+            throw new Error(msg);
+          }
+          return response.data;
+        })
+      );
+  }
+
+  createLookupMater(body: LookUPMaster): Observable<APILookUPMaster> {
+    return this.apiService
+      .post<ApiResponse<APILookUPMaster>>('AppLookup/masters', body)
+      .pipe(
+        map((response: ApiResponse<APILookUPMaster>) => {
+          if (!response.success) {
+            const msg = response.errors?.join(', ') || response.message || 'API failed to create LookUp mASTER';
+            throw new Error(msg);
+          }
+          return response.data;
+        })
+      );
+  }
+  createLookupDetail(body: LookupDetail): Observable<APILookupDetail> {
+    return this.apiService
+      .post<ApiResponse<APILookupDetail>>('AppLookup/details', body)
+      .pipe(
+        map((response: ApiResponse<APILookupDetail>) => {
+          if (!response.success) {
+            const msg = response.errors?.join(', ') || response.message || 'API failed to create LookUp details';
+            throw new Error(msg);
+          }
+          return response.data;
+        })
+      );
+  }
+
+  search(body: RequestWrapper): Observable<{ lookups: APILookUPMaster[]; total: number }> {
+      return this.apiService
+        .query<ApiSearchResponse<APILookUPMaster>>('AppLookup/query', body)
+        .pipe(
+          map((response: ApiSearchResponse<APILookUPMaster>) => {
+            if (!response.success) {
+              const msg = response.errors?.join(', ') || response.message || 'API failed to query';
+              throw new Error(msg);
+            }
+            return {
+              lookups: response.data.data ?? [],
+              total: response.data.totalPages ?? 0,
+            };
+          })
+        );
+    }
   getDepartment() {
     return this.getLookUpByCode(LOOKUP_CODES.DEPARTMENT);
   }
