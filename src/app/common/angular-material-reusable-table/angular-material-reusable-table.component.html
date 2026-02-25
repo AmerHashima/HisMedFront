@@ -1,19 +1,31 @@
-<div class="d-flex align-item-center justify-content-between">
-  <mat-form-field *ngIf="showFilter" appearance="outline">
-  <input
-    matInput
-    placeholder="Search..."
-    (keyup)="onFilter($event)"
-  />
-</mat-form-field>
-  <app-button btnLabel="Add New" [mainBtn]="true" (click)="onAddNew()" />
-</div>
+@if (title != "lookup detail") {
+  <div class="d-flex align-item-center justify-content-between">
+    <mat-form-field *ngIf="showFilter" appearance="outline">
+      <input matInput placeholder="Search..." (keyup)="onFilter($event)" />
+    </mat-form-field>
+    <div class="d-flex align-item-center justify-content-between gap-2">
+      <app-button
+        [btnLabel]="'Add new ' + title"
+        [mainBtn]="true"
+        (click)="onAddNew()"
+      />
+      @if (title == "lookup master") {
+        <app-button
+          btnLabel="Add new master detail"
+          [mainBtn]="true"
+          (click)="onAddDetails()"
+        />
+      }
+    </div>
+  </div>
+}
 
 <table mat-table [dataSource]="data" matSort class="mat-elevation-z8">
-
   <!-- Dynamic Columns -->
-  <ng-container *ngFor="let col of columns; let colIndex = index" [matColumnDef]="col.field">
-
+  <ng-container
+    *ngFor="let col of columns; let colIndex = index"
+    [matColumnDef]="col.field"
+  >
     <!-- Header -->
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       {{ col.header }}
@@ -21,18 +33,23 @@
 
     <!-- Cell -->
     <td mat-cell *matCellDef="let row; let rowIndex = index">
-
       <!-- Make first column clickable -->
       <ng-container *ngIf="colIndex === 0">
-
-        <span *ngIf="col.type === 'text'" class="clickable" (click)="onFirstCellClick(row, rowIndex, colIndex)">
+        <span
+          *ngIf="col.type === 'text'"
+          class="clickable"
+          (click)="onFirstCellClick(row, rowIndex, colIndex)"
+        >
           {{ getCellValue(row, col) }}
         </span>
 
-        <span *ngIf="col.type === 'date'" class="clickable" (click)="onFirstCellClick(row, rowIndex, colIndex)">
-          {{ row[col.field] | date : col.format || 'mediumDate' }}
+        <span
+          *ngIf="col.type === 'date'"
+          class="clickable"
+          (click)="onFirstCellClick(row, rowIndex, colIndex)"
+        >
+          {{ row[col.field] | date: col.format || "mediumDate" }}
         </span>
-
       </ng-container>
 
       <!-- Non-first columns -->
@@ -41,12 +58,16 @@
           {{ getCellValue(row, col) }}
         </span>
         <span *ngIf="col.type === 'date'">
-          {{ row[col.field] | date : col.format || 'mediumDate' }}
+          {{ row[col.field] | date: col.format || "mediumDate" }}
         </span>
       </ng-container>
 
       <!-- BADGE (all rows, any column) -->
-      <span *ngIf="col.type === 'badge'" class="badge" [ngClass]="getBadgeClass(row[col.field], col)">
+      <span
+        *ngIf="col.type === 'badge'"
+        class="badge"
+        [ngClass]="getBadgeClass(row[col.field], col)"
+      >
         {{ getBadgeLabel(row[col.field], col) }}
       </span>
 
@@ -59,7 +80,6 @@
           <mat-icon>delete</mat-icon>
         </button>
       </ng-container>
-
     </td>
   </ng-container>
 
@@ -69,7 +89,7 @@
   <!-- Data Row -->
   <tr mat-row *matRowDef="let row; columns: columnKeys"></tr>
 
-   <tr class="mat-row" *matNoDataRow>
+  <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell text-center" [attr.colspan]="columnKeys.length">
       No data available
     </td>
@@ -77,12 +97,14 @@
 </table>
 
 <!-- Paginator -->
-<mat-paginator
-  *ngIf="showPaginator"
-  [length]="totalCount"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="pageSizeOptions"
-  showFirstLastButtons
-  (page)="pageChange.emit($event)"
->
-</mat-paginator>
+@if (title != "lookup detail") {
+  <mat-paginator
+    *ngIf="showPaginator"
+    [length]="totalCount"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    showFirstLastButtons
+    (page)="pageChange.emit($event)"
+  >
+  </mat-paginator>
+}

@@ -2,6 +2,7 @@ import { Component, computed, effect, EventEmitter, inject, input, Output } from
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from 'src/app/common/button/button.component';
 import { InputComponent } from 'src/app/common/input/input.component';
+import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 import { ToggleBtnComponent } from 'src/app/common/toggle-btn/toggle-btn.component';
 import { Branch } from 'src/app/Hospital/models/branch';
 import { BranchStore } from 'src/app/Hospital/Store/Branch/branch.store';
@@ -17,6 +18,8 @@ export class BranchFormComponent {
   oid = input<string>('');
   fb = inject(FormBuilder);
   store = inject(BranchStore);
+    validationErrorService = inject(ValidationErrorService);
+
   // specialities = computed(() => this.store.specialities());
   branches = computed(() => this.store.items());
   form = this.fb.group({
@@ -40,6 +43,7 @@ export class BranchFormComponent {
     state: ['state'],
 
   };
+  apiFieldErrors: Record<string, string> = {};
   constructor() {
 
     effect(() => {
@@ -69,12 +73,19 @@ export class BranchFormComponent {
     });
 
 
+
     effect(() => {
       const error = this.store.error();
+
       if (!error) {
-        this.clearAllFieldErrors();
+        this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
       } else {
-        this.getApiErrorMessage(error);
+        this.validationErrorService.handleApiErrors(
+          this.form,
+          error,
+          this.backendErrorKeyMap,
+          this.apiFieldErrors
+        );
       }
     });
 
@@ -85,56 +96,6 @@ export class BranchFormComponent {
       this.store.setSuccess(false);
     });
 
-  }
-
-  apiFieldErrors: Record<string, string> = {};
-
-  getApiErrorMessage(error: string) {
-    this.apiFieldErrors = {};
-    if (!error) return;
-
-    const message = error.toLowerCase();
-
-    for (const field in this.backendErrorKeyMap) {
-      const keywords = this.backendErrorKeyMap[field];
-
-      if (keywords.some(k => message.includes(k))) {
-        this.applyBackendErrorToControl(field, error);
-        return;
-      }
-    }
-
-    this.form.setErrors({ backendError: true });
-  }
-
-  applyBackendErrorToControl(field: string, message: string) {
-    const control = this.form.get(field);
-    if (!control) return;
-
-    this.apiFieldErrors[field] = message;
-
-    control.setErrors({
-      ...(control.errors ?? {}),
-      backendError: true
-    });
-
-    control.markAsTouched();
-  }
-  private clearAllFieldErrors() {
-    this.apiFieldErrors = {};
-
-    // clear form-level errors
-    this.form.setErrors(null);
-
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (!control) return;
-
-      control.setErrors(null);
-
-      control.markAsUntouched();
-      control.markAsPristine();
-    });
   }
 
   onSubmit() {

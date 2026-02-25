@@ -1,1 +1,82 @@
-<p>look-up-details-form works!</p>
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="d-flex flex-column gap-4 p-3"
+>
+  <div class="row flex-wrap gy-2">
+       <div class="col-lg-3">
+      <spk-ng-select
+        formControlName="lookupMasterID"
+        label="Lookup master id"
+        [options]="masterLookUps()"
+        bindLabel="lookupNameEn"
+        bindValue="oid"
+        [multiple]="false"
+        placeholder="Choose Master Lookup"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="valueCode"
+        label="Code"
+        type="text"
+        placeholder=""
+        icon="bi bi-file-earmark-text-fill"
+        [errorMessages]="{
+          required: 'Code is required',
+          backendError: apiFieldErrors['valueCode'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="valueNameEn"
+        label="Detail Value"
+        type="text"
+        placeholder=""
+        icon="bi bi-file-earmark-text-fill"
+        [errorMessages]="{
+          required: 'Detail value is required',
+          backendError: apiFieldErrors['valueNameEn'],
+        }"
+      />
+    </div>
+<div class="col-lg-3">
+      <app-input
+        formControlName="valueNameAr"
+        label="Arabic Detail Value"
+        type="text"
+        placeholder=""
+        icon="bi bi-file-earmark-text-fill"
+        [errorMessages]="{
+          required: 'Arabic Detail Value is required',
+          backendError: apiFieldErrors['valueNameAr'],
+        }"
+      />
+    </div>
+    <div class="col-lg-3">
+      <app-input
+        formControlName="sortOrder"
+        label="Order"
+        type="number"
+        placeholder=""
+        icon="bi bi-file-earmark-text-fill"
+        [errorMessages]="{
+          required: 'Order Number is required',
+          backendError: apiFieldErrors['sortOrder'],
+        }"
+      />
+    </div>
+  </div>
+  <div class="d-flex flex-column gap-2">
+    <app-toggle-btn
+      formControlName="isDefault"
+      label="Set as default value"
+    />
+  </div>
+  <div class="d-flex justify-content-end gap-2">
+    <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
+    <app-button btnLabel="Save Lookup Detail" buttonType="submit" />
+  </div>
+</form>

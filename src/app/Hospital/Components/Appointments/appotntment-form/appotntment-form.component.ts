@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from 'src/app/common/button/button.component';
 import { InputComponent } from 'src/app/common/input/input.component';
 import { LookupService } from 'src/app/common/service/lookup.service';
+import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
 import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
 import { DoctorStore } from 'src/app/doctors/doctorStore/doctorStore';
@@ -14,14 +15,14 @@ import { PatientStore } from 'src/app/patients/patientStore/patient.store';
 
 @Component({
   selector: 'app-appointment-form',
-  imports: [ReactiveFormsModule,InputComponent,SpkNgSelectComponent,
-    SpkFlatpickrComponent,ButtonComponent,AsyncPipe
+  imports: [ReactiveFormsModule, InputComponent, SpkNgSelectComponent,
+    SpkFlatpickrComponent, ButtonComponent, AsyncPipe
   ],
   templateUrl: './appotntment-form.component.html',
   styleUrl: './appotntment-form.component.scss'
 })
 export class AppotntmentFormComponent {
-    private lookupService=inject(LookupService);
+  private lookupService = inject(LookupService);
   appointmentStatues$ = this.lookupService.getAppointmentStatus();
 
   @Output() cancalEvent = new EventEmitter<any>();
@@ -31,6 +32,8 @@ export class AppotntmentFormComponent {
   doctorStore = inject(DoctorStore);
   patientStore = inject(PatientStore);
   branchStore = inject(BranchStore);
+  validationErrorService = inject(ValidationErrorService);
+
   doctors = computed(() => this.doctorStore.doctors());
   patients = computed(() => this.patientStore.patients());
   branches = computed(() => this.branchStore.items());
@@ -54,8 +57,8 @@ export class AppotntmentFormComponent {
     branchId: ['branchId'],
     status: ['status'],
     reason: ['resason'],
-
   };
+  apiFieldErrors: Record<string, string> = {};
   constructor() {
 
     effect(() => {
@@ -85,10 +88,16 @@ export class AppotntmentFormComponent {
 
     effect(() => {
       const error = this.store.error();
+
       if (!error) {
-        this.clearAllFieldErrors();
+        this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
       } else {
-        this.getApiErrorMessage(error);
+        this.validationErrorService.handleApiErrors(
+          this.form,
+          error,
+          this.backendErrorKeyMap,
+          this.apiFieldErrors
+        );
       }
     });
 
@@ -101,55 +110,7 @@ export class AppotntmentFormComponent {
 
   }
 
-  apiFieldErrors: Record<string, string> = {};
 
-  getApiErrorMessage(error: string) {
-    this.apiFieldErrors = {};
-    if (!error) return;
-
-    const message = error.toLowerCase();
-
-    for (const field in this.backendErrorKeyMap) {
-      const keywords = this.backendErrorKeyMap[field];
-
-      if (keywords.some(k => message.includes(k))) {
-        this.applyBackendErrorToControl(field, error);
-        return;
-      }
-    }
-
-    this.form.setErrors({ backendError: true });
-  }
-
-  applyBackendErrorToControl(field: string, message: string) {
-    const control = this.form.get(field);
-    if (!control) return;
-
-    this.apiFieldErrors[field] = message;
-
-    control.setErrors({
-      ...(control.errors ?? {}),
-      backendError: true
-    });
-
-    control.markAsTouched();
-  }
-  private clearAllFieldErrors() {
-    this.apiFieldErrors = {};
-
-    // clear form-level errors
-    this.form.setErrors(null);
-
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (!control) return;
-
-      control.setErrors(null);
-
-      control.markAsUntouched();
-      control.markAsPristine();
-    });
-  }
 
   onSubmit() {
     if (this.form.invalid) {

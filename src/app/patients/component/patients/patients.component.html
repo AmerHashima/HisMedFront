@@ -5,6 +5,8 @@
       [data]="patients()"
       [totalCount]="total()"
       [pageSize]="pageSize()"
+            title="patient"
+
       (pageChange)="onPageChange($event)"
       (filterChange)="onFilterChange($event)"
       (sortChange)="onSortChange($event)"
@@ -16,6 +18,19 @@
     </app-reusable-material-table>
   </div>
   <div>
-    <app-patient-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/>
+    <app-patient-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"  (setToastObject)="setToastObject($event)"/>
   </div>
 </div>
+
+@if(showToast){
+  <spk-toast
+  [show]="showToast"
+  [title]="toastObject.title"
+  [content]="toastObject.content"
+  header="Notification"
+  [autohide]="true"
+  (hide)="onToastHide()"
+  (closeToast)="onToastClose()"
+>
+</spk-toast>
+}

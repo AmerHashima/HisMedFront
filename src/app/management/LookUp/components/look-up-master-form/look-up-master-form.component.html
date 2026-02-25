@@ -63,8 +63,26 @@
       label="Set as system lookup"
     />
   </div>
+
+  @if(lookupCode()){
+  <div class="detailsTable rounded p-3">
+    <div class='p-2 text-end'>
+             <span class="addDetail" (click)="handleAddNewDetails()">Add New Detail</span>
+    </div>
+      <app-reusable-material-table
+      [columns]="columns"
+      [data]="details()"
+      title="lookup detail"
+      (onFirstCellClickChange)="handleSingleLookupMasterNavigation($event)"
+    >
+    </app-reusable-material-table>
+  </div>
+}
+
   <div class="d-flex justify-content-end gap-2">
     <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
     <app-button btnLabel="Save LookUP" buttonType="submit" />
   </div>
 </form>
+
+

@@ -80,10 +80,15 @@ export const BranchStore = signalStore(
             ),
 
             catchError(err => {
-              patchState(store, setError<HospitalBranchVm>(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError<HospitalBranchVm>(
+                  error ?? 'Failed to query Branch'
+                )
+              );
               return of({ branches: [], total: 0 });
             }),
-
             finalize(() =>
               patchState(store, deactivateLoading<HospitalBranchVm>())
             )
@@ -93,7 +98,15 @@ export const BranchStore = signalStore(
     ),
   })),
   withMethods((store, service = inject(HospitalBranchService)) => ({
-
+    clearSelectedItem: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, {
+            selectedItem: null
+          });
+        })
+      )
+    ),
     // 📄 GET BY ID
     getBranch: rxMethod<string>(
       pipe(
@@ -111,10 +124,18 @@ export const BranchStore = signalStore(
               )
             ),
 
-            catchError(err => {
-              patchState(store, setError<HospitalBranchVm>(err.message));
-              return of(null);
-            }),
+                catchError(err => {
+                          const error=err.error.errors;
+                          patchState(
+                            store,
+                            setError<HospitalBranchVm>(
+                              error ?? 'Failed to get Branch'
+                            )
+                          );
+                          return of(null);
+                        }),
+
+
 
             finalize(() =>
               patchState(store, deactivateLoading<HospitalBranchVm>())
@@ -138,13 +159,17 @@ export const BranchStore = signalStore(
             }),
 
             catchError(err => {
-              patchState(store,
+              const error = err.error.errors;
+              patchState(
+                store,
                 setError<HospitalBranchVm>(
-                  err?.error?.message ?? 'Failed to add branch'
+                  error ?? 'Failed to add Branch'
                 )
               );
-              return EMPTY;
+              return of(null);
             }),
+
+
 
             finalize(() =>
               patchState(store, deactivateLoading<HospitalBranchVm>())
@@ -166,14 +191,15 @@ export const BranchStore = signalStore(
               patchState(store, setSuccess<HospitalBranchVm>(true));
               store.queryBranches(store.queryRequest());
             }),
-
             catchError(err => {
-              patchState(store,
+              const error = err.error.errors;
+              patchState(
+                store,
                 setError<HospitalBranchVm>(
-                  err?.error?.message ?? 'Failed to update branch'
+                  error ?? 'Failed to update Branch'
                 )
               );
-              return EMPTY;
+              return of(null);
             }),
 
             finalize(() =>
@@ -195,9 +221,15 @@ export const BranchStore = signalStore(
             ),
 
             catchError(err => {
-              patchState(store, setError<HospitalBranchVm>(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError<HospitalBranchVm>(
+                  error ?? 'Failed to delete Branch'
+                )
+              );
               return of(null);
-            })
+            }),
           )
         )
       )

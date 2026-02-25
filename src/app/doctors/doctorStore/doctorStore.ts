@@ -81,10 +81,17 @@ export const DoctorStore = signalStore(
         switchMap(req =>
           service.search(req).pipe(
             tap(res => patchState(store, setDoctors(res.doctors, res.total))),
-            catchError(err => {
-              patchState(store, setError(err.message));
-              return of({ doctors: [], total: 0 });
-            }),
+                catchError(err => {
+                            const error = err.error.errors;
+                            patchState(
+                              store,
+                              setError(
+                                error ?? 'Failed to query doctor'
+                              )
+                            );
+                  return of({ doctors: [], total: 0 });
+                          }),
+
             finalize(() => patchState(store, deactivateLoading))
           )
         )
@@ -93,7 +100,15 @@ export const DoctorStore = signalStore(
 
   })),
   withMethods((store, service = inject(DoctorService)) => ({
-
+    clearSelectedItem: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, {
+            selectedDoctor: null
+          });
+        })
+      )
+    ),
     getDoctor: rxMethod<string>(
       pipe(
         tap(() => patchState(store, activateLoading)),
@@ -101,9 +116,16 @@ export const DoctorStore = signalStore(
           service.getDoctor(id).pipe(
             tap(d => patchState(store, setSelectedDoctor(d))),
             catchError(err => {
-              patchState(store, setError(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to get doctor'
+                )
+              );
               return of(null);
             }),
+
             finalize(() => patchState(store, deactivateLoading))
           )
         )
@@ -123,10 +145,17 @@ export const DoctorStore = signalStore(
               patchState(store, setSuccess(true));
               store.queryDoctors(store.queryRequest());
             }),
-            catchError((err) => {
-              patchState(store, setError(err?.error.message ?? 'Failed to add doctor'));
-              return EMPTY;
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to add doctor'
+                )
+              );
+              return of(null);
             }),
+
             finalize(() => patchState(store, deactivateLoading))
           )
         )
@@ -142,9 +171,15 @@ export const DoctorStore = signalStore(
               patchState(store, setSuccess(true));
               store.queryDoctors(store.queryRequest());
             }),
-            catchError((err) => {
-              patchState(store, setError(err?.error.message ?? 'Failed to update doctor'));
-              return EMPTY;
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to update doctor'
+                )
+              );
+              return of(null);
             }),
             finalize(() => patchState(store, deactivateLoading))
           )
@@ -157,9 +192,15 @@ export const DoctorStore = signalStore(
           service.deleteDoctor(id).pipe(
             tap(() => patchState(store, deleteDoctor(id))),
             catchError(err => {
-              patchState(store, setError(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to delete doctor'
+                )
+              );
               return of(null);
-            })
+            }),
           )
         )
       )

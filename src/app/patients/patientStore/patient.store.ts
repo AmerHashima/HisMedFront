@@ -74,10 +74,17 @@ export const PatientStore = signalStore(
         switchMap(req =>
           service.search(req).pipe(
             tap(res => patchState(store, setPatients(res.patients, res.total))),
-            catchError(err => {
-              patchState(store, setError(err.message));
-              return of({ patients: [], total: 0 });
-            }),
+                catchError(err => {
+                            const error = err.error.errors;
+                            patchState(
+                              store,
+                              setError(
+                                error ?? 'Failed to query patient'
+                              )
+                            );
+                  return of({ patients: [], total: 0 });
+                          }),
+
             finalize(() => patchState(store, deactivateLoading))
           )
         )
@@ -86,7 +93,15 @@ export const PatientStore = signalStore(
 
   })),
   withMethods((store, service = inject(PatientService)) => ({
-
+    clearSelectedItem: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, {
+            selectedPatient: null
+          });
+        })
+      )
+    ),
     addPatient: rxMethod<Patient>(
       pipe(
         tap(() => {
@@ -100,10 +115,17 @@ export const PatientStore = signalStore(
               patchState(store, setSuccess(true));
               store.queryPatients(store.queryRequest());
             }),
-            catchError((err) => {
-              patchState(store, setError(err?.error.message ?? 'Failed to add patient'));
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to add patient'
+                )
+              );
               return EMPTY;
             }),
+
             finalize(() => patchState(store, deactivateLoading))
           )
         )
@@ -119,10 +141,17 @@ export const PatientStore = signalStore(
               patchState(store, setSuccess(true));
               store.queryPatients(store.queryRequest());
             }),
-            catchError((err) => {
-              patchState(store, setError(err?.error.message ?? 'Failed to update pateint'));
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to update patient'
+                )
+              );
               return EMPTY;
             }),
+
             finalize(() => patchState(store, deactivateLoading))
           )
         )
@@ -135,7 +164,13 @@ export const PatientStore = signalStore(
           service.getPatient(id).pipe(
             tap(p => patchState(store, setSelectedPatient(p))),
             catchError(err => {
-              patchState(store, setError(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to get patient'
+                )
+              );
               return of(null);
             }),
             finalize(() => patchState(store, deactivateLoading))
@@ -150,9 +185,15 @@ export const PatientStore = signalStore(
           service.deletePatient(id).pipe(
             tap(() => patchState(store, deletePatient(id))),
             catchError(err => {
-              patchState(store, setError(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to delete patient'
+                )
+              );
               return of(null);
-            })
+            }),
           )
         )
       )

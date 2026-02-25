@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
 import { Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
-interface Option {
-  label: string;
-  value: any;
-}
+// interface Option {
+//   label: string;
+//   value: any;
+// }
 
 @Component({
   selector: 'spk-ng-select',
@@ -23,7 +23,7 @@ export class SpkNgSelectComponent implements ControlValueAccessor {
   // Signal Inputs
   // ────────────────────────────────────────────────
   label = input<string>('');
-  options = input<Option[]>([]);
+  options = input<any[]>([]);
   id = input<string>('');
   mainClass = input<string>('');
   selectClass = input<string>('');

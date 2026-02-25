@@ -12,6 +12,7 @@ import { notInFutureValidator } from 'src/app/common/validators/notInFutureValid
 import { LookupService } from 'src/app/common/service/lookup.service';
 import { AsyncPipe } from '@angular/common';
 import { RoleService } from 'src/app/common/service/role.service';
+import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 @Component({
   selector: 'app-user-form',
   imports: [SpkNgSelectComponent, ButtonComponent, InputComponent, ToggleBtnComponent,
@@ -31,6 +32,7 @@ export class UserFormComponent {
   fb = inject(FormBuilder);
   store = inject(UsersStore);
   id: string = '';
+  validationErrorService = inject(ValidationErrorService);
 
   form = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
@@ -52,6 +54,8 @@ export class UserFormComponent {
     email: ['email', 'e-mail'],
     phone: ['phone', 'mobile'],
   };
+  apiFieldErrors: Record<string, string> = {};
+
   constructor() {
 
     effect(() => {
@@ -102,14 +106,18 @@ export class UserFormComponent {
 
       passwordCtrl.updateValueAndValidity();
     });
-
     effect(() => {
       const error = this.store.error();
 
-      if (!error ) {
-        this.clearAllFieldErrors();
+      if (!error) {
+        this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
       } else {
-        this.getApiErrorMessage(error);
+        this.validationErrorService.handleApiErrors(
+          this.form,
+          error,
+          this.backendErrorKeyMap,
+          this.apiFieldErrors
+        );
       }
     });
 
@@ -122,58 +130,8 @@ export class UserFormComponent {
 
   }
 
-  apiFieldErrors: Record<string, string> = {};
 
-  getApiErrorMessage(error: string) {
-    this.apiFieldErrors = {};
-    if (!error) return;
 
-    const message = error.toLowerCase();
-
-    for (const field in this.backendErrorKeyMap) {
-      const keywords = this.backendErrorKeyMap[field];
-
-      if (keywords.some(k => message.includes(k))) {
-        this.applyBackendErrorToControl(field, error);
-        return;
-      }
-    }
-
-    this.form.setErrors({ backendError: true });
-  }
-
-  applyBackendErrorToControl(field: string, message: string) {
-    const control = this.form.get(field);
-    if (!control) return;
-
-    this.apiFieldErrors[field] = message;
-
-    control.setErrors({
-      ...(control.errors ?? {}),
-      backendError: true
-    });
-
-    control.markAsTouched();
-  }
-  private clearAllFieldErrors() {
-    // clear all backend API errors
-    this.apiFieldErrors = {};
-
-    // clear form-level errors
-    this.form.setErrors(null);
-
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (!control) return;
-
-      // remove ALL errors (required, minlength, backendError, etc.)
-      control.setErrors(null);
-
-      // reset state flags
-      control.markAsUntouched();
-      control.markAsPristine();
-    });
-  }
   formatDateOnly(value: string | Date): string {
     const d = new Date(value);
     const year = d.getFullYear();

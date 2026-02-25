@@ -125,7 +125,7 @@
         label="Gender"
         [options]="$any((genderOptions$ | async)?.lookupDetails ?? [])"
         bindLabel="valueNameEn"
-        bindValue="valueNameEn"
+        bindValue="oid"
         [multiple]="false"
         placeholder="Choose gender"
         selectClass="form-control"

@@ -5,8 +5,8 @@ import { Filter, Pagination, RequestWrapper, Sort } from "src/app/common/Models/
 import { createQueryRequest } from "src/app/management/user/userStore/store.helpers";
 import { SpecialityService } from "../../Services/speciality.service";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { catchError, debounceTime, EMPTY, finalize, of, pipe, switchMap, tap } from "rxjs";
-import { APISpeciality, Speciality, SpecialityVM } from "../../models/speciality";
+import { catchError, debounceTime, finalize, of, pipe, switchMap, tap } from "rxjs";
+import {  Speciality, SpecialityVM } from "../../models/speciality";
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiSpecialitiesToSpecialityVMs, mapApiSpecialityToSpecialityVM } from "./speciality.mapper";
 
@@ -80,14 +80,17 @@ export const SpecialityStore = signalStore(
                 )
               )
             ),
-
             catchError(err => {
+              const error = err.error.errors;
               patchState(
                 store,
-                setError<SpecialityVM>(err.message)
+                setError<SpecialityVM>(
+                  error ?? 'Failed to query specialities'
+                )
               );
               return of({ specialities: [], total: 0 });
             }),
+
 
             finalize(() =>
               patchState(store, deactivateLoading<SpecialityVM>())
@@ -99,6 +102,15 @@ export const SpecialityStore = signalStore(
 
   })),
   withMethods((store, service = inject(SpecialityService)) => ({
+    clearSelectedItem: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, {
+            selectedItem: null
+          });
+        })
+      )
+    ),
     getSpeciality: rxMethod<string>(
       pipe(
         tap(() =>
@@ -116,15 +128,16 @@ export const SpecialityStore = signalStore(
                 )
               )
             ),
-
             catchError(err => {
+              const error = err.error.errors;
               patchState(
                 store,
-                setError<SpecialityVM>(err.message)
+                setError<SpecialityVM>(
+                  error ?? 'Failed to load Speciality'
+                )
               );
               return of(null);
             }),
-
             finalize(() =>
               patchState(store, deactivateLoading<SpecialityVM>())
             )
@@ -142,7 +155,6 @@ export const SpecialityStore = signalStore(
 
         switchMap(body =>
           service.createSpeciality(body).pipe(
-
             tap(() => {
               patchState(
                 store,
@@ -152,13 +164,14 @@ export const SpecialityStore = signalStore(
             }),
 
             catchError(err => {
+              const error=err.error.errors;
               patchState(
                 store,
                 setError<SpecialityVM>(
-                  err?.error?.message ?? 'Failed to add speciality'
+                  error ?? 'Failed to add speciality'
                 )
               );
-              return EMPTY;
+              return of(null);
             }),
 
             finalize(() =>
@@ -188,15 +201,15 @@ export const SpecialityStore = signalStore(
             }),
 
             catchError(err => {
+              const error = err.error.errors;
               patchState(
                 store,
                 setError<SpecialityVM>(
-                  err?.error?.message ?? 'Failed to update speciality'
+                  error ?? 'Failed to update speciality'
                 )
               );
-              return EMPTY;
+              return of(null);
             }),
-
             finalize(() =>
               patchState(store, deactivateLoading<SpecialityVM>())
             )
@@ -217,14 +230,16 @@ export const SpecialityStore = signalStore(
                 deleteItem<SpecialityVM>(id)
               )
             ),
-
             catchError(err => {
+              const error = err.error.errors;
               patchState(
                 store,
-                setError<SpecialityVM>(err.message)
+                setError<SpecialityVM>(
+                  error ?? 'Failed to delete speciality'
+                )
               );
               return of(null);
-            })
+            }),
           )
         )
       )

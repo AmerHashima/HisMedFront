@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BranchFormComponent } from '../branch-form/branch-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-new-branch',
@@ -8,5 +9,8 @@ import { BranchFormComponent } from '../branch-form/branch-form.component';
   styleUrl: './create-new-branch.component.scss'
 })
 export class CreateNewBranchComponent {
-
+  private router = inject(Router);
+  onCancel() {
+    this.router.navigateByUrl(`hospital/branches`);
+  }
 }

@@ -14,26 +14,14 @@ export class HospitalBranchService {
 
   getBranches(): Observable<APIHospitalBranch[]> {
     return this.apiService.get<ApiResponse<APIHospitalBranch[]>>('HospitalBranch', { activeOnly: true }).pipe(
-      map((response: ApiResponse<APIHospitalBranch[]>) => {
-        if (!response.success) {
-          throw new Error(response.message || 'API failed to load branches');
-        }
-        return response.data;
-      })
-    );
+      map((response: ApiResponse<APIHospitalBranch[]>) => response.data))
   }
 
   createBranch(body: Branch): Observable<APIHospitalBranch> {
     return this.apiService
       .post<ApiResponse<APIHospitalBranch>>('HospitalBranch', body)
       .pipe(
-        map((response: ApiResponse<APIHospitalBranch>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to create branch';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APIHospitalBranch>) => response.data)
       );
   }
 
@@ -41,13 +29,7 @@ export class HospitalBranchService {
     return this.apiService
       .getSingle<ApiResponse<APIHospitalBranch>>('HospitalBranch', id)
       .pipe(
-        map((response: ApiResponse<APIHospitalBranch>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to load branch';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APIHospitalBranch>) => response.data)
       );
   }
 
@@ -55,13 +37,7 @@ export class HospitalBranchService {
     return this.apiService
       .put<ApiResponse<APIHospitalBranch>>('HospitalBranch', id, body)
       .pipe(
-        map((response: ApiResponse<APIHospitalBranch>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to update branch';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APIHospitalBranch>) => response.data)
       );
   }
 
@@ -69,13 +45,7 @@ export class HospitalBranchService {
     return this.apiService
       .delete<ApiResponse<string>>('HospitalBranch', id)
       .pipe(
-        map((response: ApiResponse<string>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to delete branch';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<string>) => response.data)
       );
   }
 
@@ -85,10 +55,6 @@ export class HospitalBranchService {
       .query<ApiSearchResponse<APIHospitalBranch>>('HospitalBranch/query', body)
       .pipe(
         map((response: ApiSearchResponse<APIHospitalBranch>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to query';
-            throw new Error(msg);
-          }
           return {
             branches: response.data.data ?? [],
             total: response.data.totalPages ?? 0,

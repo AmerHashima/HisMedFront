@@ -5,6 +5,7 @@
       [data]="specialities()"
       [totalCount]="total()"
       [pageSize]="pageSize()"
+      title="speciality"
       (pageChange)="onPageChange($event)"
       (filterChange)="onFilterChange($event)"
       (sortChange)="onSortChange($event)"
@@ -16,6 +17,10 @@
     </app-reusable-material-table>
   </div>
   <div>
-    <app-speciality-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/>
+    <app-speciality-form
+      [hidden]="!hidden()"
+      (cancalEvent)="onCancal()"
+      [oid]="oid"
+    />
   </div>
 </div>

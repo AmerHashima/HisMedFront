@@ -14,26 +14,14 @@ export class AppointmentService {
 
   getAppointments(): Observable<APIAppointment[]> {
     return this.apiService.get<ApiResponse<APIAppointment[]>>('Appointment').pipe(
-      map((response: ApiResponse<APIAppointment[]>) => {
-        if (!response.success) {
-          throw new Error(response.message || 'API failed to load appointments');
-        }
-        return response.data;
-      })
-    );
+      map((response: ApiResponse<APIAppointment[]>) => response.data))
   }
 
   createAppointment(body: Appointment): Observable<APIAppointment> {
     return this.apiService
       .post<ApiResponse<APIAppointment>>('Appointment', body)
       .pipe(
-        map((response: ApiResponse<APIAppointment>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to create appointment';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APIAppointment>) => response.data)
       );
   }
 
@@ -41,13 +29,7 @@ export class AppointmentService {
     return this.apiService
       .getSingle<ApiResponse<APIAppointment>>('Appointment', id)
       .pipe(
-        map((response: ApiResponse<APIAppointment>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to load appointment';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APIAppointment>) => response.data)
       );
   }
 
@@ -55,18 +37,12 @@ export class AppointmentService {
     return this.apiService
       .put<ApiResponse<APIAppointment>>('Appointment', id, body)
       .pipe(
-        map((response: ApiResponse<APIAppointment>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to update appointment';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APIAppointment>) => response.data)
       );
   }
 
   cancalAppointment(){
-    
+
   }
 
 

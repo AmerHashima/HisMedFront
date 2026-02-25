@@ -17,12 +17,7 @@ constructor(private apiService: ApiService) { }
 
   getPatients(): Observable<ApiPatient[]> {
     return this.apiService.get<ApiResponse<ApiPatient[]>>('Patient').pipe(
-      map((response: ApiResponse<ApiPatient[]>) => {
-        if (!response.success) {
-          throw new Error(response.message || 'API failed to load patients');
-        }
-        return response.data;
-      })
+      map((response: ApiResponse<ApiPatient[]>) => response.data)
     );
   }
 
@@ -30,13 +25,7 @@ constructor(private apiService: ApiService) { }
     return this.apiService
       .post<ApiResponse<ApiPatient>>('Patient', body)
       .pipe(
-        map((response: ApiResponse<ApiPatient>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to create patient';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiPatient>) => response.data)
       );
   }
 
@@ -50,19 +39,16 @@ getPatient(value: string, type: PatientLookupType = 'id'): Observable < ApiPatie
 
   return this.apiService
     .getSingle<ApiResponse<ApiPatient>>(endpoint, value)
-    .pipe(map(this.mapApiResponse));
+    .pipe(
+      map((response: ApiResponse<ApiPatient>) => response.data)
+    )
+    // .pipe(map(this.mapApiResponse));
 }
   updatePatient(id: string, body: Patient): Observable<ApiPatient> {
     return this.apiService
       .put<ApiResponse<ApiPatient>>('Patient', id, body)
       .pipe(
-        map((response: ApiResponse<ApiPatient>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to update patient';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiPatient>) => response.data)
       );
   }
 
@@ -70,13 +56,7 @@ getPatient(value: string, type: PatientLookupType = 'id'): Observable < ApiPatie
     return this.apiService
       .delete<ApiResponse<string>>('Patient', id)
       .pipe(
-        map((response: ApiResponse<string>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to delete patient';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<string>) => response.data)
       );
   }
 
@@ -85,10 +65,6 @@ getPatient(value: string, type: PatientLookupType = 'id'): Observable < ApiPatie
       .query<ApiSearchResponse<ApiPatient>>('Patient/query', body)
       .pipe(
         map((response: ApiSearchResponse<ApiPatient>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to query';
-            throw new Error(msg);
-          }
           return {
             patients: response.data.data ?? [],
             total: response.data.totalPages ?? 0,
@@ -97,16 +73,16 @@ getPatient(value: string, type: PatientLookupType = 'id'): Observable < ApiPatie
       );
   }
 
-   private mapApiResponse<T>(response: ApiResponse<T>): T {
-    if (!response.success) {
-      const msg =
-        response.errors?.join(', ')
-        || response.message
-        || 'API request failed';
+  //  private mapApiResponse<T>(response: ApiResponse<T>): T {
+  //   if (!response.success) {
+  //     const msg =
+  //       response.errors?.join(', ')
+  //       || response.message
+  //       || 'API request failed';
 
-      throw new Error(msg);
-    }
+  //     throw new Error(msg);
+  //   }
 
-    return response.data;
-  }
+  //   return response.data;
+  // }
 }

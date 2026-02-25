@@ -102,6 +102,7 @@ export class AllAppointmentsComponent {
   onCancal() {
     this.hidden.set(false);
     this.oid = "";
+    this.store.clearSelectedItem();
     this.breadcrumb.resetToRoute();
   }
 }

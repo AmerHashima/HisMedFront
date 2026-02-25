@@ -1,21 +1,29 @@
 <div class="p-3">
-  <div [hidden]="hidden()">
+    <div [hidden]="viewMode() !== 'table'">
     <app-reusable-material-table
       [columns]="columns"
       [data]="lookups()"
       [totalCount]="total()"
       [pageSize]="pageSize()"
+      title="lookup master"
       (pageChange)="onPageChange($event)"
       (filterChange)="onFilterChange($event)"
       (sortChange)="onSortChange($event)"
-      (editRow)="handleEdit($event)"
-      (deleteRow)="handleDelete($event)"
-      (onFirstCellClickChange)="handleSingleUserNavigation($event)"
+      (onFirstCellClickChange)="handleSingleLookupMasterNavigation($event)"
       (onAddNewChange)="handleAddNew()"
+      (onAddNewDeatilsChange)="handleAddNewDetails()"
     >
     </app-reusable-material-table>
   </div>
   <div>
-    <app-look-up-master-form [hidden]="!hidden()" (cancalEvent)="onCancal()" />
+     <app-look-up-master-form
+ [hidden]="viewMode() !== 'masterForm'"
+  [lookupCode]="lookupCode"
+  (cancalEvent)="onCancel()" />
+  </div>
+   <div>
+     <app-look-up-details-form
+      [hidden]="viewMode() !== 'detailsForm'"
+  (cancalEvent)="onCancel()" />
   </div>
 </div>

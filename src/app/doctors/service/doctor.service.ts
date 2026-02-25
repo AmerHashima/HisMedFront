@@ -16,12 +16,7 @@ constructor(private apiService: ApiService) { }
 
   getDoctors(): Observable<ApiDocor[]> {
     return this.apiService.get<ApiResponse<ApiDocor[]>>('Doctor').pipe(
-      map((response: ApiResponse<ApiDocor[]>) => {
-        if (!response.success) {
-          throw new Error(response.message || 'API failed to load patients');
-        }
-        return response.data;
-      })
+      map((response: ApiResponse<ApiDocor[]>) => response.data)
     );
   }
 
@@ -29,13 +24,7 @@ constructor(private apiService: ApiService) { }
     return this.apiService
       .post<ApiResponse<ApiDocor>>('Doctor', body)
       .pipe(
-        map((response: ApiResponse<ApiDocor>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to create doctoe';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiDocor>) => response.data)
       );
   }
 
@@ -44,13 +33,7 @@ constructor(private apiService: ApiService) { }
     return this.apiService
       .getSingle<ApiResponse<ApiDocor>>('Doctor', id)
       .pipe(
-        map((response: ApiResponse<ApiDocor>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to load doctor';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiDocor>) => response.data)
       );
   }
 
@@ -58,13 +41,7 @@ constructor(private apiService: ApiService) { }
     return this.apiService
       .put<ApiResponse<ApiDocor>>('Doctor', id, body)
       .pipe(
-        map((response: ApiResponse<ApiDocor>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to update doctor';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiDocor>) => response.data)
       );
   }
 
@@ -72,13 +49,7 @@ constructor(private apiService: ApiService) { }
     return this.apiService
       .delete<ApiResponse<string>>('Doctor', id)
       .pipe(
-        map((response: ApiResponse<string>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to delete doctor';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<string>) => response.data)
       );
   }
 
@@ -87,10 +58,6 @@ constructor(private apiService: ApiService) { }
       .query<ApiSearchResponse<ApiDocor>>('Doctor/query', body)
       .pipe(
         map((response: ApiSearchResponse<ApiDocor>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to query';
-            throw new Error(msg);
-          }
           return {
             doctors: response.data.data ?? [],
             total: response.data.totalPages ?? 0,

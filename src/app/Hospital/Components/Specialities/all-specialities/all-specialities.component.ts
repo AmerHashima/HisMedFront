@@ -88,7 +88,7 @@ export class AllSpecialitiesComponent {
   }
 
   handleDelete(row: any) {
-    // this.store.deleteDoctor(row.oid)
+    this.store.deleteSpeciality(row.oid);
   }
 
   handleSingleUserNavigation(row: any) {
@@ -110,8 +110,9 @@ export class AllSpecialitiesComponent {
     this.hidden.update(state => !state);
   }
   onCancal() {
-    this.hidden.set(false);
     this.oid = "";
+    this.store.clearSelectedItem();
+    this.hidden.set(false);
     this.breadcrumb.resetToRoute();
   }
 }

@@ -5,38 +5,49 @@ import { InputComponent } from 'src/app/common/input/input.component';
 import { ToggleBtnComponent } from 'src/app/common/toggle-btn/toggle-btn.component';
 import { Speciality } from 'src/app/Hospital/models/speciality';
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
+import { ValidationErrorService } from '../../../../common/service/validation-error.service';
 
 @Component({
   selector: 'app-speciality-form',
-  imports: [InputComponent, ToggleBtnComponent, ButtonComponent,ReactiveFormsModule],
+  imports: [InputComponent, ToggleBtnComponent, ButtonComponent, ReactiveFormsModule],
   templateUrl: './speciality-form.component.html',
   styleUrl: './speciality-form.component.scss'
 })
 export class SpecialityFormComponent {
   @Output() cancalEvent = new EventEmitter<any>();
+
   oid = input<string>('');
   fb = inject(FormBuilder);
   store = inject(SpecialityStore);
-  // specialities = computed(() => this.store.specialities());
+  validationErrorService = inject(ValidationErrorService);
   specialities = computed(() => this.store.items());
+
   form = this.fb.group({
     code: ['', Validators.required],
     nameAr: ['', Validators.required],
     nameEn: ['', Validators.required],
-    defaultVisitDuration: [180, Validators.required],
-    defaultPrice: [999999.99, Validators.required],
+    defaultVisitDuration: [180, [Validators.required, Validators.pattern(/^\d+$/)]],
+    defaultPrice: [999999.99, [
+      Validators.required,
+      Validators.pattern(/^\d+(\.\d{1,2})?$/)
+    ]],
     isActive: [false, Validators.required],
   });
 
+  apiFieldErrors: Record<string, string> = {};
+
+  // Map backend validation keys to form controls
   private backendErrorKeyMap: Record<string, string[]> = {
-    code: ['code'],
+    code: ['Code'],
     nameAr: ['nameAr'],
     nameEn: ['nameEn'],
-    defaultVisitDuration: ['defaultVisitDuration'],
     defaultPrice: ['defaultPrice'],
+    defaultVisitDuration: ['defaultVisitDuration'],
+    createSpecialtyDto: ['createSpecialtyDto'],
   };
-  constructor() {
 
+  constructor() {
+    // Load speciality if editing
     effect(() => {
       const oid = this.oid();
       if (!oid) {
@@ -46,8 +57,8 @@ export class SpecialityFormComponent {
       this.store.getSpeciality(oid);
     });
 
+    // Patch form when selected item changes
     effect(() => {
-      // const speciality = this.store.selectedSpeciality();
       const speciality = this.store.selectedItem();
       if (speciality) {
         this.form.patchValue({
@@ -64,95 +75,51 @@ export class SpecialityFormComponent {
 
     effect(() => {
       const error = this.store.error();
+
       if (!error) {
-        this.clearAllFieldErrors();
+        this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
       } else {
-        this.getApiErrorMessage(error);
+        this.validationErrorService.handleApiErrors(
+          this.form,
+          error,
+          this.backendErrorKeyMap,
+          this.apiFieldErrors
+        );
       }
     });
 
+    // Handle success
     effect(() => {
       const success = this.store.success();
-      if (success)
-        this.cancel();
+      if (success) this.cancel();
       this.store.setSuccess(false);
     });
-
   }
 
-  apiFieldErrors: Record<string, string> = {};
 
-  getApiErrorMessage(error: string) {
-    this.apiFieldErrors = {};
-    if (!error) return;
-
-    const message = error.toLowerCase();
-
-    for (const field in this.backendErrorKeyMap) {
-      const keywords = this.backendErrorKeyMap[field];
-
-      if (keywords.some(k => message.includes(k))) {
-        this.applyBackendErrorToControl(field, error);
-        return;
-      }
-    }
-
-    this.form.setErrors({ backendError: true });
-  }
-
-  applyBackendErrorToControl(field: string, message: string) {
-    const control = this.form.get(field);
-    if (!control) return;
-
-    this.apiFieldErrors[field] = message;
-
-    control.setErrors({
-      ...(control.errors ?? {}),
-      backendError: true
-    });
-
-    control.markAsTouched();
-  }
-  private clearAllFieldErrors() {
-    this.apiFieldErrors = {};
-
-    // clear form-level errors
-    this.form.setErrors(null);
-
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (!control) return;
-
-      control.setErrors(null);
-
-      control.markAsUntouched();
-      control.markAsPristine();
-    });
-  }
-
+  /** Submit handler */
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-    if (this.form.valid && !this.oid()) {
-      this.createSpeciality();
-    }
-    if (this.form.valid && this.oid()) {
-      this.editSpeciality();
-    }
+
+    if (!this.oid()) this.createSpeciality();
+    if (this.oid()) this.editSpeciality();
   }
+
   createSpeciality() {
     this.store.addSpeciality(this.getPayload());
   }
+
   editSpeciality() {
     this.store.updateSpeciality({ id: this.oid(), body: this.getPayload() });
-
   }
 
-  getPayload() {
+  /** Get form payload */
+  getPayload(): Speciality {
     const v = this.form.getRawValue();
-    const payload: Speciality = {
+    return {
       ...(this.oid() ? { oid: this.oid() } : {}),
       code: v.code!,
       nameAr: v.nameAr!,
@@ -161,14 +128,13 @@ export class SpecialityFormComponent {
       defaultVisitDuration: v.defaultVisitDuration!,
       isActive: v.isActive ?? true,
     };
-    return payload;
   }
+
+  /** Cancel / reset form */
   cancel() {
     this.form.markAsUntouched();
     this.form.reset();
     this.cancalEvent.emit();
   }
-  back() {
-    this.cancalEvent.emit();
-  }
+
 }

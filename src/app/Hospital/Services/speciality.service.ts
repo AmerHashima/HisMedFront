@@ -12,26 +12,14 @@ export class SpecialityService {
   constructor(private apiService: ApiService) { }
   getSpecialities(): Observable<APISpeciality[]> {
     return this.apiService.get<ApiResponse<APISpeciality[]>>('Specialty', { activeOnly: true }).pipe(
-      map((response: ApiResponse<APISpeciality[]>) => {
-        if (!response.success) {
-          throw new Error(response.message || 'API failed to load specialities');
-        }
-        return response.data;
-      })
+      map((response: ApiResponse<APISpeciality[]>) => response.data)
     );
   }
-
   createSpeciality(body: Speciality): Observable<APISpeciality> {
     return this.apiService
       .post<ApiResponse<APISpeciality>>('Specialty', body)
       .pipe(
-        map((response: ApiResponse<APISpeciality>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to create Specialty';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APISpeciality>) =>  response.data)
       );
   }
 
@@ -39,13 +27,7 @@ export class SpecialityService {
     return this.apiService
       .getSingle<ApiResponse<APISpeciality>>('Specialty', id)
       .pipe(
-        map((response: ApiResponse<APISpeciality>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to load Specialty';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APISpeciality>) => response.data)
       );
   }
 
@@ -53,13 +35,7 @@ export class SpecialityService {
     return this.apiService
       .put<ApiResponse<APISpeciality>>('Specialty', id, body)
       .pipe(
-        map((response: ApiResponse<APISpeciality>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to update specialty';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<APISpeciality>) => response.data)
       );
   }
 
@@ -67,13 +43,8 @@ export class SpecialityService {
     return this.apiService
       .delete<ApiResponse<string>>('Specialty', id)
       .pipe(
-        map((response: ApiResponse<string>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to delete specialty';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<string>) => response.data)
+
       );
   }
 
@@ -82,12 +53,9 @@ export class SpecialityService {
     return this.apiService
       .query<ApiSearchResponse<APISpeciality>>('Specialty/query', body)
       .pipe(
+
         map((response: ApiSearchResponse<APISpeciality>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to query';
-            throw new Error(msg);
-          }
-          return {
+        return  {
             specialities: response.data.data ?? [],
             total: response.data.totalPages ?? 0,
           };

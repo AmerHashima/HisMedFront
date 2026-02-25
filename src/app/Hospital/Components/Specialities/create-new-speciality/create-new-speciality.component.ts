@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SpecialityFormComponent } from '../speciality-form/speciality-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-new-speciality',
@@ -8,5 +9,8 @@ import { SpecialityFormComponent } from '../speciality-form/speciality-form.comp
   styleUrl: './create-new-speciality.component.scss'
 })
 export class CreateNewSpecialityComponent {
-
+  private router = inject(Router);
+  onCancel() {
+    this.router.navigateByUrl(`hospital/specialities`);
+  }
 }

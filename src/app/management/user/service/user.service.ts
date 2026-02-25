@@ -16,12 +16,8 @@ export default class UserService {
 
   getUsers(): Observable<ApiUser[]> {
     return this.apiService.get<ApiResponse<ApiUser[]>>('SystemUser').pipe(
-      map((response: ApiResponse<ApiUser[]>) => {
-        if (!response.success) {
-          throw new Error(response.message || 'API failed to load users');
-        }
-        return response.data;
-      })
+      map((response: ApiResponse<ApiUser[]>) => response.data)
+
     );
   }
 
@@ -29,13 +25,7 @@ export default class UserService {
     return this.apiService
       .post<ApiResponse<ApiUser>>('SystemUser', body)
       .pipe(
-        map((response: ApiResponse<ApiUser>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to create user';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiUser>) => response.data)
       );
   }
 
@@ -43,13 +33,7 @@ export default class UserService {
     return this.apiService
       .getSingle<ApiResponse<ApiUser>>('SystemUser', id)
       .pipe(
-        map((response: ApiResponse<ApiUser>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to load user';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiUser>) => response.data)
       );
   }
 
@@ -57,13 +41,8 @@ export default class UserService {
     return this.apiService
       .put<ApiResponse<ApiUser>>('SystemUser', id, body)
       .pipe(
-        map((response: ApiResponse<ApiUser>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to update user';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<ApiUser>) => response.data)
+
       );
   }
 
@@ -71,13 +50,7 @@ export default class UserService {
     return this.apiService
       .delete<ApiResponse<string>>('SystemUser', id)
       .pipe(
-        map((response: ApiResponse<string>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to delete user';
-            throw new Error(msg);
-          }
-          return response.data;
-        })
+        map((response: ApiResponse<string>) => response.data)
       );
   }
 
@@ -99,10 +72,6 @@ export default class UserService {
       .query<ApiSearchResponse<ApiUser>>('SystemUser/query', body)
       .pipe(
         map((response: ApiSearchResponse<ApiUser>) => {
-          if (!response.success) {
-            const msg = response.errors?.join(', ') || response.message || 'API failed to query';
-            throw new Error(msg);
-          }
           return {
             users: response.data.data ?? [],
             total: response.data.totalPages ?? 0,

@@ -37,7 +37,7 @@ export function mapApiLookupDetailToLookupDetailVm(
     valueNameEn: api.valueNameEn,
     sortOrder: api.sortOrder,
     isDefault: api.isDefault,
-    createdAt: api.createdAt,
+    createdAt: api.createdAt ?? '',
     updatedAt: api.updatedAt ?? '',
     masterLookupCode: api.masterLookupCode,
   };
@@ -85,7 +85,7 @@ export function mapApiLookupMasterToLookupMasterVm(
     lookupNameEn: api.lookupNameEn,
     description: api.description,
     isSystem: api.isSystem,
-    createdAt: api.createdAt,
+    createdAt: api.createdAt ?? '',
     updatedAt: api.updatedAt ?? '',
     lookupDetails: api.lookupDetails ?? [],
   };

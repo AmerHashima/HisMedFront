@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { CreateNewLookupmasterComponent } from './components/create-new-lookupmaster/create-new-lookupmaster.component';
+import { CreateLookUpMasterDetailsComponent } from './components/create-look-up-master-details/create-look-up-master-details.component';
 
 const LOOKUP_ROUTES: Routes = [
   {
@@ -23,6 +24,14 @@ const LOOKUP_ROUTES: Routes = [
             .then(m => m.CreateNewLookupmasterComponent),
         data: { breadcrumb: 'Create LookUP' },
       },
+      {
+        path: 'createDetails',
+        loadComponent: () =>
+          import('./components/create-look-up-master-details/create-look-up-master-details.component')
+            .then(m => m.CreateLookUpMasterDetailsComponent),
+        data: { breadcrumb: 'Create Lookup Details' },
+      },
+
     ]
   }
 ];

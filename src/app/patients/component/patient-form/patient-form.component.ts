@@ -10,6 +10,7 @@ import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.co
 import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
 import { InputComponent } from 'src/app/common/input/input.component';
 import { AsyncPipe } from '@angular/common';
+import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 
 @Component({
   selector: 'app-patient-form',
@@ -20,11 +21,13 @@ import { AsyncPipe } from '@angular/common';
 })
 export class PatientFormComponent {
   @Output() cancalEvent = new EventEmitter<any>();
+  @Output() setToastObject = new EventEmitter<any>();
   oid = input<string>('');
   fb = inject(FormBuilder);
   store = inject(PatientStore);
   lookupService = inject(LookupService);
   branchService = inject(HospitalBranchService);
+  validationErrorService = inject(ValidationErrorService);
   branches$ = this.branchService.getBranches();
   bloodGroups$ = this.lookupService.getBloodGroup();
   maritalStatues$ = this.lookupService.getMaritalStatus();
@@ -51,6 +54,8 @@ export class PatientFormComponent {
     middleNameAr: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     lastNameAr: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
   });
+
+  apiFieldErrors: Record<string, string> = {};
 
   private backendErrorKeyMap: Record<string, string[]> = {
     email: ['email'],
@@ -103,73 +108,66 @@ export class PatientFormComponent {
 
     effect(() => {
       const error = this.store.error();
+
       if (!error) {
-        this.clearAllFieldErrors();
+        this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
       } else {
-        this.getApiErrorMessage(error);
+        this.validationErrorService.handleApiErrors(
+          this.form,
+          error,
+          this.backendErrorKeyMap,
+          this.apiFieldErrors
+        );
       }
     });
 
     effect(() => {
       const success = this.store.success();
-      if (success)
+      if (success) {
         this.cancel();
+        this.setToastObject.emit({
+          title: 'Success',
+          content: "Patient has been safed successfully"
+        })
+      }
       this.store.setSuccess(false);
     });
 
   }
 
-  apiFieldErrors: Record<string, string> = {};
 
-  getApiErrorMessage(error: string) {
-    this.apiFieldErrors = {};
-    if (!error) return;
+  // logInvalidControls() {
+  //   const invalidControls: string[] = [];
 
-    const message = error.toLowerCase();
+  //   // Simple version (flat form)
+  //   Object.keys(this.form.controls).forEach(key => {
+  //     const control = this.form.get(key);
+  //     if (control?.invalid) {
+  //       invalidControls.push(key);
+  //       console.log(`Field "${key}" is invalid.`, {
+  //         value: control.value,
+  //         errors: control.errors,           // ← shows exactly which validator failed
+  //         status: control.status,
+  //         touched: control.touched,
+  //         dirty: control.dirty
+  //       });
+  //     }
+  //   });
 
-    for (const field in this.backendErrorKeyMap) {
-      const keywords = this.backendErrorKeyMap[field];
+  //   // If you have nested FormGroups or FormArrays → use recursive version below
 
-      if (keywords.some(k => message.includes(k))) {
-        this.applyBackendErrorToControl(field, error);
-        return;
-      }
-    }
+  //   console.log('Invalid fields:', invalidControls);
+  //   if (invalidControls.length === 0) {
+  //     console.log('Form is actually valid (or no controls found)');
+  //   }
 
-    this.form.setErrors({ backendError: true });
-  }
-
-  applyBackendErrorToControl(field: string, message: string) {
-    const control = this.form.get(field);
-    if (!control) return;
-
-    this.apiFieldErrors[field] = message;
-
-    control.setErrors({
-      ...(control.errors ?? {}),
-      backendError: true
-    });
-
-    control.markAsTouched();
-  }
-  private clearAllFieldErrors() {
-    this.apiFieldErrors = {};
-
-    // clear form-level errors
-    this.form.setErrors(null);
-
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (!control) return;
-
-      control.setErrors(null);
-
-      control.markAsUntouched();
-      control.markAsPristine();
-    });
-  }
+  //   return invalidControls;
+  // }
 
   onSubmit() {
+    // this.logInvalidControls();
+    //    console.log('form',this.form);
+    //   console.log(this.form.invalid);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -185,7 +183,6 @@ export class PatientFormComponent {
     this.store.addPatient(this.getPayload());
   }
   editPatient() {
-    console.log('in edit');
     this.store.updatePatient({ id: this.oid(), body: this.getPayload() });
 
   }

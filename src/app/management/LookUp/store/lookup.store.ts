@@ -7,10 +7,9 @@ import { catchError, debounceTime, EMPTY, finalize, of, pipe, switchMap, tap } f
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { initialLookUPState } from "./lookup.slice";
 import { LookupService } from "src/app/common/service/lookup.service";
-import { LookUPMaster, LookUPMasterVM } from "../models/lookup";
+import { LookUPDetailVM, LookUPMaster, LookUPMasterVM, LookupDetail } from "../models/lookup";
 import { LookUpService } from "src/app/shared/services/look-up.service";
 import { mapApiLookupDetailsToLookupDetailVms, mapApiLookupMastersToLookupMasterVms, mapApiLookupMasterToLookupMasterVm } from "./lookup.mappers";
-import { LookupDetail } from "src/app/common/Models/lookup";
 
 
 export const LOOKUPStore = signalStore(
@@ -39,7 +38,10 @@ export const LOOKUPStore = signalStore(
       }
 
       const pagination: Pagination = {
-        getAll: false,
+        // getAll: false,
+        // pageNumber: page() - 1,
+        // pageSize: pageSize(),
+        getAll: true,
         pageNumber: page() - 1,
         pageSize: pageSize(),
       };
@@ -59,6 +61,7 @@ export const LOOKUPStore = signalStore(
 
   withMethods((store, service = inject(LookupService)) => ({
     // 🔎 SEARCH
+
     queryLookups: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(300),
@@ -92,7 +95,15 @@ export const LOOKUPStore = signalStore(
     ),
   })),
   withMethods((store, service = inject(LookupService)) => ({
-
+    clearSelectedItem: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, {
+            selectedItem: null
+          });
+        })
+      )
+    ),
     // 📄 GET BY ID
     getLookupByCode: rxMethod<string>(
       pipe(
@@ -110,10 +121,18 @@ export const LOOKUPStore = signalStore(
               )
             ),
 
-            catchError(err => {
-              patchState(store, setError<LookUPMasterVM>(err.message));
-              return of(null);
-            }),
+                  catchError(err => {
+                          const error = err.error.errors;
+                          patchState(
+                            store,
+                            setError<LookUPMasterVM>(
+                              error ?? 'Failed to get lookup'
+                            )
+                          );
+                    return of(null);
+                        }),
+
+
 
             finalize(() =>
               patchState(store, deactivateLoading<LookUPMasterVM>())
@@ -135,16 +154,16 @@ export const LOOKUPStore = signalStore(
               patchState(store, setSuccess<LookUPMasterVM>(true));
               store.queryLookups(store.queryRequest());
             }),
-
             catchError(err => {
-              patchState(store,
+              const error = err.error.errors;
+              patchState(
+                store,
                 setError<LookUPMasterVM>(
-                  err?.error?.message ?? 'Failed to add lookupmaster'
+                  error ?? 'Failed to add Look up'
                 )
               );
               return EMPTY;
             }),
-
             finalize(() =>
               patchState(store, deactivateLoading<LookUPMasterVM>())
             )
@@ -164,13 +183,17 @@ export const LOOKUPStore = signalStore(
             }),
 
             catchError(err => {
-              patchState(store,
+              const error = err.error.errors;
+              patchState(
+                store,
                 setError<LookUPMasterVM>(
-                  err?.error?.message ?? 'Failed to add lookup detail'
+                  error ?? 'Failed to add Look up detail'
                 )
               );
               return EMPTY;
             }),
+
+
 
             finalize(() =>
               patchState(store, deactivateLoading<LookUPMasterVM>())
@@ -180,6 +203,43 @@ export const LOOKUPStore = signalStore(
       )
     ),
 
+    // addLookUpDetail: rxMethod<LookupDetail>(
+    //   pipe(
+    //     tap(() => patchState(store, activateLoading<LookUPMasterVM>())),
+    //     switchMap(body =>
+    //       service.createLookupDetail(body).pipe(
+    //         tap(apiDetail => {
+    //           // Map API response to full VM
+    //           const detailVM: LookUPDetailVM = {
+    //             ...body,
+    //             oid: apiDetail.oid,
+    //             createdAt: apiDetail.createdAt ?? new Date().toISOString(),
+    //             updatedAt: apiDetail.updatedAt ?? '',
+    //             masterLookupCode: apiDetail.masterLookupCode
+    //           };
+
+    //           // Patch state
+    //           patchState(store, {
+    //             details: [...store.details(), detailVM],
+    //             selectedDetail: detailVM,
+    //             success: true
+    //           });
+    //         }),
+    //         catchError(err => {
+    //           patchState(store,
+    //             setError<LookUPMasterVM>(
+    //               err?.error?.message ?? 'Failed to add lookup detail'
+    //             )
+    //           );
+    //           return EMPTY;
+    //         }),
+    //         finalize(() =>
+    //           patchState(store, deactivateLoading<LookUPMasterVM>())
+    //         )
+    //       )
+    //     )
+    //   )
+    // ),
     loadLookupDetails: rxMethod<string>(
       pipe(
         tap(() => patchState(store, activateLoading<LookUPMasterVM>())),
@@ -196,7 +256,13 @@ export const LOOKUPStore = signalStore(
             }),
 
             catchError(err => {
-              patchState(store, setError<LookUPMasterVM>(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError<LookUPMasterVM>(
+                  error ?? 'Failed to add Look up details'
+                )
+              );
               return of(null);
             }),
 

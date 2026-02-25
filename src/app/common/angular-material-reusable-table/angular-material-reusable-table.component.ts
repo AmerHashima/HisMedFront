@@ -40,6 +40,7 @@ export class ReusableMaterialTableComponent implements AfterViewInit {
   @Input() showPaginator = true;
   @Input() showFilter = true;
   @Input() stickyHeader = false;
+  @Input() title = '';
 
   @Output() editRow = new EventEmitter<any>();
   @Output() deleteRow = new EventEmitter<any>();
@@ -49,6 +50,7 @@ export class ReusableMaterialTableComponent implements AfterViewInit {
   @Output() sortChange = new EventEmitter<any>();
   @Output() onFirstCellClickChange = new EventEmitter<any>();
   @Output() onAddNewChange=new EventEmitter<any>();
+  @Output() onAddNewDeatilsChange = new EventEmitter<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -83,6 +85,10 @@ export class ReusableMaterialTableComponent implements AfterViewInit {
   }
   onAddNew(){
     this.onAddNewChange.emit();
+  }
+
+  onAddDetails(){
+  this.onAddNewDeatilsChange.emit();
   }
 
   getCellValue(row: any, col: any): any {

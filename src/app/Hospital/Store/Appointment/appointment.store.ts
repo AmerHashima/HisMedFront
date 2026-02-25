@@ -6,7 +6,7 @@ import { Filter, Pagination, RequestWrapper, Sort } from "src/app/common/Models/
 import { createQueryRequest } from "src/app/management/user/userStore/store.helpers";
 import { AppointmentService } from "../../Services/appointment.service";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { catchError, debounceTime, EMPTY, finalize, of, pipe, switchMap, tap } from "rxjs";
+import { catchError, finalize, of, pipe, switchMap, tap } from "rxjs";
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiAppointmentToAppointmentVM } from "./appointment.mapper";
 
@@ -93,10 +93,17 @@ export const AppointmentStore = signalStore(
             tap(apiAppointment =>
               patchState(store, setSelectedItem<AppointmentVM>(mapApiAppointmentToAppointmentVM(apiAppointment)))
             ),
-            catchError(err => {
-              patchState(store, setError<AppointmentVM>(err.message));
-              return of(null);
-            }),
+              catchError(err => {
+                          const error = err.error.errors;
+                          patchState(
+                            store,
+                            setError<AppointmentVM>(
+                              error ?? 'Failed to get appointment'
+                            )
+                          );
+                          return of(null);
+                        }),
+
             finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
           )
         )
@@ -115,8 +122,14 @@ export const AppointmentStore = signalStore(
               // store.queryAppointments(store.queryRequest());
             }),
             catchError(err => {
-              patchState(store, setError<AppointmentVM>(err?.error?.message ?? 'Failed to add appointment'));
-              return EMPTY;
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError<AppointmentVM>(
+                  error ?? 'Failed to add appointment'
+                )
+              );
+              return of(null);
             }),
             finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
           )
@@ -137,8 +150,14 @@ export const AppointmentStore = signalStore(
               // store.queryAppointments(store.queryRequest());
             }),
             catchError(err => {
-              patchState(store, setError<AppointmentVM>(err?.error?.message ?? 'Failed to update appointment'));
-              return EMPTY;
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError<AppointmentVM>(
+                  error ?? 'Failed to update appointment'
+                )
+              );
+              return of(null);
             }),
             finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
           )
@@ -153,14 +172,28 @@ export const AppointmentStore = signalStore(
           service.getAppointment(id).pipe(
             tap(() => patchState(store, deleteItem<AppointmentVM>(id))),
             catchError(err => {
-              patchState(store, setError<AppointmentVM>(err.message));
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError<AppointmentVM>(
+                  error ?? 'Failed to update appointment'
+                )
+              );
               return of(null);
-            })
+            }),
           )
         )
       )
     ),
-
+    clearSelectedItem: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, {
+            selectedItem: null
+          });
+        })
+      )
+    ),
     // 🎛 UI HELPERS
     setSearch(value: string) {
       patchState(store, setSearchUpdater<AppointmentVM>(value));

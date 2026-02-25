@@ -19,6 +19,7 @@ export const setError =
       error,
     });
 
+
 export const setItems =
   <T>(items: T[], total: number) =>
     (): Partial<BaseCrudState<T>> => ({
@@ -31,6 +32,12 @@ export const setSelectedItem =
     (): Partial<BaseCrudState<T>> => ({
       selectedItem: item,
     });
+
+// export const clearSelectedItem =
+//   <T>() =>
+//     (): Partial<BaseCrudState<T>> => ({
+//       selectedItem: null,
+//     });
 
 export const deleteItem =
   <T extends { oid: string }>(id: string) =>

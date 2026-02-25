@@ -6,23 +6,24 @@ import { LOOKUPStore } from '../../store/lookup.store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
+import { LookUpDetailsFormComponent } from '../look-up-details-form/look-up-details-form.component';
 
+type ViewMode = 'table' | 'masterForm' | 'detailsForm';
 @Component({
   selector: 'app-all-looksups',
-  imports: [ReusableMaterialTableComponent,LookUpMasterFormComponent],
+  imports: [ReusableMaterialTableComponent, LookUpMasterFormComponent, LookUpDetailsFormComponent],
   templateUrl: './all-looksups.component.html',
   styleUrl: './all-looksups.component.scss'
 })
 export class AllLooksupsComponent {
   private breadcrumb = inject(BreadcrumbService);
   private store = inject(LOOKUPStore);
-  // specialities = computed(() => this.store.specialities());
   lookups = computed(() => this.store.items());
   total = computed(() => this.store.total());
   pageSize = computed(() => this.store.pageSize());
   loading = computed(() => this.store.loading());
-  hidden = signal<boolean>(false);
-  // oid: string = '';
+  viewMode = signal<ViewMode>('table');
+  lookupCode: string = '';
   columns = [
     { field: 'lookupCode', header: 'Code', type: 'text' },
     { field: 'lookupNameEn', header: 'Name', type: 'text' },
@@ -39,7 +40,7 @@ export class AllLooksupsComponent {
         falseClass: 'bg-danger'
       }
     },
-    { field: 'actions', header: 'Actions', type: 'buttons' }
+    // { field: 'actions', header: 'Actions', type: 'buttons' }
   ];
 
 
@@ -51,8 +52,7 @@ export class AllLooksupsComponent {
       if (!crumb) return;
 
       if (crumb.label === 'LookUps') {
-        this.hidden.set(false);
-        // this.oid = '';
+        this.lookupCode = '';
         this.breadcrumb.resetToRoute();
       }
     });
@@ -77,41 +77,52 @@ export class AllLooksupsComponent {
     this.store.setSort(sort);
   }
 
-  handleEdit(row: any) {
-    // this.oid = row.oid;
-    this.toggleHidden();
-    this.breadcrumb.setBreadcrumbs([
-      { label: 'LookUps', url: '/looks-up' },
-      { label: 'Edit Lookup', url: '' }
-    ]);
-  }
+  // handleEdit(row: any) {
+  //   this.lookupCode = row.lookupCode;
+  //   this.viewMode.set('masterForm');
+  //   this.breadcrumb.setBreadcrumbs([
+  //     { label: 'LookUps', url: '/looks-up' },
+  //     { label: 'Edit Lookup', url: '' }
+  //   ]);
+  // }
 
-  handleDelete(row: any) {
-    // this.store.deleteDoctor(row.oid)
-  }
+  // handleDelete(row: any) {
+  //   // this.store.deleteDoctor(row.oid)
+  // }
 
-  handleSingleUserNavigation(row: any) {
-    // this.oid = row.oid;
-    this.toggleHidden();
+  handleSingleLookupMasterNavigation(row: any) {
+    this.lookupCode = row.lookupCode;
+    this.viewMode.set('masterForm');
     this.breadcrumb.setBreadcrumbs([
       { label: 'LookUps', url: '/looks-up' },
       { label: 'Look Up Details', url: '' }
     ]);
   }
   handleAddNew() {
-    this.toggleHidden();
+    this.viewMode.set('masterForm');
+
     this.breadcrumb.setBreadcrumbs([
       { label: 'LookUps', url: '/looks-up' },
       { label: 'Add Lookup', url: '' }
     ]);
   }
-  toggleHidden() {
-    this.hidden.update(state => !state);
+  handleAddNewDetails() {
+    this.viewMode.set('detailsForm');
+
+    this.breadcrumb.setBreadcrumbs([
+      { label: 'LookUps', url: '/looks-up' },
+      { label: 'Add Lookup Details', url: '/looks-up/createDetails' }
+    ]);
   }
-  onCancal() {
-    console.log('in cancal');
-    this.hidden.set(false);
-    // this.oid = "";
+
+  onCancel() {
+    console.log('in cacnel');
+    this.lookupCode = "";
+    this.store.clearSelectedItem();
+    this.viewMode.set('table');
+    console.log('viewMode',this.viewMode());
     this.breadcrumb.resetToRoute();
   }
+
 }
+

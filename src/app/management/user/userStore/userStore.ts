@@ -13,7 +13,7 @@ import {
 import UserService from '../service/user.service';
 import { computed, effect, inject } from '@angular/core';
 import { catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, of, pipe, switchMap, tap } from 'rxjs';
-import { User } from '../models/user';
+import { User, UserVM } from '../models/user';
 import { ApiUser } from '../models/api-user';
 import { Filter, Pagination, RequestWrapper, Sort } from '../../../common/Models/request';
 import { createQueryRequest } from './store.helpers';
@@ -104,10 +104,16 @@ export const UsersStore = signalStore(
                 total: response.total ?? 0
               }));
             }),
-            catchError((err) => {
-              patchState(store, setError(err.message || 'Failed to load users'));
-              return of({ users: [], total: 0 }); // match return type
-            }),
+              catchError(err => {
+                          const error = err.error.errors;
+                          patchState(
+                            store,
+                            setError(
+                              error ?? 'Failed to query users'
+                            )
+                          );
+                          return of({ users: [], total: 0 });
+                        }),
             finalize(() => patchState(store, deactivateLoading))
           )
         )
@@ -135,6 +141,15 @@ export const UsersStore = signalStore(
       //     })
       //   );
       // },
+      clearSelectedItem: rxMethod<void>(
+        pipe(
+          tap(() => {
+            patchState(store, {
+              selectedUser: null
+            });
+          })
+        )
+      ),
       addUser: rxMethod<User>(
         pipe(
           tap(() => { patchState(store, activateLoading);
@@ -147,10 +162,17 @@ export const UsersStore = signalStore(
                 patchState(store, setSuccess(true));
                 store.queryUsers(store.queryRequest());
               }),
-              catchError((err) => {
-                patchState(store, setError(err?.error.message ?? 'Failed to add user'));
-                return EMPTY;
+              catchError(err => {
+                const error = err.error.errors;
+                patchState(
+                  store,
+                  setError(
+                    error ?? 'Failed to add user'
+                  )
+                );
+                return EMPTY
               }),
+
               finalize(() => patchState(store, deactivateLoading))
             )
           )
@@ -166,10 +188,17 @@ export const UsersStore = signalStore(
                 patchState(store, setSuccess(true));
                 store.queryUsers(store.queryRequest());
               }),
-              catchError((err) => {
-                patchState(store, setError(err?.error.message ?? 'Failed to update user'));
-                return EMPTY;
+              catchError(err => {
+                const error = err.error.errors;
+                patchState(
+                  store,
+                  setError(
+                    error ?? 'Failed to update user'
+                  )
+                );
+                return EMPTY
               }),
+
               finalize(() => patchState(store, deactivateLoading))
             )
           )
@@ -181,9 +210,15 @@ export const UsersStore = signalStore(
           switchMap((id) =>
             userService.getUser(id).pipe(
               tap((user: ApiUser) => patchState(store, getUser(user))),
-              catchError((err) => {
-                patchState(store, setError(err?.msg ?? 'Failed to load user'));
-                return EMPTY;
+              catchError(err => {
+                const error = err.error.errors;
+                patchState(
+                  store,
+                  setError(
+                    error ?? 'Failed to load user'
+                  )
+                );
+                return EMPTY
               }),
               finalize(() => patchState(store, deactivateLoading))
             )
@@ -196,8 +231,14 @@ export const UsersStore = signalStore(
           switchMap((id) =>
             userService.deleteUser(id).pipe(
               tap(() => patchState(store, deleteUser(id))),
-              catchError((err) => {
-                patchState(store, setError(err.message || 'Delete failed'));
+              catchError(err => {
+                const error = err.error.errors;
+                patchState(
+                  store,
+                  setError(
+                    error ?? 'Failed to delete user'
+                  )
+                );
                 return EMPTY
               }),
               finalize(() => patchState(store, deactivateLoading))
