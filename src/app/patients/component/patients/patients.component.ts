@@ -6,11 +6,11 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { ReusableMaterialTableComponent } from 'src/app/common/angular-material-reusable-table/angular-material-reusable-table.component';
 import { PatientFormComponent } from '../patient-form/patient-form.component';
-import { SpkToastComponent } from 'src/app/@spk/reusable-ui-elements/spk-toast/spk-toast.component';
+// import { SpkToastComponent } from 'src/app/@spk/reusable-ui-elements/spk-toast/spk-toast.component';
 
 @Component({
   selector: 'app-patients',
-  imports: [ReusableMaterialTableComponent, PatientFormComponent, SpkToastComponent],
+  imports: [ReusableMaterialTableComponent, PatientFormComponent],
   templateUrl: './patients.component.html',
   styleUrl: './patients.component.scss'
 })
@@ -45,8 +45,8 @@ export class PatientsComponent {
 
 
   breadcrumbClick = toSignal(this.breadcrumb.breadcrumbClick$, { initialValue: null });
-  showToast:boolean=false;
-  toastObject: { title: string, content: string } = { title: '', content :''};
+  // showToast:boolean=false;
+  // toastObject: { title: string, content: string } = { title: '', content :''};
   constructor() {
     effect(() => {
       const crumb = this.breadcrumbClick();
@@ -118,10 +118,10 @@ export class PatientsComponent {
     this.breadcrumb.resetToRoute();
   }
 
-  onToastHide(){}
-  onToastClose(){}
-  setToastObject(toast:any){
-    this.showToast=true;
-    this.toastObject=toast
-  }
+  // onToastHide(){}
+  // onToastClose(){}
+  // setToastObject(toast:any){
+  //   this.showToast=true;
+  //   this.toastObject=toast
+  // }
 }

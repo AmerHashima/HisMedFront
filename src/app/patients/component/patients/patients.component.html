@@ -18,11 +18,11 @@
     </app-reusable-material-table>
   </div>
   <div>
-    <app-patient-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"  (setToastObject)="setToastObject($event)"/>
+    <app-patient-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/>
   </div>
 </div>
 
-@if(showToast){
+<!-- @if(showToast){
   <spk-toast
   [show]="showToast"
   [title]="toastObject.title"
@@ -33,4 +33,4 @@
   (closeToast)="onToastClose()"
 >
 </spk-toast>
-}
+} -->

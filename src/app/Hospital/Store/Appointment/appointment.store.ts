@@ -9,6 +9,7 @@ import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { catchError, finalize, of, pipe, switchMap, tap } from "rxjs";
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiAppointmentToAppointmentVM } from "./appointment.mapper";
+import { ToastingMessagesService } from "src/app/common/service/toasting.service";
 
 type UpdatePayload = {
   id: string;
@@ -81,7 +82,7 @@ export const AppointmentStore = signalStore(
 
   // })),
 
-  withMethods((store, service = inject(AppointmentService)) => ({
+  withMethods((store, toast=inject(ToastingMessagesService),service = inject(AppointmentService)) => ({
 
 
     // 📄 GET BY ID
@@ -101,6 +102,8 @@ export const AppointmentStore = signalStore(
                               error ?? 'Failed to get appointment'
                             )
                           );
+                toast.showToast('Falied to get appointment', 'error');
+
                           return of(null);
                         }),
 
@@ -118,7 +121,8 @@ export const AppointmentStore = signalStore(
           service.createAppointment(body).pipe(
             tap(() => {
               patchState(store, setSuccess<AppointmentVM>(true));
-              console.log('update appointment');
+              toast.showToast('Appointment has been added successfully', 'success');
+
               // store.queryAppointments(store.queryRequest());
             }),
             catchError(err => {
@@ -129,6 +133,8 @@ export const AppointmentStore = signalStore(
                   error ?? 'Failed to add appointment'
                 )
               );
+              toast.showToast('Falied to add appointment', 'error');
+
               return of(null);
             }),
             finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
@@ -145,7 +151,7 @@ export const AppointmentStore = signalStore(
           service.updateAppointment(id, body).pipe(
             tap(() => {
               patchState(store, setSuccess<AppointmentVM>(true));
-              console.log('update appointment');
+              toast.showToast('Appointment has been updated successfully', 'success');
 
               // store.queryAppointments(store.queryRequest());
             }),
@@ -157,6 +163,8 @@ export const AppointmentStore = signalStore(
                   error ?? 'Failed to update appointment'
                 )
               );
+              toast.showToast('Falied to update appointment', 'error');
+
               return of(null);
             }),
             finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
@@ -170,15 +178,19 @@ export const AppointmentStore = signalStore(
       pipe(
         switchMap(id =>
           service.getAppointment(id).pipe(
-            tap(() => patchState(store, deleteItem<AppointmentVM>(id))),
+            tap(() => {patchState(store, deleteItem<AppointmentVM>(id));
+              toast.showToast('Appointment has been deleted successfully', 'success');
+            }),
             catchError(err => {
               const error = err.error.errors;
               patchState(
                 store,
                 setError<AppointmentVM>(
-                  error ?? 'Failed to update appointment'
+                  error ?? 'Failed to delete appointment'
                 )
               );
+              toast.showToast('Falied to delete appointment', 'error');
+
               return of(null);
             }),
           )

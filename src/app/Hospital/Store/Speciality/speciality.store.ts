@@ -9,6 +9,7 @@ import { catchError, debounceTime, finalize, of, pipe, switchMap, tap } from "rx
 import {  Speciality, SpecialityVM } from "../../models/speciality";
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiSpecialitiesToSpecialityVMs, mapApiSpecialityToSpecialityVM } from "./speciality.mapper";
+import { ToastingMessagesService } from "src/app/common/service/toasting.service";
 
 type UpdatePayload = {
   id: string;
@@ -61,7 +62,7 @@ export const SpecialityStore = signalStore(
     }),
   })),
 
-  withMethods((store, service = inject(SpecialityService)) => ({
+  withMethods((store, toast=inject(ToastingMessagesService),service = inject(SpecialityService)) => ({
     querySpecialities: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(300),
@@ -88,6 +89,8 @@ export const SpecialityStore = signalStore(
                   error ?? 'Failed to query specialities'
                 )
               );
+              toast.showToast('Falied to search specialties', 'error');
+
               return of({ specialities: [], total: 0 });
             }),
 
@@ -101,7 +104,7 @@ export const SpecialityStore = signalStore(
     ),
 
   })),
-  withMethods((store, service = inject(SpecialityService)) => ({
+  withMethods((store, toast=inject(ToastingMessagesService),service = inject(SpecialityService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -136,6 +139,8 @@ export const SpecialityStore = signalStore(
                   error ?? 'Failed to load Speciality'
                 )
               );
+              toast.showToast('Falied to load speciality', 'error');
+
               return of(null);
             }),
             finalize(() =>
@@ -160,6 +165,7 @@ export const SpecialityStore = signalStore(
                 store,
                 setSuccess<SpecialityVM>(true)
               );
+              toast.showToast('Specialty has been created successfully','success');
               store.querySpecialities(store.queryRequest());
             }),
 
@@ -171,6 +177,8 @@ export const SpecialityStore = signalStore(
                   error ?? 'Failed to add speciality'
                 )
               );
+              toast.showToast('Falied to add speciality', 'error');
+
               return of(null);
             }),
 
@@ -197,6 +205,8 @@ export const SpecialityStore = signalStore(
                 store,
                 setSuccess<SpecialityVM>(true)
               );
+              toast.showToast('Specialty has been updated successfully', 'success');
+
               store.querySpecialities(store.queryRequest());
             }),
 
@@ -208,6 +218,7 @@ export const SpecialityStore = signalStore(
                   error ?? 'Failed to update speciality'
                 )
               );
+              toast.showToast('Falied to update speciality', 'error');
               return of(null);
             }),
             finalize(() =>
@@ -225,10 +236,12 @@ export const SpecialityStore = signalStore(
           service.deleteSpecialty(id).pipe(
 
             tap(() =>
-              patchState(
+              {patchState(
                 store,
                 deleteItem<SpecialityVM>(id)
-              )
+              );
+              toast.showToast('Specialty has been deleted successfully', 'success');
+}
             ),
             catchError(err => {
               const error = err.error.errors;
@@ -238,6 +251,8 @@ export const SpecialityStore = signalStore(
                   error ?? 'Failed to delete speciality'
                 )
               );
+              toast.showToast('Falied to delete speciality', 'error');
+
               return of(null);
             }),
           )

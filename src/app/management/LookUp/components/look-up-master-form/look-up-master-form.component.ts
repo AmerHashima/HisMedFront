@@ -7,13 +7,11 @@ import { InputComponent } from 'src/app/common/input/input.component';
 import { ToggleBtnComponent } from 'src/app/common/toggle-btn/toggle-btn.component';
 import { ButtonComponent } from 'src/app/common/button/button.component';
 import { ReusableMaterialTableComponent } from 'src/app/common/angular-material-reusable-table/angular-material-reusable-table.component';
-import { Sort } from '@angular/material/sort';
-import { setSelectedItem } from 'src/app/common/store/generic-updaters';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 
 @Component({
   selector: 'app-look-up-master-form',
-  imports: [InputComponent,ToggleBtnComponent,ButtonComponent,ReactiveFormsModule,ReusableMaterialTableComponent],
+  imports: [InputComponent, ToggleBtnComponent, ButtonComponent, ReactiveFormsModule, ReusableMaterialTableComponent],
   templateUrl: './look-up-master-form.component.html',
   styleUrl: './look-up-master-form.component.scss',
 })

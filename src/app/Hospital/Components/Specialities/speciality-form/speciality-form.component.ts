@@ -15,7 +15,6 @@ import { ValidationErrorService } from '../../../../common/service/validation-er
 })
 export class SpecialityFormComponent {
   @Output() cancalEvent = new EventEmitter<any>();
-
   oid = input<string>('');
   fb = inject(FormBuilder);
   store = inject(SpecialityStore);

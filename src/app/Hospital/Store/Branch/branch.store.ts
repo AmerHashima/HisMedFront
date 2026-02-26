@@ -9,6 +9,7 @@ import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { catchError, debounceTime, EMPTY, finalize, of, pipe, switchMap, tap } from "rxjs";
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiBranchesToBranchVms, mapApiBranchToBranchVm } from "./branch.mapper";
+import { ToastingMessagesService } from "src/app/common/service/toasting.service";
 
 type UpdatePayload = {
   id: string;
@@ -58,7 +59,7 @@ export const BranchStore = signalStore(
     isLastPage: computed(() => page() * pageSize() >= total()),
   })),
 
-  withMethods((store, service = inject(HospitalBranchService)) => ({
+  withMethods((store, toast=inject(ToastingMessagesService),service = inject(HospitalBranchService)) => ({
     // 🔎 SEARCH
     queryBranches: rxMethod<RequestWrapper>(
       pipe(
@@ -87,6 +88,7 @@ export const BranchStore = signalStore(
                   error ?? 'Failed to query Branch'
                 )
               );
+              toast.showToast('Falied to search branches', 'error');
               return of({ branches: [], total: 0 });
             }),
             finalize(() =>
@@ -97,7 +99,7 @@ export const BranchStore = signalStore(
       )
     ),
   })),
-  withMethods((store, service = inject(HospitalBranchService)) => ({
+  withMethods((store, toast=inject(ToastingMessagesService),service = inject(HospitalBranchService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -132,6 +134,8 @@ export const BranchStore = signalStore(
                               error ?? 'Failed to get Branch'
                             )
                           );
+                  toast.showToast('Falied to retrieve Branch', 'error');
+
                           return of(null);
                         }),
 
@@ -155,6 +159,7 @@ export const BranchStore = signalStore(
 
             tap(() => {
               patchState(store, setSuccess<HospitalBranchVm>(true));
+              toast.showToast('Branch has been added successfully', 'success');
               store.queryBranches(store.queryRequest());
             }),
 
@@ -166,6 +171,8 @@ export const BranchStore = signalStore(
                   error ?? 'Failed to add Branch'
                 )
               );
+              toast.showToast('Falied to add Branch', 'error');
+
               return of(null);
             }),
 
@@ -189,6 +196,8 @@ export const BranchStore = signalStore(
 
             tap(() => {
               patchState(store, setSuccess<HospitalBranchVm>(true));
+              toast.showToast('Branch has been updated successfully', 'success');
+
               store.queryBranches(store.queryRequest());
             }),
             catchError(err => {
@@ -199,6 +208,8 @@ export const BranchStore = signalStore(
                   error ?? 'Failed to update Branch'
                 )
               );
+              toast.showToast('Falied to update Branch', 'error');
+
               return of(null);
             }),
 
@@ -217,7 +228,9 @@ export const BranchStore = signalStore(
           service.deleteBranch(id).pipe(
 
             tap(() =>
-              patchState(store, deleteItem<HospitalBranchVm>(id))
+              {patchState(store, deleteItem<HospitalBranchVm>(id));
+              toast.showToast('Branch has been deleted successfully', 'success');
+          }
             ),
 
             catchError(err => {
@@ -228,6 +241,8 @@ export const BranchStore = signalStore(
                   error ?? 'Failed to delete Branch'
                 )
               );
+              toast.showToast('Falied to delete Branch', 'error');
+
               return of(null);
             }),
           )

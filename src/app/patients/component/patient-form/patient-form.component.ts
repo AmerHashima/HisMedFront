@@ -21,7 +21,6 @@ import { ValidationErrorService } from 'src/app/common/service/validation-error.
 })
 export class PatientFormComponent {
   @Output() cancalEvent = new EventEmitter<any>();
-  @Output() setToastObject = new EventEmitter<any>();
   oid = input<string>('');
   fb = inject(FormBuilder);
   store = inject(PatientStore);
@@ -125,10 +124,6 @@ export class PatientFormComponent {
       const success = this.store.success();
       if (success) {
         this.cancel();
-        this.setToastObject.emit({
-          title: 'Success',
-          content: "Patient has been safed successfully"
-        })
       }
       this.store.setSuccess(false);
     });
