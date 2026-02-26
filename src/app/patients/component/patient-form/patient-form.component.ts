@@ -220,7 +220,5 @@ export class PatientFormComponent {
     this.form.reset();
     this.cancalEvent.emit();
   }
-  back() {
-    this.cancalEvent.emit();
-  }
+
 }

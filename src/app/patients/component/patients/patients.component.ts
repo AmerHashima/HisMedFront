@@ -45,8 +45,6 @@ export class PatientsComponent {
 
 
   breadcrumbClick = toSignal(this.breadcrumb.breadcrumbClick$, { initialValue: null });
-  // showToast:boolean=false;
-  // toastObject: { title: string, content: string } = { title: '', content :''};
   constructor() {
     effect(() => {
       const crumb = this.breadcrumbClick();
@@ -63,7 +61,7 @@ export class PatientsComponent {
   ngOnInit() {
     this.breadcrumb.resetToRoute();
   }
-  // 🔹 table event handlers
+  // table event handlers
   onPageChange(event: PageEvent) {
     console.log('pagination', event);
     this.store.setPage(event.pageIndex + 1, event.pageSize);
@@ -118,10 +116,5 @@ export class PatientsComponent {
     this.breadcrumb.resetToRoute();
   }
 
-  // onToastHide(){}
-  // onToastClose(){}
-  // setToastObject(toast:any){
-  //   this.showToast=true;
-  //   this.toastObject=toast
-  // }
+
 }
