@@ -17,6 +17,7 @@ import { User, UserVM } from '../models/user';
 import { ApiUser } from '../models/api-user';
 import { Filter, Pagination, RequestWrapper, Sort } from '../../../common/Models/request';
 import { createQueryRequest } from './store.helpers';
+import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
 
 type UpdateUserPayload = {
   id: string;
@@ -89,7 +90,7 @@ export const UsersStore = signalStore(
     },
 
   })),
-  withMethods((store, userService = inject(UserService)) => ({
+  withMethods((store, toast=inject(ToastingMessagesService),userService = inject(UserService)) => ({
     queryUsers: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(350),
@@ -112,6 +113,8 @@ export const UsersStore = signalStore(
                               error ?? 'Failed to query users'
                             )
                           );
+                toast.showToast('Falied to search user', 'error');
+
                           return of({ users: [], total: 0 });
                         }),
             finalize(() => patchState(store, deactivateLoading))
@@ -123,6 +126,8 @@ export const UsersStore = signalStore(
   })),
   withMethods((store) => {
     const userService = inject(UserService);
+    const toast = inject(ToastingMessagesService);
+
     return {
       // loadUsers: () => {
       //   patchState(store, activateLoading);
@@ -160,6 +165,8 @@ export const UsersStore = signalStore(
               // tap((user: ApiUser) => patchState(store, addUser(user))),
               tap(() => {
                 patchState(store, setSuccess(true));
+                toast.showToast('User has been added successfully', 'success');
+
                 store.queryUsers(store.queryRequest());
               }),
               catchError(err => {
@@ -170,6 +177,7 @@ export const UsersStore = signalStore(
                     error ?? 'Failed to add user'
                   )
                 );
+                toast.showToast('Falied to add user', 'error');
                 return EMPTY
               }),
 
@@ -186,6 +194,8 @@ export const UsersStore = signalStore(
               // tap(() => patchState(store, setError(''))),
               tap(() => {
                 patchState(store, setSuccess(true));
+                toast.showToast('User has been updated successfully', 'success');
+
                 store.queryUsers(store.queryRequest());
               }),
               catchError(err => {
@@ -196,6 +206,8 @@ export const UsersStore = signalStore(
                     error ?? 'Failed to update user'
                   )
                 );
+                toast.showToast('Falied to updated user', 'error');
+
                 return EMPTY
               }),
 
@@ -218,6 +230,8 @@ export const UsersStore = signalStore(
                     error ?? 'Failed to load user'
                   )
                 );
+                toast.showToast('Falied to retrieve user', 'error');
+
                 return EMPTY
               }),
               finalize(() => patchState(store, deactivateLoading))
@@ -230,7 +244,10 @@ export const UsersStore = signalStore(
           tap(() => patchState(store, activateLoading)),
           switchMap((id) =>
             userService.deleteUser(id).pipe(
-              tap(() => patchState(store, deleteUser(id))),
+              tap(() => {patchState(store, deleteUser(id));
+                toast.showToast('User has been deleted successfully', 'success');
+
+              }),
               catchError(err => {
                 const error = err.error.errors;
                 patchState(
@@ -239,6 +256,7 @@ export const UsersStore = signalStore(
                     error ?? 'Failed to delete user'
                   )
                 );
+                toast.showToast('Falied to delete user', 'error');
                 return EMPTY
               }),
               finalize(() => patchState(store, deactivateLoading))

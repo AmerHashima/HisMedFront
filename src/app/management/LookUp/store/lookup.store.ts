@@ -10,6 +10,7 @@ import { LookupService } from "src/app/common/service/lookup.service";
 import { LookUPDetailVM, LookUPMaster, LookUPMasterVM, LookupDetail } from "../models/lookup";
 import { LookUpService } from "src/app/shared/services/look-up.service";
 import { mapApiLookupDetailsToLookupDetailVms, mapApiLookupMastersToLookupMasterVms, mapApiLookupMasterToLookupMasterVm } from "./lookup.mappers";
+import { ToastingMessagesService } from "src/app/common/service/toasting.service";
 
 
 export const LOOKUPStore = signalStore(
@@ -59,7 +60,7 @@ export const LOOKUPStore = signalStore(
     isLastPage: computed(() => page() * pageSize() >= total()),
   })),
 
-  withMethods((store, service = inject(LookupService)) => ({
+  withMethods((store, toast=inject(ToastingMessagesService),service = inject(LookupService)) => ({
     // 🔎 SEARCH
 
     queryLookups: rxMethod<RequestWrapper>(
@@ -83,6 +84,7 @@ export const LOOKUPStore = signalStore(
 
             catchError(err => {
               patchState(store, setError<LookUPMasterVM>(err.message));
+              toast.showToast('Falied to query lookuos', 'error');
               return of({ branches: [], total: 0 });
             }),
 
@@ -94,7 +96,7 @@ export const LOOKUPStore = signalStore(
       )
     ),
   })),
-  withMethods((store, service = inject(LookupService)) => ({
+  withMethods((store,toast=inject(ToastingMessagesService), service = inject(LookupService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -129,6 +131,8 @@ export const LOOKUPStore = signalStore(
                               error ?? 'Failed to get lookup'
                             )
                           );
+                    toast.showToast('Falied to get lookup', 'error');
+
                     return of(null);
                         }),
 
@@ -152,6 +156,8 @@ export const LOOKUPStore = signalStore(
 
             tap(() => {
               patchState(store, setSuccess<LookUPMasterVM>(true));
+              toast.showToast('Lookup Master has been added successfully', 'success');
+
               store.queryLookups(store.queryRequest());
             }),
             catchError(err => {
@@ -162,6 +168,8 @@ export const LOOKUPStore = signalStore(
                   error ?? 'Failed to add Look up'
                 )
               );
+              toast.showToast('Falied to add lookup', 'error');
+
               return EMPTY;
             }),
             finalize(() =>
@@ -179,6 +187,8 @@ export const LOOKUPStore = signalStore(
           service.createLookupDetail(body).pipe(
             tap(() => {
               patchState(store, setSuccess<LookUPMasterVM>(true));
+              toast.showToast('Lookup details has been added successfully', 'success');
+
               store.queryLookups(store.queryRequest());
             }),
 
@@ -190,6 +200,7 @@ export const LOOKUPStore = signalStore(
                   error ?? 'Failed to add Look up detail'
                 )
               );
+              toast.showToast('Falied to add deatils', 'error');
               return EMPTY;
             }),
 
@@ -260,9 +271,11 @@ export const LOOKUPStore = signalStore(
               patchState(
                 store,
                 setError<LookUPMasterVM>(
-                  error ?? 'Failed to add Look up details'
+                  error ?? 'Failed to load Look up details'
                 )
               );
+              toast.showToast('Falied to load deatils', 'error');
+
               return of(null);
             }),
 

@@ -14,6 +14,7 @@ import {
   setSuccess
 } from './patient.updater';
 import { Patient } from '../models/patient';
+import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
 type UpdatePayload = {
   id: string;
   body: Patient;
@@ -66,7 +67,7 @@ export const PatientStore = signalStore(
     }),
   })),
 
-  withMethods((store, service = inject(PatientService)) => ({
+  withMethods((store,toast=inject(ToastingMessagesService) ,service = inject(PatientService)) => ({
     queryPatients: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(300),
@@ -82,6 +83,8 @@ export const PatientStore = signalStore(
                                 error ?? 'Failed to query patient'
                               )
                             );
+                  toast.showToast('Falied to search patient', 'error');
+
                   return of({ patients: [], total: 0 });
                           }),
 
@@ -92,7 +95,7 @@ export const PatientStore = signalStore(
     ),
 
   })),
-  withMethods((store, service = inject(PatientService)) => ({
+  withMethods((store,toast=inject(ToastingMessagesService) ,service = inject(PatientService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -113,6 +116,7 @@ export const PatientStore = signalStore(
             // tap((user: ApiUser) => patchState(store, addUser(user))),
             tap(() => {
               patchState(store, setSuccess(true));
+              toast.showToast('Patient has been added successfully', 'success');
               store.queryPatients(store.queryRequest());
             }),
             catchError(err => {
@@ -123,6 +127,8 @@ export const PatientStore = signalStore(
                   error ?? 'Failed to add patient'
                 )
               );
+              toast.showToast('Falied to add patient', 'error');
+
               return EMPTY;
             }),
 
@@ -139,6 +145,7 @@ export const PatientStore = signalStore(
             // tap(() => patchState(store, setError(''))),
             tap(() => {
               patchState(store, setSuccess(true));
+              toast.showToast('Patient has been updated successfully', 'success');
               store.queryPatients(store.queryRequest());
             }),
             catchError(err => {
@@ -149,6 +156,8 @@ export const PatientStore = signalStore(
                   error ?? 'Failed to update patient'
                 )
               );
+              toast.showToast('Falied to update patient', 'error');
+
               return EMPTY;
             }),
 
@@ -171,6 +180,8 @@ export const PatientStore = signalStore(
                   error ?? 'Failed to get patient'
                 )
               );
+              toast.showToast('Falied to retrieve patient', 'error');
+
               return of(null);
             }),
             finalize(() => patchState(store, deactivateLoading))
@@ -183,7 +194,10 @@ export const PatientStore = signalStore(
       pipe(
         switchMap(id =>
           service.deletePatient(id).pipe(
-            tap(() => patchState(store, deletePatient(id))),
+            tap(() => {patchState(store, deletePatient(id));
+              toast.showToast('Patient has been deleted successfully', 'success');
+
+            }),
             catchError(err => {
               const error = err.error.errors;
               patchState(
@@ -192,6 +206,7 @@ export const PatientStore = signalStore(
                   error ?? 'Failed to delete patient'
                 )
               );
+              toast.showToast('Falied to delete patient', 'error');
               return of(null);
             }),
           )
