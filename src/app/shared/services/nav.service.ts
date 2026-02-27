@@ -157,29 +157,56 @@ export class NavService implements OnDestroy {
       children: [
 
         {
-          title: 'Patients',
+          title: 'All Patients',
           dirchange: false,
-          type: 'sub',
+          type: 'link',
           active: false,
-          children: [
-            {
-              path: '/patients',
-              title: 'All Patients',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
-            {
-              path: '/patients/create',
-              title: 'Add New Patient',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
+          path: '/patients',
+          // children: [
+          //   {
+          //     path: '/patients',
+          //     title: 'All Patients',
+          //     dirchange: false,
+          //     type: 'link',
+          //     active: false,
+          //     selected: false,
+          //   },
+          //   {
+          //     path: '/patients/create',
+          //     title: 'Add New Patient',
+          //     dirchange: false,
+          //     type: 'link',
+          //     active: false,
+          //     selected: false,
+          //   },
 
-          ],
+          // ],
+        },
+        {
+          title: 'Add New Patient',
+          dirchange: false,
+          type: 'link',
+          active: false,
+          path: '/patients/create',
+          // children: [
+          //   {
+          //     path: '/patients',
+          //     title: 'All Patients',
+          //     dirchange: false,
+          //     type: 'link',
+          //     active: false,
+          //     selected: false,
+          //   },
+          //   {
+          //     path: '/patients/create',
+          //     title: 'Add New Patient',
+          //     dirchange: false,
+          //     type: 'link',
+          //     active: false,
+          //     selected: false,
+          //   },
+
+          // ],
         },
       ],
     },
@@ -190,32 +217,45 @@ export class NavService implements OnDestroy {
       type: 'sub',
       active: false,
       children: [
-
         {
-          title: 'Doctors',
+          title: 'All Doctors',
           dirchange: false,
-          type: 'sub',
+          type: 'link',
           active: false,
-          children: [
-            {
-              path: '/doctors',
-              title: 'All Doctors',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
-            {
-              path: '/doctors/create',
-              title: 'Add New Doctor',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
-
-          ],
+          path: '/doctors',
         },
+        {
+          title: 'Add New Doctor',
+          dirchange: false,
+          type: 'link',
+          active: false,
+          path: '/doctors/create',
+        },
+        // {
+        //   title: 'Doctors',
+        //   dirchange: false,
+        //   type: 'sub',
+        //   active: false,
+        //   children: [
+        //     {
+        //       path: '/doctors',
+        //       title: 'All Doctors',
+        //       dirchange: false,
+        //       type: 'link',
+        //       active: false,
+        //       selected: false,
+        //     },
+        //     {
+        //       path: '/doctors/create',
+        //       title: 'Add New Doctor',
+        //       dirchange: false,
+        //       type: 'link',
+        //       active: false,
+        //       selected: false,
+        //     },
+
+        //   ],
+        // },
       ],
     },
     {
