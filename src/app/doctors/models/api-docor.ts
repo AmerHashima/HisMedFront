@@ -11,7 +11,7 @@ export interface ApiDocor {
   departmentName: string,
   branchId:string,
   branchName: string,
-  nphiesProviderId: string,
+  nphiesProviderId: string | null,
   isNphiesEnabled: boolean,
   isActive: boolean,
   createdAt: string,

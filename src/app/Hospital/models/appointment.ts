@@ -41,19 +41,4 @@ export interface AppointmentVM extends Appointment {
   updatedAt: string;
 }
 
-
-// export interface AppointmentState {
-//   appointments: AppointmentVM[];
-//   selectedAppointment: AppointmentVM | null;
-//     success: boolean
-//     loading: boolean;
-//     error: string | null;
-//     page: number;
-//     pageSize: number;
-//     total: number;
-//     search: string;
-//     sortBy: string;
-//     sortDirection: 'asc' | 'desc' | '';
-// }
-
 export type AppointmentState = BaseCrudState<AppointmentVM>;

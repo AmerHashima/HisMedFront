@@ -43,21 +43,42 @@
         }"
       />
     </div>
-    <div class="col-lg-3">
-      <app-input
-        formControlName="city"
-        label="City"
-        type="text"
-        placeholder=""
-        icon="bi bi-building"
-        [errorMessages]="{
-          required: 'City is required',
-          backendError: apiFieldErrors['city'],
-        }"
+      <div class="col-lg-3">
+         <spk-ng-select
+        formControlName="country"
+        label="Country"
+        [options]="$any((countries$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose Country"
+        selectClass="form-control"
       />
     </div>
     <div class="col-lg-3">
-      <app-input
+               <spk-ng-select
+        formControlName="city"
+        label="City"
+        [options]="$any((cities$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose City"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-lg-3">
+                 <spk-ng-select
+        formControlName="state"
+        label="State"
+        [options]="$any((states$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose State"
+        selectClass="form-control"
+      />
+      <!-- <app-input
         formControlName="state"
         label="State"
         type="text"
@@ -67,21 +88,9 @@
           required: 'State is required',
           backendError: apiFieldErrors['state'],
         }"
-      />
+      /> -->
     </div>
-    <div class="col-lg-3">
-      <app-input
-        formControlName="country"
-        label="Country"
-        type="text"
-        placeholder=""
-        icon="bi bi-globe"
-        [errorMessages]="{
-          required: 'Country is required',
-          backendError: apiFieldErrors['country'],
-        }"
-      />
-    </div>
+
     <div class="col-lg-3">
       <app-input
         formControlName="postalCode"

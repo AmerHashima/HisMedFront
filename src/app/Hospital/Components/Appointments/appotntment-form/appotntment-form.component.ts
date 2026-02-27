@@ -24,6 +24,8 @@ import { PatientStore } from 'src/app/patients/patientStore/patient.store';
 export class AppotntmentFormComponent {
   private lookupService = inject(LookupService);
   appointmentStatues$ = this.lookupService.getAppointmentStatus();
+  appointmentTypes$ = this.lookupService.getAppointmentTypes();
+  appointmentReasons$ = this.lookupService.getAppointmentReasons();
 
   @Output() cancalEvent = new EventEmitter<any>();
   oid = input<string>('');

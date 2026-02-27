@@ -8,8 +8,8 @@
       <spk-ng-select
         formControlName="patientId"
         label="Patient Id"
-        [options]="$any(patients())"
-        bindLabel="firstName"
+        [options]="patients()"
+        bindLabel="fullNameEn"
         bindValue="oid"
         [multiple]="false"
         placeholder="Choose Patient"
@@ -20,7 +20,7 @@
       <spk-ng-select
         formControlName="doctorId"
         label="Doctor Id"
-        [options]="$any(doctors())"
+        [options]="doctors()"
         bindLabel="doctorFullName"
         bindValue="oid"
         [multiple]="false"
@@ -38,25 +38,24 @@
       ></spk-flatpickr>
     </div>
     <div class="col-lg-3">
-      <app-input
+     <spk-ng-select
         formControlName="appointmentType"
         label="Appointment Type"
-        type="text"
-        placeholder=""
-        icon="bi bi-card-text"
-        [errorMessages]="{
-          required: 'Appointment Type is required',
-          backendError: apiFieldErrors['appointmentType'],
-        }"
+        [options]="$any((appointmentTypes$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose Status"
+        selectClass="form-control"
       />
     </div>
     <div class="col-lg-3">
       <spk-ng-select
         formControlName="status"
         label="Appointment Status"
-        [options]="$any((appointmentStatues$ | async) ?? [])"
+        [options]="$any((appointmentStatues$ | async)?.lookupDetails ?? [])"
         bindLabel="valueNameEn"
-        bindValue="oid"
+        bindValue="valueNameEn"
         [multiple]="false"
         placeholder="Choose Status"
         selectClass="form-control"
@@ -75,7 +74,17 @@
       />
     </div>
     <div class="col-lg-3">
-      <app-input
+        <spk-ng-select
+        formControlName="reason"
+        label="Reason"
+        [options]="$any((appointmentReasons$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose Reason"
+        selectClass="form-control"
+      />
+      <!-- <app-input
         formControlName="reason"
         label="Reason"
         type="text"
@@ -85,7 +94,7 @@
           required: 'Reason is required',
           backendError: apiFieldErrors['reason'],
         }"
-      />
+      /> -->
     </div>
   </div>
   <div class="d-flex justify-content-end gap-2">

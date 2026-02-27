@@ -59,7 +59,7 @@ export class PatientFormComponent {
   private backendErrorKeyMap: Record<string, string[]> = {
     email: ['email'],
     phone: ['phone'],
-    mobile: ['mobile'],
+    mobile: ['Mobile'],
     lastNameAr: ['lastNameAr'],
     middleNameEn: ['middleNameEn'],
     middleNameAr: ['middleNameAr'],
@@ -213,6 +213,7 @@ export class PatientFormComponent {
       email: patient.email!,
       branchId: patient.branchId!,
     };
+    console.log(payload);
     return payload;
   }
   cancel() {

@@ -6,7 +6,7 @@ export interface Branch {
   name: string,
   address: string,
   city: string,
-  state: string,
+  state: string|null,
   postalCode: string,
   country: string,
   isActive: boolean
@@ -18,7 +18,7 @@ export interface APIHospitalBranch {
   name: string,
   address: string,
   city: string,
-  state: string,
+  state: string | null,
   postalCode: string,
   country: string,
   isActive: boolean,
@@ -35,18 +35,6 @@ export interface HospitalBranchVm extends Branch {
 }
 
 
-// export interface HospitalBranchState {
-//   branches: HospitalBranchVm[];
-//   selectedBranch: HospitalBranchVm | null;
-//   success: boolean
-//   loading: boolean;
-//   error: string | null;
-//   page: number;
-//   pageSize: number;
-//   total: number;
-//   search: string;
-//   sortBy: string;
-//   sortDirection: 'asc' | 'desc' | '';
-// }
+
 export type HospitalBranchState = BaseCrudState<HospitalBranchVm>;
 

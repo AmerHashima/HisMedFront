@@ -12,6 +12,7 @@ import { AsyncPipe } from '@angular/common';
 import { HospitalBranchService } from 'src/app/Hospital/Services/hospital-branch.service';
 import { SpecialityService } from 'src/app/Hospital/Services/speciality.service';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
+import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
 
 @Component({
   selector: 'app-doctor-form',
@@ -19,7 +20,7 @@ import { ValidationErrorService } from 'src/app/common/service/validation-error.
     SpkNgSelectComponent, ReactiveFormsModule, AsyncPipe],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
-  providers: [UsersStore]
+  providers: [UsersStore, SpecialityStore]
 
 })
 export class DoctorFormComponent {
@@ -31,6 +32,8 @@ export class DoctorFormComponent {
   lookupService = inject(LookupService);
   branchService = inject(HospitalBranchService);
   specialityService = inject(SpecialityService);
+  specialityStore = inject(SpecialityStore);
+  specialities=computed(()=> this.specialityStore.items())
     validationErrorService = inject(ValidationErrorService);
 
   users = computed(() => this.userStore.users());
@@ -44,9 +47,9 @@ export class DoctorFormComponent {
     specialtyId: ['', Validators.required],
     departmentLookupId: ['', Validators.required],
     branchId: ['', Validators.required],
-    nphiesProviderId: ['', Validators.required],
-    isNphiesEnabled: [false, Validators.required],
-    isActive: [false, Validators.required],
+    nphiesProviderId: [''],
+    isNphiesEnabled: [false],
+    isActive: [false],
   });
 
   private backendErrorKeyMap: Record<string, string[]> = {
@@ -76,9 +79,9 @@ export class DoctorFormComponent {
           specialtyId: doctor.specialtyId,
           departmentLookupId: doctor.departmentLookupId,
           branchId: doctor.branchId,
-          nphiesProviderId: doctor.nphiesProviderId,
-          isActive: doctor.isActive,
-          isNphiesEnabled: doctor.isNphiesEnabled,
+          nphiesProviderId: doctor.nphiesProviderId ?? null,
+          isActive: doctor.isActive ?? false ,
+          isNphiesEnabled: doctor.isNphiesEnabled ?? false,
         });
       }
     });
@@ -142,7 +145,7 @@ export class DoctorFormComponent {
       branchId: v.branchId!,
       specialtyId: v.specialtyId!,
       departmentLookupId: v.departmentLookupId!,
-      nphiesProviderId: v.nphiesProviderId!,
+      nphiesProviderId: v.nphiesProviderId ? v.nphiesProviderId :null,
       isNphiesEnabled: v.isNphiesEnabled ?? false,
       isActive: v.isActive ?? true,
     };

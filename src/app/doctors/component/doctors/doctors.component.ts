@@ -25,8 +25,12 @@ export class DoctorsComponent {
   oid: string = '';
   // 🔹 table columns
   columns = [
-    { field: 'userId', header: 'User Id', type: 'text' },
+    { field: 'username', header: 'Username', type: 'text' },
+
+    { field: 'doctorFullName', header: 'Doctor Name', type: 'text' },
     { field: 'licenseNumber', header: 'license Number', type: 'text' },
+    { field: 'branchName', header: 'Branch', type: 'text' },
+    { field: 'specialtyNameEn', header: 'Speciality', type: 'text' },
     {
       field: 'isActive',
       header: 'Status',

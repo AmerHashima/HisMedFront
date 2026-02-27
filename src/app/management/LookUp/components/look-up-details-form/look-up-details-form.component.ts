@@ -36,6 +36,7 @@ export class LookUpDetailsFormComponent {
     valueCode: ['valueCode'],
     valueNameAr: ['valueNameAr'],
     valueNameEn: ['valueNameEn'],
+    sortOrder: ['SortOrder']
   };
     validationErrorService = inject(ValidationErrorService);
 

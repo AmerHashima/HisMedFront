@@ -5,7 +5,7 @@ export interface Doctor {
   specialtyId: string,
   departmentLookupId: string,
   branchId: string,
-  nphiesProviderId: string,
+  nphiesProviderId: string | null,
   isNphiesEnabled: boolean,
   isActive: boolean
 }

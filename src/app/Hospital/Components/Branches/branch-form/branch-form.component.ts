@@ -6,10 +6,13 @@ import { ValidationErrorService } from 'src/app/common/service/validation-error.
 import { ToggleBtnComponent } from 'src/app/common/toggle-btn/toggle-btn.component';
 import { Branch } from 'src/app/Hospital/models/branch';
 import { BranchStore } from 'src/app/Hospital/Store/Branch/branch.store';
+import { LookupService } from 'src/app/common/service/lookup.service';
+import { SpkNgSelectComponent } from 'src/app/@spk/spk-ng-select/spk-ng-select.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-branch-form',
-  imports: [InputComponent,ReactiveFormsModule,ToggleBtnComponent,ButtonComponent],
+  imports: [InputComponent,ReactiveFormsModule,ToggleBtnComponent,ButtonComponent,SpkNgSelectComponent,AsyncPipe],
   templateUrl: './branch-form.component.html',
   styleUrl: './branch-form.component.scss'
 })
@@ -19,7 +22,7 @@ export class BranchFormComponent {
   fb = inject(FormBuilder);
   store = inject(BranchStore);
     validationErrorService = inject(ValidationErrorService);
-
+  lookupService = inject(LookupService);
   // specialities = computed(() => this.store.specialities());
   branches = computed(() => this.store.items());
   form = this.fb.group({
@@ -27,7 +30,7 @@ export class BranchFormComponent {
     name: ['', Validators.required],
     address: ['', Validators.required],
     city: ['', Validators.required],
-    state: ['', Validators.required],
+    state: [''],
     country: ['', Validators.required],
     postalCode: ['', Validators.required],
     isActive: [false, Validators.required],
@@ -44,6 +47,10 @@ export class BranchFormComponent {
 
   };
   apiFieldErrors: Record<string, string> = {};
+  countries$ = this.lookupService.getCountries();
+  cities$ = this.lookupService.getCities();
+  states$ = this.lookupService.getStates();
+
   constructor() {
 
     effect(() => {
@@ -62,7 +69,7 @@ export class BranchFormComponent {
         this.form.patchValue({
           code: branch.code,
           name: branch.name,
-          state: branch.state,
+          state: branch.state?branch.state : null,
           country: branch.country,
           city: branch.city,
           postalCode: branch.postalCode,
@@ -126,7 +133,7 @@ export class BranchFormComponent {
       name: v.name!,
       address: v.address!,
       city: v.city!,
-      state: v.state!,
+      state: v.state?v.state:null,
       country: v.country!,
       postalCode: v.postalCode!,
       isActive: v.isActive ?? true,

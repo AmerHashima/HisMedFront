@@ -15,6 +15,11 @@ export const LOOKUP_CODES = {
   NATIONALITY: 'NATIONALITY',
   APPOINTMENT_STATUS: 'APPOINTMENT_STATUS',
   ENCOUNTER_TYPE: 'ENCOUNTER_TYPE',
+  COUNTRY_TYPE:'COUNTRY',
+  CITY_TYPE:'CITY',
+  STATE_TYPE:'STATE',
+  APPOINTMENT_TYPE:'APPOINTMENT_TYPES',
+  APPOINTMENT_REASON:'APPOINTMENT_REASON'
 } as const;
 
 @Injectable({
@@ -102,5 +107,19 @@ export class LookupService {
   getENCOUNTER_TYPE(){
     return this.getLookUpByCode(LOOKUP_CODES.ENCOUNTER_TYPE);
   }
-
+  getCountries() {
+    return this.getLookUpByCode(LOOKUP_CODES.COUNTRY_TYPE);
+  }
+  getCities() {
+    return this.getLookUpByCode(LOOKUP_CODES.CITY_TYPE);
+  }
+  getStates() {
+    return this.getLookUpByCode(LOOKUP_CODES.STATE_TYPE);
+  }
+  getAppointmentTypes(){
+    return this.getLookUpByCode(LOOKUP_CODES.APPOINTMENT_TYPE);
+  }
+  getAppointmentReasons(){
+    return this.getLookUpByCode(LOOKUP_CODES.APPOINTMENT_REASON);
+  }
 }

@@ -89,7 +89,7 @@ export class AllBranchesComponent {
   }
 
   handleDelete(row: any) {
-    // this.store.deleteDoctor(row.oid)
+    this.store.deleteBranch(row.oid)
   }
 
   handleSingleUserNavigation(row: any) {
