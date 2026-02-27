@@ -21,6 +21,7 @@ import {
 } from './doctor.updater';
 import { Doctor } from '../models/doctor';
 import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
+import { LoadingService } from 'src/app/common/service/loading.service';
 
 type UpdatePayload = {
   id: string;
@@ -74,35 +75,39 @@ export const DoctorStore = signalStore(
     }),
   })),
 
-  withMethods((store, toast=inject(ToastingMessagesService),service = inject(DoctorService)) => ({
+  withMethods((store, loader = inject(LoadingService), toast = inject(ToastingMessagesService), service = inject(DoctorService)) => ({
     queryDoctors: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(300),
-        tap(() => patchState(store, activateLoading)),
-        switchMap(req =>
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }), switchMap(req =>
           service.search(req).pipe(
             tap(res => patchState(store, setDoctors(res.doctors, res.total))),
-                catchError(err => {
-                            const error = err.error.errors;
-                            patchState(
-                              store,
-                              setError(
-                                error ?? 'Failed to query doctor'
-                              )
-                            );
-                  toast.showToast('Falied to search doctors', 'error');
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to query doctor'
+                )
+              );
+              toast.showToast('Falied to search doctors', 'error');
 
-                  return of({ doctors: [], total: 0 });
-                          }),
+              return of({ doctors: [], total: 0 });
+            }),
 
-            finalize(() => patchState(store, deactivateLoading))
-          )
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
         )
       )
     ),
 
   })),
-  withMethods((store,toast=inject(ToastingMessagesService), service = inject(DoctorService)) => ({
+  withMethods((store, loader = inject(LoadingService), toast = inject(ToastingMessagesService), service = inject(DoctorService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -114,8 +119,10 @@ export const DoctorStore = signalStore(
     ),
     getDoctor: rxMethod<string>(
       pipe(
-        tap(() => patchState(store, activateLoading)),
-        switchMap(id =>
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }), switchMap(id =>
           service.getDoctor(id).pipe(
             tap(d => patchState(store, setSelectedDoctor(d))),
             catchError(err => {
@@ -131,8 +138,10 @@ export const DoctorStore = signalStore(
               return of(null);
             }),
 
-            finalize(() => patchState(store, deactivateLoading))
-          )
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
         )
       )
     ),
@@ -141,7 +150,7 @@ export const DoctorStore = signalStore(
       pipe(
         tap(() => {
           patchState(store, activateLoading);
-          //  patchState(store, setError(null))
+          loader.start();
         }),
         switchMap((body) =>
           service.createDoctor(body).pipe(
@@ -165,15 +174,19 @@ export const DoctorStore = signalStore(
               return of(null);
             }),
 
-            finalize(() => patchState(store, deactivateLoading))
-          )
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
         )
       )
     ),
     updateDoctor: rxMethod<UpdatePayload>(
       pipe(
-        tap(() => { patchState(store, activateLoading); }),
-        switchMap(({ id, body }) =>
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }), switchMap(({ id, body }) =>
           service.updateDoctor(id, body).pipe(
             // tap(() => patchState(store, setError(''))),
             tap(() => {
@@ -194,8 +207,10 @@ export const DoctorStore = signalStore(
 
               return of(null);
             }),
-            finalize(() => patchState(store, deactivateLoading))
-          )
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
         )
       )
     ),
@@ -203,7 +218,8 @@ export const DoctorStore = signalStore(
       pipe(
         switchMap(id =>
           service.deleteDoctor(id).pipe(
-            tap(() => {patchState(store, deleteDoctor(id));
+            tap(() => {
+              patchState(store, deleteDoctor(id));
               toast.showToast('Doctor has been deleted successfully', 'success');
             }),
             catchError(err => {
@@ -236,7 +252,7 @@ export const DoctorStore = signalStore(
     setPage(page: number, pageSize?: number) {
       patchState(store, setPageUpdater(page, pageSize));
     },
-  setSort(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
+    setSort(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
       patchState(store, setSortUpdater(sort.active, sort.direction));
     },
   })),

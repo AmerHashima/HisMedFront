@@ -10,6 +10,7 @@ import { catchError, debounceTime, EMPTY, finalize, of, pipe, switchMap, tap } f
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiBranchesToBranchVms, mapApiBranchToBranchVm } from "./branch.mapper";
 import { ToastingMessagesService } from "src/app/common/service/toasting.service";
+import { LoadingService } from "src/app/common/service/loading.service";
 
 type UpdatePayload = {
   id: string;
@@ -59,13 +60,15 @@ export const BranchStore = signalStore(
     isLastPage: computed(() => page() * pageSize() >= total()),
   })),
 
-  withMethods((store, toast=inject(ToastingMessagesService),service = inject(HospitalBranchService)) => ({
+  withMethods((store,loader=inject(LoadingService), toast=inject(ToastingMessagesService),service = inject(HospitalBranchService)) => ({
     // 🔎 SEARCH
     queryBranches: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(300),
-
-        tap(() => patchState(store, activateLoading<HospitalBranchVm>())),
+ tap(() => {
+   patchState(store, activateLoading<HospitalBranchVm>());
+             loader.start();
+        }),
 
         switchMap(req =>
           service.search(req).pipe(
@@ -91,15 +94,17 @@ export const BranchStore = signalStore(
               toast.showToast('Falied to search branches', 'error');
               return of({ branches: [], total: 0 });
             }),
-            finalize(() =>
-              patchState(store, deactivateLoading<HospitalBranchVm>())
+            finalize(() => {
+              patchState(store, deactivateLoading<HospitalBranchVm>());
+              loader.stop();
+            }
             )
           )
         )
       )
     ),
   })),
-  withMethods((store, toast=inject(ToastingMessagesService),service = inject(HospitalBranchService)) => ({
+  withMethods((store,loader=inject(LoadingService), toast=inject(ToastingMessagesService),service = inject(HospitalBranchService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -112,8 +117,10 @@ export const BranchStore = signalStore(
     // 📄 GET BY ID
     getBranch: rxMethod<string>(
       pipe(
-        tap(() => patchState(store, activateLoading<HospitalBranchVm>())),
-
+        tap(() => {
+          patchState(store, activateLoading<HospitalBranchVm>());
+          loader.start();
+        }),
         switchMap(id =>
           service.getBranch(id).pipe(
 
@@ -140,10 +147,12 @@ export const BranchStore = signalStore(
                         }),
 
 
-
-            finalize(() =>
-              patchState(store, deactivateLoading<HospitalBranchVm>())
+   finalize(() => {
+     patchState(store, deactivateLoading<HospitalBranchVm>());
+              loader.stop();
+            }
             )
+
           )
         )
       )
@@ -152,8 +161,10 @@ export const BranchStore = signalStore(
     // ➕ ADD
     addBranch: rxMethod<Branch>(
       pipe(
-        tap(() => patchState(store, activateLoading<HospitalBranchVm>())),
-
+        tap(() => {
+          patchState(store, activateLoading<HospitalBranchVm>());
+          loader.start();
+        }),
         switchMap(body =>
           service.createBranch(body).pipe(
 
@@ -178,8 +189,10 @@ export const BranchStore = signalStore(
 
 
 
-            finalize(() =>
-              patchState(store, deactivateLoading<HospitalBranchVm>())
+            finalize(() => {
+              patchState(store, deactivateLoading<HospitalBranchVm>());
+              loader.stop();
+            }
             )
           )
         )
@@ -189,8 +202,10 @@ export const BranchStore = signalStore(
     // ✏ UPDATE
     updateBranch: rxMethod<UpdatePayload>(
       pipe(
-        tap(() => patchState(store, activateLoading<HospitalBranchVm>())),
-
+        tap(() => {
+          patchState(store, activateLoading<HospitalBranchVm>());
+          loader.start();
+        }),
         switchMap(({ id, body }) =>
           service.updateBranch(id, body).pipe(
 
@@ -213,8 +228,10 @@ export const BranchStore = signalStore(
               return of(null);
             }),
 
-            finalize(() =>
-              patchState(store, deactivateLoading<HospitalBranchVm>())
+            finalize(() => {
+              patchState(store, deactivateLoading<HospitalBranchVm>());
+              loader.stop();
+            }
             )
           )
         )

@@ -4,7 +4,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { initialUsersState } from './user.slice';
 import {
   activateLoading, deactivateLoading, setUsers, setError,
-   getUser, deleteUser,
+  getUser, deleteUser,
   setSearchUpdater,
   setPageUpdater,
   setSortUpdater,
@@ -18,6 +18,7 @@ import { ApiUser } from '../models/api-user';
 import { Filter, Pagination, RequestWrapper, Sort } from '../../../common/Models/request';
 import { createQueryRequest } from './store.helpers';
 import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
+import { LoadingService } from 'src/app/common/service/loading.service';
 
 type UpdateUserPayload = {
   id: string;
@@ -90,12 +91,15 @@ export const UsersStore = signalStore(
     },
 
   })),
-  withMethods((store, toast=inject(ToastingMessagesService),userService = inject(UserService)) => ({
+  withMethods((store, loader = inject(LoadingService), toast = inject(ToastingMessagesService), userService = inject(UserService)) => ({
     queryUsers: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(350),
         // distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
-        tap(() => patchState(store, activateLoading)),
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }),
         switchMap((request: RequestWrapper) =>
           userService.search(request).pipe(
             tap((response: { users: ApiUser[]; total: number }) => {
@@ -105,19 +109,22 @@ export const UsersStore = signalStore(
                 total: response.total ?? 0
               }));
             }),
-              catchError(err => {
-                          const error = err.error.errors;
-                          patchState(
-                            store,
-                            setError(
-                              error ?? 'Failed to query users'
-                            )
-                          );
-                toast.showToast('Falied to search user', 'error');
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to query users'
+                )
+              );
+              toast.showToast('Falied to search user', 'error');
 
-                          return of({ users: [], total: 0 });
-                        }),
-            finalize(() => patchState(store, deactivateLoading))
+              return of({ users: [], total: 0 });
+            }),
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            })
           )
         )
       )
@@ -127,7 +134,7 @@ export const UsersStore = signalStore(
   withMethods((store) => {
     const userService = inject(UserService);
     const toast = inject(ToastingMessagesService);
-
+    const loader = inject(LoadingService);
     return {
       // loadUsers: () => {
       //   patchState(store, activateLoading);
@@ -157,9 +164,10 @@ export const UsersStore = signalStore(
       ),
       addUser: rxMethod<User>(
         pipe(
-          tap(() => { patchState(store, activateLoading);
-            //  patchState(store, setError(null))
-            }),
+          tap(() => {
+            patchState(store, activateLoading);
+            loader.start();
+          }),
           switchMap((body) =>
             userService.createUser(body).pipe(
               // tap((user: ApiUser) => patchState(store, addUser(user))),
@@ -181,15 +189,19 @@ export const UsersStore = signalStore(
                 return EMPTY
               }),
 
-              finalize(() => patchState(store, deactivateLoading))
-            )
+              finalize(() => {
+                patchState(store, deactivateLoading);
+                loader.stop()
+              }))
           )
         )
       ),
       updateUser: rxMethod<UpdateUserPayload>(
         pipe(
-          tap(() => { patchState(store, activateLoading); }),
-          switchMap(({ id, body }) =>
+          tap(() => {
+            patchState(store, activateLoading);
+            loader.start();
+          }), switchMap(({ id, body }) =>
             userService.updateUser(id, body).pipe(
               // tap(() => patchState(store, setError(''))),
               tap(() => {
@@ -211,15 +223,19 @@ export const UsersStore = signalStore(
                 return EMPTY
               }),
 
-              finalize(() => patchState(store, deactivateLoading))
-            )
+              finalize(() => {
+                patchState(store, deactivateLoading);
+                loader.stop()
+              }))
           )
         )
       ),
       getUser: rxMethod<string>(
         pipe(
-          tap(() => patchState(store, activateLoading)),
-          switchMap((id) =>
+          tap(() => {
+            patchState(store, activateLoading);
+            loader.start();
+          }), switchMap((id) =>
             userService.getUser(id).pipe(
               tap((user: ApiUser) => patchState(store, getUser(user))),
               catchError(err => {
@@ -234,17 +250,22 @@ export const UsersStore = signalStore(
 
                 return EMPTY
               }),
-              finalize(() => patchState(store, deactivateLoading))
-            )
+              finalize(() => {
+                patchState(store, deactivateLoading);
+                loader.stop()
+              }))
           )
         )
       ),
       deleteUser: rxMethod<string>(
         pipe(
-          tap(() => patchState(store, activateLoading)),
-          switchMap((id) =>
+          tap(() => {
+            patchState(store, activateLoading);
+            loader.start();
+          }), switchMap((id) =>
             userService.deleteUser(id).pipe(
-              tap(() => {patchState(store, deleteUser(id));
+              tap(() => {
+                patchState(store, deleteUser(id));
                 toast.showToast('User has been deleted successfully', 'success');
 
               }),
@@ -259,8 +280,10 @@ export const UsersStore = signalStore(
                 toast.showToast('Falied to delete user', 'error');
                 return EMPTY
               }),
-              finalize(() => patchState(store, deactivateLoading))
-            )
+              finalize(() => {
+                patchState(store, deactivateLoading);
+                loader.stop()
+              }))
           )
         )
       )

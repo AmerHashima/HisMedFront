@@ -11,6 +11,7 @@ import { LookUPDetailVM, LookUPMaster, LookUPMasterVM, LookupDetail } from "../m
 import { LookUpService } from "src/app/shared/services/look-up.service";
 import { mapApiLookupDetailsToLookupDetailVms, mapApiLookupMastersToLookupMasterVms, mapApiLookupMasterToLookupMasterVm } from "./lookup.mappers";
 import { ToastingMessagesService } from "src/app/common/service/toasting.service";
+import { LoadingService } from "src/app/common/service/loading.service";
 
 
 export const LOOKUPStore = signalStore(
@@ -60,14 +61,17 @@ export const LOOKUPStore = signalStore(
     isLastPage: computed(() => page() * pageSize() >= total()),
   })),
 
-  withMethods((store, toast=inject(ToastingMessagesService),service = inject(LookupService)) => ({
+  withMethods((store, loader = inject(LoadingService), toast = inject(ToastingMessagesService), service = inject(LookupService)) => ({
     // 🔎 SEARCH
 
     queryLookups: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(300),
 
-        tap(() => patchState(store, activateLoading<LookUPMasterVM>())),
+        tap(() => {
+          patchState(store, activateLoading<LookUPMasterVM>())
+          loader.start();
+        }),
 
         switchMap(req =>
           service.search(req).pipe(
@@ -88,15 +92,17 @@ export const LOOKUPStore = signalStore(
               return of({ branches: [], total: 0 });
             }),
 
-            finalize(() =>
-              patchState(store, deactivateLoading<LookUPMasterVM>())
+            finalize(() => {
+              patchState(store, deactivateLoading<LookUPMasterVM>());
+              loader.stop();
+            }
             )
           )
         )
       )
     ),
   })),
-  withMethods((store,toast=inject(ToastingMessagesService), service = inject(LookupService)) => ({
+  withMethods((store, loader = inject(LoadingService), toast = inject(ToastingMessagesService), service = inject(LookupService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -123,18 +129,18 @@ export const LOOKUPStore = signalStore(
               )
             ),
 
-                  catchError(err => {
-                          const error = err.error.errors;
-                          patchState(
-                            store,
-                            setError<LookUPMasterVM>(
-                              error ?? 'Failed to get lookup'
-                            )
-                          );
-                    toast.showToast('Falied to get lookup', 'error');
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError<LookUPMasterVM>(
+                  error ?? 'Failed to get lookup'
+                )
+              );
+              toast.showToast('Falied to get lookup', 'error');
 
-                    return of(null);
-                        }),
+              return of(null);
+            }),
 
 
 
@@ -149,7 +155,10 @@ export const LOOKUPStore = signalStore(
     // ➕ ADD
     addLookUpMaster: rxMethod<LookUPMaster>(
       pipe(
-        tap(() => patchState(store, activateLoading<LookUPMasterVM>())),
+        tap(() => {
+          patchState(store, activateLoading<LookUPMasterVM>());
+          loader.start();
+        }),
 
         switchMap(body =>
           service.createLookupMater(body).pipe(
@@ -172,8 +181,10 @@ export const LOOKUPStore = signalStore(
 
               return EMPTY;
             }),
-            finalize(() =>
-              patchState(store, deactivateLoading<LookUPMasterVM>())
+            finalize(() => {
+              patchState(store, deactivateLoading<LookUPMasterVM>());
+              loader.stop();
+            }
             )
           )
         )
@@ -181,7 +192,10 @@ export const LOOKUPStore = signalStore(
     ),
     addLookUpDetail: rxMethod<LookupDetail>(
       pipe(
-        tap(() => patchState(store, activateLoading<LookUPMasterVM>())),
+        tap(() => {
+          patchState(store, activateLoading<LookUPMasterVM>());
+          loader.start();
+        }),
 
         switchMap(body =>
           service.createLookupDetail(body).pipe(
@@ -206,8 +220,10 @@ export const LOOKUPStore = signalStore(
 
 
 
-            finalize(() =>
-              patchState(store, deactivateLoading<LookUPMasterVM>())
+            finalize(() => {
+              patchState(store, deactivateLoading<LookUPMasterVM>());
+              loader.stop();
+            }
             )
           )
         )
@@ -253,7 +269,10 @@ export const LOOKUPStore = signalStore(
     // ),
     loadLookupDetails: rxMethod<string>(
       pipe(
-        tap(() => patchState(store, activateLoading<LookUPMasterVM>())),
+        tap(() => {
+          patchState(store, activateLoading<LookUPMasterVM>());
+          loader.start();
+        }),
 
         switchMap(id =>
           service.getDetailsByLookupMasterId(id).pipe(
@@ -279,8 +298,10 @@ export const LOOKUPStore = signalStore(
               return of(null);
             }),
 
-            finalize(() =>
-              patchState(store, deactivateLoading<LookUPMasterVM>())
+            finalize(() => {
+              patchState(store, deactivateLoading<LookUPMasterVM>());
+              loader.stop();
+            }
             )
           )
         )

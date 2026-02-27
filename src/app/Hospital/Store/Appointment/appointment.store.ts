@@ -10,6 +10,7 @@ import { catchError, finalize, of, pipe, switchMap, tap } from "rxjs";
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiAppointmentToAppointmentVM } from "./appointment.mapper";
 import { ToastingMessagesService } from "src/app/common/service/toasting.service";
+import { LoadingService } from "src/app/common/service/loading.service";
 
 type UpdatePayload = {
   id: string;
@@ -82,13 +83,16 @@ export const AppointmentStore = signalStore(
 
   // })),
 
-  withMethods((store, toast=inject(ToastingMessagesService),service = inject(AppointmentService)) => ({
+  withMethods((store,loader=inject(LoadingService), toast=inject(ToastingMessagesService),service = inject(AppointmentService)) => ({
 
 
     // 📄 GET BY ID
     getAppointment: rxMethod<string>(
       pipe(
-        tap(() => patchState(store, activateLoading<AppointmentVM>())),
+         tap(() => {
+           patchState(store, activateLoading<AppointmentVM>());
+                     loader.start();
+                }),
         switchMap(id =>
           service.getAppointment(id).pipe(
             tap(apiAppointment =>
@@ -106,8 +110,11 @@ export const AppointmentStore = signalStore(
 
                           return of(null);
                         }),
-
-            finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
+            finalize(() => {
+              patchState(store, deactivateLoading<AppointmentVM>());
+              loader.stop();
+            }
+            )
           )
         )
       )
@@ -116,8 +123,10 @@ export const AppointmentStore = signalStore(
     // ➕ ADD
     addAppointment: rxMethod<Appointment>(
       pipe(
-        tap(() => patchState(store, activateLoading<AppointmentVM>())),
-        switchMap(body =>
+        tap(() => {
+          patchState(store, activateLoading<AppointmentVM>());
+          loader.start();
+        }),        switchMap(body =>
           service.createAppointment(body).pipe(
             tap(() => {
               patchState(store, setSuccess<AppointmentVM>(true));
@@ -137,8 +146,11 @@ export const AppointmentStore = signalStore(
 
               return of(null);
             }),
-            finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
-          )
+            finalize(() => {
+              patchState(store, deactivateLoading<AppointmentVM>());
+              loader.stop();
+            }
+            )          )
         )
       )
     ),
@@ -146,8 +158,10 @@ export const AppointmentStore = signalStore(
     // ✏ UPDATE
     updateAppointment: rxMethod<UpdatePayload>(
       pipe(
-        tap(() => patchState(store, activateLoading<AppointmentVM>())),
-        switchMap(({ id, body }) =>
+        tap(() => {
+          patchState(store, activateLoading<AppointmentVM>());
+          loader.start();
+        }),        switchMap(({ id, body }) =>
           service.updateAppointment(id, body).pipe(
             tap(() => {
               patchState(store, setSuccess<AppointmentVM>(true));
@@ -167,8 +181,11 @@ export const AppointmentStore = signalStore(
 
               return of(null);
             }),
-            finalize(() => patchState(store, deactivateLoading<AppointmentVM>()))
-          )
+            finalize(() => {
+              patchState(store, deactivateLoading<AppointmentVM>());
+              loader.stop();
+            }
+            )          )
         )
       )
     ),

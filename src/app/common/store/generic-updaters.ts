@@ -1,11 +1,12 @@
 import { PartialStateUpdater } from '@ngrx/signals';
 import { BaseCrudState } from '../Models/base-crud-state';
-
 export const activateLoading =
   <T>() =>
     (): Partial<BaseCrudState<T>> => ({
       loading: true,
     });
+
+
 
 export const deactivateLoading =
   <T>() =>

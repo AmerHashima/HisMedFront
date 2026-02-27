@@ -11,15 +11,20 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../../componets/footer/footer.component';
 import { TapToTopComponent } from '../../componets/tap-to-top/tap-to-top.component';
 import { NgbOffcanvas, NgbOffcanvasModule, NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';import { filter, Subscription } from 'rxjs';
+import { LoadingService } from 'src/app/common/service/loading.service';
+import { AsyncPipe } from '@angular/common';
 @Component({
     selector: 'app-full-layout',
     standalone:true,
     templateUrl: './full-layout.component.html',
     styleUrls: ['./full-layout.component.scss'],
-    imports: [ LoaderComponent, NgbOffcanvasModule,HeaderComponent, NotificationSidebarComponent, SidemenuComponent, HoverEffectSidebarDirective, RouterOutlet, FooterComponent, TapToTopComponent],
+    imports: [ LoaderComponent,AsyncPipe, NgbOffcanvasModule,HeaderComponent, NotificationSidebarComponent, SidemenuComponent, HoverEffectSidebarDirective, RouterOutlet, FooterComponent, TapToTopComponent],
     providers:[NgbActiveOffcanvas]
 })
 export class FullLayoutComponent implements OnInit {
+  private loadingService=inject(LoadingService);
+  loading$ = this.loadingService.loading$;
+
   menuItems!:Menu[];
   menuitemsSubscribe$!:Subscription
   constructor(
@@ -42,13 +47,13 @@ export class FullLayoutComponent implements OnInit {
       window.scrollTo(0, 0);
     });
   }
-  
+
   ngOnInit() {
 
     this.menuitemsSubscribe$ = this.navServices.items.subscribe((items: any) => {
       this.menuItems = items;
     });
-  
+
   }
 
   clearNavDropdown() {
@@ -77,7 +82,7 @@ export class FullLayoutComponent implements OnInit {
     const navStyle = document.documentElement.getAttribute('data-nav-style');
     if (navStyle === 'menu-click' || navStyle === 'menu-hover' || navStyle === 'icon-click' || navStyle === 'icon-hover') {
       document.querySelector('.double-menu-active')?.setAttribute('style', 'display: none;');
-    }   
+    }
   }
   menuItem = {
     active: false,

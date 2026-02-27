@@ -10,6 +10,7 @@ import {  Speciality, SpecialityVM } from "../../models/speciality";
 import { activateLoading, deactivateLoading, deleteItem, setError, setItems, setPageUpdater, setSearchUpdater, setSelectedItem, setSortUpdater, setSuccess } from "src/app/common/store/generic-updaters";
 import { mapApiSpecialitiesToSpecialityVMs, mapApiSpecialityToSpecialityVM } from "./speciality.mapper";
 import { ToastingMessagesService } from "src/app/common/service/toasting.service";
+import { LoadingService } from "src/app/common/service/loading.service";
 
 type UpdatePayload = {
   id: string;
@@ -62,13 +63,15 @@ export const SpecialityStore = signalStore(
     }),
   })),
 
-  withMethods((store, toast=inject(ToastingMessagesService),service = inject(SpecialityService)) => ({
+  withMethods((store,loader=inject(LoadingService), toast=inject(ToastingMessagesService),service = inject(SpecialityService)) => ({
     querySpecialities: rxMethod<RequestWrapper>(
       pipe(
         debounceTime(300),
 
-        tap(() => patchState(store, activateLoading<SpecialityVM>())),
-
+        tap(() => {
+          patchState(store, activateLoading<SpecialityVM>());
+          loader.start();
+        }),
         switchMap(req =>
           service.search(req).pipe(
 
@@ -94,17 +97,19 @@ export const SpecialityStore = signalStore(
               return of({ specialities: [], total: 0 });
             }),
 
-
-            finalize(() =>
-              patchState(store, deactivateLoading<SpecialityVM>())
+   finalize(() => {
+     patchState(store, deactivateLoading<SpecialityVM>());
+              loader.stop();
+            }
             )
+
           )
         )
       )
     ),
 
   })),
-  withMethods((store, toast=inject(ToastingMessagesService),service = inject(SpecialityService)) => ({
+  withMethods((store,loader=inject(LoadingService), toast=inject(ToastingMessagesService),service = inject(SpecialityService)) => ({
     clearSelectedItem: rxMethod<void>(
       pipe(
         tap(() => {
@@ -116,10 +121,11 @@ export const SpecialityStore = signalStore(
     ),
     getSpeciality: rxMethod<string>(
       pipe(
-        tap(() =>
-          patchState(store, activateLoading<SpecialityVM>())
-        ),
 
+   tap(() => {
+     patchState(store, activateLoading<SpecialityVM>());
+                     loader.start();
+                }),
         switchMap(id =>
           service.getSpecialty(id).pipe(
 
@@ -143,8 +149,11 @@ export const SpecialityStore = signalStore(
 
               return of(null);
             }),
-            finalize(() =>
-              patchState(store, deactivateLoading<SpecialityVM>())
+
+            finalize(() => {
+              patchState(store, deactivateLoading<SpecialityVM>());
+              loader.stop();
+            }
             )
           )
         )
@@ -154,9 +163,10 @@ export const SpecialityStore = signalStore(
     // ➕ ADD
     addSpeciality: rxMethod<Speciality>(
       pipe(
-        tap(() =>
-          patchState(store, activateLoading<SpecialityVM>())
-        ),
+        tap(() => {
+          patchState(store, activateLoading<SpecialityVM>());
+          loader.start();
+        }),
 
         switchMap(body =>
           service.createSpeciality(body).pipe(
@@ -182,8 +192,11 @@ export const SpecialityStore = signalStore(
               return of(null);
             }),
 
-            finalize(() =>
-              patchState(store, deactivateLoading<SpecialityVM>())
+
+            finalize(() => {
+              patchState(store, deactivateLoading<SpecialityVM>());
+              loader.stop();
+            }
             )
           )
         )
@@ -193,10 +206,10 @@ export const SpecialityStore = signalStore(
     // ✏ UPDATE
     updateSpeciality: rxMethod<UpdatePayload>(
       pipe(
-        tap(() =>
-          patchState(store, activateLoading<SpecialityVM>())
-        ),
-
+        tap(() => {
+          patchState(store, activateLoading<SpecialityVM>());
+          loader.start();
+        }),
         switchMap(({ id, body }) =>
           service.updateSpecialty(id, body).pipe(
 
@@ -221,8 +234,11 @@ export const SpecialityStore = signalStore(
               toast.showToast('Falied to update speciality', 'error');
               return of(null);
             }),
-            finalize(() =>
-              patchState(store, deactivateLoading<SpecialityVM>())
+
+            finalize(() => {
+              patchState(store, deactivateLoading<SpecialityVM>());
+              loader.stop();
+            }
             )
           )
         )

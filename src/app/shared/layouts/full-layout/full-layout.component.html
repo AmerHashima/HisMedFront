@@ -19,7 +19,13 @@
 
       <!-- container -->
       <div class="d-block align-items-center justify-content-between">
+        @if (loading$ | async) {
+          <div class="loading-spinner-overlay">
+            <div class="spinner"></div>
+          </div>
+        }
         <router-outlet> </router-outlet>
+
       </div>
       <!-- /Container -->
     </div>
