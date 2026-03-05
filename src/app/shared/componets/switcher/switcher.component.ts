@@ -1,10 +1,11 @@
+// src\app\shared\componets\switcher\switcher.component.ts
 import {
   Component,
   ElementRef,
   inject,
   Renderer2,
 } from '@angular/core';
-import { NavService } from '../../services/nav.service';
+import { NavService } from 'src/app/shared/services/nav.service';
 import { SwitcherService } from '../../services/switcher.service';
 import { NgbNav, NgbNavItem, NgbNavLinkButton, NgbNavLinkBase, 
   NgbNavContent, NgbNavOutlet, NgbActiveOffcanvas, NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';

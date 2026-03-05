@@ -1,7 +1,8 @@
+// src\app\patients\models\api-patient.ts
 export interface ApiPatient {
   oid: string,
   mrn: string,
-  identityTypeLookupId:string,
+  identityTypeLookupId: string,
   identityNumber: string,
   identityTypeName: string,
   firstNameAr: string,

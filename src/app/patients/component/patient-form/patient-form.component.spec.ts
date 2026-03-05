@@ -1,3 +1,4 @@
+// src\app\patients\component\patient-form\patient-form.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PatientFormComponent } from './patient-form.component';
@@ -10,7 +11,7 @@ describe('PatientFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PatientFormComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PatientFormComponent);
     component = fixture.componentInstance;

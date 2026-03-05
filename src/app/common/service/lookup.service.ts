@@ -1,3 +1,4 @@
+// src\app\common\service\lookup.service.ts
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import ApiService from 'src/app/shared/services/api.service';
@@ -15,11 +16,11 @@ export const LOOKUP_CODES = {
   NATIONALITY: 'NATIONALITY',
   APPOINTMENT_STATUS: 'APPOINTMENT_STATUS',
   ENCOUNTER_TYPE: 'ENCOUNTER_TYPE',
-  COUNTRY_TYPE:'COUNTRY',
-  CITY_TYPE:'CITY',
-  STATE_TYPE:'STATE',
-  APPOINTMENT_TYPE:'APPOINTMENT_TYPES',
-  APPOINTMENT_REASON:'APPOINTMENT_REASON'
+  COUNTRY_TYPE: 'COUNTRY',
+  CITY_TYPE: 'CITY',
+  STATE_TYPE: 'STATE',
+  APPOINTMENT_TYPE: 'APPOINTMENT_TYPES',
+  APPOINTMENT_REASON: 'APPOINTMENT_REASON'
 } as const;
 
 @Injectable({
@@ -32,14 +33,14 @@ export class LookupService {
   getLookUpByCode(code: string): Observable<ApiLookup> {
     return this.apiService
       .getSingle<ApiResponse<ApiLookup>>('AppLookup', code, { includeDetails: true }
-)
+      )
       .pipe(
         map((response: ApiResponse<ApiLookup>) => response.data)
       );
   }
 
   getDetailsByLookupMasterId(masterId: string): Observable<APILookupDetail[]> {
-    const url =`AppLookup/${masterId}/details`
+    const url = `AppLookup/${masterId}/details`
     return this.apiService
       .get<ApiResponse<APILookupDetail[]>>(url)
       .pipe(
@@ -72,17 +73,17 @@ export class LookupService {
   }
 
   search(body: RequestWrapper): Observable<{ lookups: APILookUPMaster[]; total: number }> {
-      return this.apiService
-        .query<ApiSearchResponse<APILookUPMaster>>('AppLookup/query', body)
-        .pipe(
-          map((response: ApiSearchResponse<APILookUPMaster>) => {
-            return {
-              lookups: response.data.data ?? [],
-              total: response.data.totalPages ?? 0,
-            };
-          })
-        );
-    }
+    return this.apiService
+      .query<ApiSearchResponse<APILookUPMaster>>('AppLookup/query', body)
+      .pipe(
+        map((response: ApiSearchResponse<APILookUPMaster>) => {
+          return {
+            lookups: response.data.data ?? [],
+            total: response.data.totalPages ?? 0,
+          };
+        })
+      );
+  }
   getDepartment() {
     return this.getLookUpByCode(LOOKUP_CODES.DEPARTMENT);
   }
@@ -104,7 +105,7 @@ export class LookupService {
   getAppointmentStatus() {
     return this.getLookUpByCode(LOOKUP_CODES.APPOINTMENT_STATUS);
   }
-  getENCOUNTER_TYPE(){
+  getENCOUNTER_TYPE() {
     return this.getLookUpByCode(LOOKUP_CODES.ENCOUNTER_TYPE);
   }
   getCountries() {
@@ -116,10 +117,10 @@ export class LookupService {
   getStates() {
     return this.getLookUpByCode(LOOKUP_CODES.STATE_TYPE);
   }
-  getAppointmentTypes(){
+  getAppointmentTypes() {
     return this.getLookUpByCode(LOOKUP_CODES.APPOINTMENT_TYPE);
   }
-  getAppointmentReasons(){
+  getAppointmentReasons() {
     return this.getLookUpByCode(LOOKUP_CODES.APPOINTMENT_REASON);
   }
 }

@@ -1,3 +1,4 @@
+// src\app\patients\service\patient.service.ts
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import ApiService from 'src/app/shared/services/api.service';
@@ -12,7 +13,7 @@ type PatientLookupType = 'id' | 'mrn';
   providedIn: 'root'
 })
 export class PatientService {
-constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) { }
 
 
   getPatients(): Observable<ApiPatient[]> {
@@ -23,7 +24,7 @@ constructor(private apiService: ApiService) { }
 
   createPatient(body: Patient): Observable<ApiPatient> {
     return this.apiService
-      .post<ApiResponse<ApiPatient>>('Patient', body)
+      .post<ApiResponse<ApiPatient>>('https://localhost:7294/api/Patient/full', body)
       .pipe(
         map((response: ApiResponse<ApiPatient>) => response.data)
       );
@@ -31,19 +32,19 @@ constructor(private apiService: ApiService) { }
 
 
 
-getPatient(value: string, type: PatientLookupType = 'id'): Observable < ApiPatient > {
-  const endpoint =
-    type === 'mrn'
-      ? 'Patient/by-mrn'
-      : 'Patient';
+  getPatient(value: string, type: PatientLookupType = 'id'): Observable<ApiPatient> {
+    const endpoint =
+      type === 'mrn'
+        ? 'Patient/by-mrn'
+        : 'Patient';
 
-  return this.apiService
-    .getSingle<ApiResponse<ApiPatient>>(endpoint, value)
-    .pipe(
-      map((response: ApiResponse<ApiPatient>) => response.data)
-    )
+    return this.apiService
+      .getSingle<ApiResponse<ApiPatient>>(endpoint, value)
+      .pipe(
+        map((response: ApiResponse<ApiPatient>) => response.data)
+      )
     // .pipe(map(this.mapApiResponse));
-}
+  }
   updatePatient(id: string, body: Patient): Observable<ApiPatient> {
     return this.apiService
       .put<ApiResponse<ApiPatient>>('Patient', id, body)

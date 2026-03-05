@@ -1,3 +1,4 @@
+// src\app\patients\component\patients\patients.component.ts
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { BreadcrumbService } from 'src/app/shared/services/breadcrumb.service';
 import { PatientStore } from '../../patientStore/patient.store';

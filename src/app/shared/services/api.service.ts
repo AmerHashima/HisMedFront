@@ -1,15 +1,15 @@
 // src\app\shared\services\api.service.ts
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import {  Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 @Injectable({ providedIn: 'root' })
 export default class ApiService {
   private readonly baseUrl: string = environment.baseUrl;
-  constructor(private http: HttpClient,private authService:AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService) {
 
-   }
+  }
 
   private createHeaders(): HttpHeaders {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -31,7 +31,7 @@ export default class ApiService {
   }
 
   getSingle<T>(url: string, id: string, params?: Record<string, any>
- ): Observable<T> {
+  ): Observable<T> {
     const fullUrl = `${this.baseUrl}/${url}/${id}`;
     let httpParams = new HttpParams();
     if (params) {
@@ -45,7 +45,8 @@ export default class ApiService {
   }
 
   post<T>(url: string, body: any): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}/${url}`, body, {
+    const fullUrl = /^https?:\/\//i.test(url) ? url : `${this.baseUrl}/${url}`;
+    return this.http.post<T>(fullUrl, body, {
       headers: this.createHeaders(),
     })
   }

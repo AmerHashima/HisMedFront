@@ -1,18 +1,20 @@
+// src\app\shared\componets\sidemenu\sidemenu.component.ts
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
-import { Menu, NavService } from '../../services/nav.service';
+import { NavService } from 'src/app/shared/services/nav.service';
+import { Menu } from 'src/app/shared/models/menu.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgClass, NgStyle } from '@angular/common';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 @Component({
-    selector: 'app-sidemenu',
-    standalone:true,
-    templateUrl: './sidemenu.component.html',
-    styleUrls: ['./sidemenu.component.scss'],
-    imports: [NgClass, RouterLink, OverlayscrollbarsModule, RouterLinkActive, NgStyle]
+  selector: 'app-sidemenu',
+  standalone: true,
+  templateUrl: './sidemenu.component.html',
+  styleUrls: ['./sidemenu.component.scss'],
+  imports: [NgClass, RouterLink, OverlayscrollbarsModule, RouterLinkActive, NgStyle]
 })
 export class SidemenuComponent implements OnInit {
   public localdata = localStorage;
@@ -45,26 +47,26 @@ export class SidemenuComponent implements OnInit {
   }
   ngOnInit() {
 
-  let bodyElement: any = document.querySelector('.main-content');
+    let bodyElement: any = document.querySelector('.main-content');
 
-  bodyElement.onclick = () => {
-    if (
-      localStorage.getItem('layoutStyles') == 'icon-click' ||
-      localStorage.getItem('layoutStyles') == 'menu-click' ||
-      localStorage.getItem('layoutStyles') == 'icon-hover' ||
-      localStorage.getItem('ynexlayout') == 'horizontal'
-    ) {
-      document.querySelectorAll('.main-menu .slide-menu.child1')
-        .forEach((ele: any) => {
-          ele.style.display = 'none';
-        });
-    }
+    bodyElement.onclick = () => {
+      if (
+        localStorage.getItem('layoutStyles') == 'icon-click' ||
+        localStorage.getItem('layoutStyles') == 'menu-click' ||
+        localStorage.getItem('layoutStyles') == 'icon-hover' ||
+        localStorage.getItem('ynexlayout') == 'horizontal'
+      ) {
+        document.querySelectorAll('.main-menu .slide-menu.child1')
+          .forEach((ele: any) => {
+            ele.style.display = 'none';
+          });
+      }
 
-        if (localStorage.getItem('layoutStyles') == 'icontext') {
-          document.querySelector('html')?.removeAttribute('data-icon-text')
-        }
-  };
-    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
+      if (localStorage.getItem('layoutStyles') == 'icontext') {
+        document.querySelector('html')?.removeAttribute('data-icon-text')
+      }
+    };
+    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items: Menu[]) => {
       this.menuItems = items;
     });
 
@@ -84,8 +86,8 @@ export class SidemenuComponent implements OnInit {
     if (document.querySelector('html')?.getAttribute('data-nav-layout') == 'horizontal' && window.innerWidth >= 992) { this.clearNavDropdown(); }
   }
   // Start of Set menu Active event
-  setNavActive(event:any, currentPath: string, menuData = this.menuItems) {
-    if(event){
+  setNavActive(event: any, currentPath: string, menuData = this.menuItems) {
+    if (event) {
       if (event?.ctrlKey) {
         return;
       }
@@ -131,9 +133,9 @@ export class SidemenuComponent implements OnInit {
   //4.10
   setMenuAncestorsActive(targetObject: Menu) {
     const parent = this.getParentObject(this.menuItems, targetObject);
-    let html = document.documentElement;    
+    let html = document.documentElement;
     if (parent) {
-      if (this.hasParentLevel >= 2) {        
+      if (this.hasParentLevel >= 2) {
         this.hasParent = true;
       }
       parent.active = true;
@@ -146,7 +148,7 @@ export class SidemenuComponent implements OnInit {
       if (html.getAttribute('data-vertical-style') == 'doublemenu') {
         html.setAttribute('data-toggled', 'double-menu-close');
       }
-    }else{
+    } else {
       this.hasParentLevel = 0;
       this.hasParent = false;
     }
@@ -170,167 +172,167 @@ export class SidemenuComponent implements OnInit {
       return;
     }
   }
-   //04.10
-   // Start of Toggle menu event
-   toggleNavActive(event:any, targetObject:Menu, menuData = this.menuItems, state?:any) {
+  //04.10
+  // Start of Toggle menu event
+  toggleNavActive(event: any, targetObject: Menu, menuData = this.menuItems, state?: any) {
     let html = document.documentElement;
     let element = event.target;
-    if (html.getAttribute('data-nav-style') != "icon-hover" && html.getAttribute('data-nav-style') != "menu-hover"  || (window.innerWidth < 992) || (html.getAttribute('data-nav-layout')!= "horizontal") && (html.getAttribute('data-nav-style') != "icon-hover-closed" && html.getAttribute('data-nav-style') != "menu-hover-closed")) {
-        for (const item of menuData) {
-            if (item === targetObject) {
-                if (html.getAttribute('data-vertical-style') == 'doublemenu' && item.active && window.innerWidth > 992 && state) { return }
-                item.active = !item.active;
-                if (item.active) {
-                    this.closeOtherMenus(menuData, item);
-                }
-                this.setAncestorsActive(menuData, item);
+    if (html.getAttribute('data-nav-style') != "icon-hover" && html.getAttribute('data-nav-style') != "menu-hover" || (window.innerWidth < 992) || (html.getAttribute('data-nav-layout') != "horizontal") && (html.getAttribute('data-nav-style') != "icon-hover-closed" && html.getAttribute('data-nav-style') != "menu-hover-closed")) {
+      for (const item of menuData) {
+        if (item === targetObject) {
+          if (html.getAttribute('data-vertical-style') == 'doublemenu' && item.active && window.innerWidth > 992 && state) { return }
+          item.active = !item.active;
+          if (item.active) {
+            this.closeOtherMenus(menuData, item);
+          }
+          this.setAncestorsActive(menuData, item);
 
-            } else if (!item.active) {
-                if (html.getAttribute('data-vertical-style') != 'doublemenu') {
-                    item.active = false; // Set active to false for items not matching the target
-                }
-            }
-            if (item.children && item.children.length > 0) {
-                this.toggleNavActive(event, targetObject, item.children);
-            }
-        }
-        if (targetObject?.children && targetObject.active) {
-            if (html.getAttribute('data-vertical-style') == 'doublemenu' && html.getAttribute('data-toggled') != 'double-menu-open') {
-                html.setAttribute('data-toggled', 'double-menu-open');
-            }
-        }
-
-        if (element && html.getAttribute("data-nav-layout") == 'horizontal' && (html.getAttribute("data-nav-style") == 'menu-click' || html.getAttribute("data-nav-style") == 'icon-click')) {
-            const listItem = element.closest("li");
-            if (listItem) {
-                // Find the first sibling <ul> element
-                const siblingUL = listItem.querySelector("ul");
-                let outterUlWidth = 0;
-                let listItemUL = listItem.closest('ul:not(.main-menu)');
-                while (listItemUL) {
-                    listItemUL = listItemUL.parentElement.closest('ul:not(.main-menu)');
-                    if (listItemUL) {
-                        outterUlWidth += listItemUL.clientWidth;
-                    }
-                }
-                if (siblingUL) {
-                    // You've found the sibling <ul> element
-                    let siblingULRect = listItem.getBoundingClientRect();
-                    if (html.getAttribute('dir') == 'rtl') {
-                        if ((siblingULRect.left - siblingULRect.width - outterUlWidth + 150 < 0 && outterUlWidth < window.innerWidth) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
-                            targetObject.dirchange = true;
-                        } else {
-                            targetObject.dirchange = false;
-                        }
-                    } else {
-                        if ((outterUlWidth + siblingULRect.right + siblingULRect.width + 50 > window.innerWidth && siblingULRect.right >= 0) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
-                            targetObject.dirchange = true;
-                        } else {
-                            targetObject.dirchange = false;
-                        }
-                    }
-                }
-                setTimeout(() => {
-                    let computedValue = siblingUL.getBoundingClientRect();
-                    if ((computedValue.bottom) > window.innerHeight) {
-                        siblingUL.style.height = (window.innerHeight - computedValue.top - 8) + 'px !important';
-                        siblingUL.style.overflow = 'auto !important';
-                    }
-                }, 100);
-            }
-        }
-    }
-
-  
-    if (html.getAttribute('data-vertical-style') == 'icontext') {
-      document.querySelector('html')?.setAttribute('data-icon-text','open')
-    }else{
-      document.querySelector('html')?.removeAttribute('data-icon-text')
-    }
-   
-}
-setAncestorsActive(menuData:Menu[], targetObject:Menu) {
-    let html = document.documentElement;
-    const parent = this.findParent(menuData, targetObject);
-    
-    if (parent) {
-        parent.active = true;
-        if (parent.active) {
-            html.setAttribute('data-toggled', 'double-menu-open');
-        }
-        this.setAncestorsActive(menuData, parent);
-    }
-}
-closeOtherMenus(menuData:Menu[], targetObject:Menu) {
-    for (const item of menuData) {
-        if (item !== targetObject) {
-            item.active = false;
-            if (item.children && item.children.length > 0) {
-                this.closeOtherMenus(item.children, targetObject);
-            }
-        }
-    }
-}
-findParent(menuData:Menu[], targetObject:Menu) {
-    for (const item of menuData) {
-        if (item.children && item.children.includes(targetObject)) {
-            return item;
+        } else if (!item.active) {
+          if (html.getAttribute('data-vertical-style') != 'doublemenu') {
+            item.active = false; // Set active to false for items not matching the target
+          }
         }
         if (item.children && item.children.length > 0) {
-            const parent:any = this.findParent(item.children, targetObject);
-            if (parent) {
-                return parent;
-            }
+          this.toggleNavActive(event, targetObject, item.children);
         }
+      }
+      if (targetObject?.children && targetObject.active) {
+        if (html.getAttribute('data-vertical-style') == 'doublemenu' && html.getAttribute('data-toggled') != 'double-menu-open') {
+          html.setAttribute('data-toggled', 'double-menu-open');
+        }
+      }
+
+      if (element && html.getAttribute("data-nav-layout") == 'horizontal' && (html.getAttribute("data-nav-style") == 'menu-click' || html.getAttribute("data-nav-style") == 'icon-click')) {
+        const listItem = element.closest("li");
+        if (listItem) {
+          // Find the first sibling <ul> element
+          const siblingUL = listItem.querySelector("ul");
+          let outterUlWidth = 0;
+          let listItemUL = listItem.closest('ul:not(.main-menu)');
+          while (listItemUL) {
+            listItemUL = listItemUL.parentElement.closest('ul:not(.main-menu)');
+            if (listItemUL) {
+              outterUlWidth += listItemUL.clientWidth;
+            }
+          }
+          if (siblingUL) {
+            // You've found the sibling <ul> element
+            let siblingULRect = listItem.getBoundingClientRect();
+            if (html.getAttribute('dir') == 'rtl') {
+              if ((siblingULRect.left - siblingULRect.width - outterUlWidth + 150 < 0 && outterUlWidth < window.innerWidth) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
+                targetObject.dirchange = true;
+              } else {
+                targetObject.dirchange = false;
+              }
+            } else {
+              if ((outterUlWidth + siblingULRect.right + siblingULRect.width + 50 > window.innerWidth && siblingULRect.right >= 0) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
+                targetObject.dirchange = true;
+              } else {
+                targetObject.dirchange = false;
+              }
+            }
+          }
+          setTimeout(() => {
+            let computedValue = siblingUL.getBoundingClientRect();
+            if ((computedValue.bottom) > window.innerHeight) {
+              siblingUL.style.height = (window.innerHeight - computedValue.top - 8) + 'px !important';
+              siblingUL.style.overflow = 'auto !important';
+            }
+          }, 100);
+        }
+      }
+    }
+
+
+    if (html.getAttribute('data-vertical-style') == 'icontext') {
+      document.querySelector('html')?.setAttribute('data-icon-text', 'open')
+    } else {
+      document.querySelector('html')?.removeAttribute('data-icon-text')
+    }
+
+  }
+  setAncestorsActive(menuData: Menu[], targetObject: Menu) {
+    let html = document.documentElement;
+    const parent = this.findParent(menuData, targetObject);
+
+    if (parent) {
+      parent.active = true;
+      if (parent.active) {
+        html.setAttribute('data-toggled', 'double-menu-open');
+      }
+      this.setAncestorsActive(menuData, parent);
+    }
+  }
+  closeOtherMenus(menuData: Menu[], targetObject: Menu) {
+    for (const item of menuData) {
+      if (item !== targetObject) {
+        item.active = false;
+        if (item.children && item.children.length > 0) {
+          this.closeOtherMenus(item.children, targetObject);
+        }
+      }
+    }
+  }
+  findParent(menuData: Menu[], targetObject: Menu) {
+    for (const item of menuData) {
+      if (item.children && item.children.includes(targetObject)) {
+        return item;
+      }
+      if (item.children && item.children.length > 0) {
+        const parent: any = this.findParent(item.children, targetObject);
+        if (parent) {
+          return parent;
+        }
+      }
     }
     return null;
-}
-isDoubleMenu(): boolean {
-  const htmlElement = document.querySelector('[data-vertical-style="doublemenu"]');
-  return htmlElement !== null;
-}
+  }
+  isDoubleMenu(): boolean {
+    const htmlElement = document.querySelector('[data-vertical-style="doublemenu"]');
+    return htmlElement !== null;
+  }
 
-// Method to determine if tooltip should be shown
-shouldShowTooltip(menuItem: any): boolean {
-  return this.isDoubleMenu() && menuItem.title !== '';
-}
-// End of Toggle menu event
-HoverToggleInnerMenuFn(event:Event, item:Menu) {
+  // Method to determine if tooltip should be shown
+  shouldShowTooltip(menuItem: any): boolean {
+    return this.isDoubleMenu() && menuItem.title !== '';
+  }
+  // End of Toggle menu event
+  HoverToggleInnerMenuFn(event: Event, item: Menu) {
     let html = document.documentElement;
     let element = event.target as HTMLElement;
     if (element && html.getAttribute("data-nav-layout") == 'horizontal' && (html.getAttribute("data-nav-style") == 'menu-hover' || html.getAttribute("data-nav-style") == 'icon-hover')) {
-        const listItem = element.closest("li");
-        if (listItem) {
-            // Find the first sibling <ul> element
-            const siblingUL = listItem.querySelector("ul");
-            let outterUlWidth = 0;
-            let listItemUL:any = listItem.closest('ul:not(.main-menu)');
-            while (listItemUL) {
-                listItemUL = listItemUL.parentElement?.closest('ul:not(.main-menu)');
-                if (listItemUL) {
-                    outterUlWidth += listItemUL.clientWidth;
-                }
-            }
-            if (siblingUL) {
-                // You've found the sibling <ul> element
-                let siblingULRect = listItem.getBoundingClientRect();
-                if (html.getAttribute('dir') == 'rtl') {
-                    if ((siblingULRect.left - siblingULRect.width - outterUlWidth + 150 < 0 && outterUlWidth < window.innerWidth) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
-                        item.dirchange = true;
-                    } else {
-                        item.dirchange = false;
-                    }
-                } else {
-                    if ((outterUlWidth + siblingULRect.right + siblingULRect.width + 50 > window.innerWidth && siblingULRect.right >= 0) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
-                        item.dirchange = true;
-                    } else {
-                        item.dirchange = false;
-                    }
-                }
-            }
+      const listItem = element.closest("li");
+      if (listItem) {
+        // Find the first sibling <ul> element
+        const siblingUL = listItem.querySelector("ul");
+        let outterUlWidth = 0;
+        let listItemUL: any = listItem.closest('ul:not(.main-menu)');
+        while (listItemUL) {
+          listItemUL = listItemUL.parentElement?.closest('ul:not(.main-menu)');
+          if (listItemUL) {
+            outterUlWidth += listItemUL.clientWidth;
+          }
         }
+        if (siblingUL) {
+          // You've found the sibling <ul> element
+          let siblingULRect = listItem.getBoundingClientRect();
+          if (html.getAttribute('dir') == 'rtl') {
+            if ((siblingULRect.left - siblingULRect.width - outterUlWidth + 150 < 0 && outterUlWidth < window.innerWidth) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
+              item.dirchange = true;
+            } else {
+              item.dirchange = false;
+            }
+          } else {
+            if ((outterUlWidth + siblingULRect.right + siblingULRect.width + 50 > window.innerWidth && siblingULRect.right >= 0) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
+              item.dirchange = true;
+            } else {
+              item.dirchange = false;
+            }
+          }
+        }
+      }
     }
-}
+  }
 
 
   ngOnDestroy() {
@@ -447,7 +449,7 @@ HoverToggleInnerMenuFn(event:Event, item:Menu) {
   eventTriggered: boolean = false;
   screenWidth!: number;
 
-  
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
     this.menuResizeFn();

@@ -1,6 +1,8 @@
+// src\app\shared\layouts\full-layout\full-layout.component.ts
 import { Component, ElementRef, HostListener, inject, OnInit, Renderer2 } from '@angular/core';
 import { SwitcherService } from 'src/app/shared/services/switcher.service';
-import { Menu, NavService } from '../../services/nav.service';
+import { NavService } from 'src/app/shared/services/nav.service';
+import { Menu } from 'src/app/shared/models/menu.model';
 // import { localStorageBackUp } from '../../componets/switcher/switcher';
 import { LoaderComponent } from '../../componets/loader/loader.component';
 import { HeaderComponent } from '../../componets/header/header.component';
@@ -50,7 +52,7 @@ export class FullLayoutComponent implements OnInit {
 
   ngOnInit() {
 
-    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items: any) => {
+    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items: Menu[]) => {
       this.menuItems = items;
     });
 

@@ -1,6 +1,7 @@
+// src\app\shared\componets\header-one\header-one.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { NavService } from '../../services/nav.service';
+import { NavService } from 'src/app/shared/services/nav.service';
 import { SidebarRightService } from '../../services/sidebar-right.service';
 import { SwitcherService } from '../../services/switcher.service';
 import { NgbCollapse, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu } from '@ng-bootstrap/ng-bootstrap';
@@ -11,11 +12,11 @@ import { RouterLink } from '@angular/router';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 @Component({
-    selector: 'app-header-one',
-    standalone:true,
-    templateUrl: './header-one.component.html',
-    styleUrls: ['./header-one.component.scss'],
-    imports: [NgbCollapse, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, ToggleThemeDirective, FormsModule, FullscreenDirective, RouterLink,OverlayscrollbarsModule]
+  selector: 'app-header-one',
+  standalone: true,
+  templateUrl: './header-one.component.html',
+  styleUrls: ['./header-one.component.scss'],
+  imports: [NgbCollapse, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, ToggleThemeDirective, FormsModule, FullscreenDirective, RouterLink, OverlayscrollbarsModule]
 })
 export class HeaderOneComponent implements OnInit {
 
@@ -36,11 +37,11 @@ export class HeaderOneComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let navbarForm:any = document.querySelector('.navbar-form')
-    navbarForm.addEventListener('click',(event:any)=>{
+    let navbarForm: any = document.querySelector('.navbar-form')
+    navbarForm.addEventListener('click', (event: any) => {
       event.preventDefault();
       return;
-    }, {passive: false})
+    }, { passive: false })
   }
 
   toggleSwitcher() {
@@ -50,29 +51,29 @@ export class HeaderOneComponent implements OnInit {
   toggleSidebarNotification() {
     this.sidebarRightservice.emitSidebarNotifyChange(true);
   }
-  toggleSidebarOpen(){
+  toggleSidebarOpen() {
     if ((this.navServices.collapseSidebar = true)) {
-      let mainBody:any = document.querySelector('.main-body')
+      let mainBody: any = document.querySelector('.main-body')
       mainBody.classList.add('sidenav-toggled');
     }
   }
-  toggleSidebarClose(){
+  toggleSidebarClose() {
     if ((this.navServices.collapseSidebar = true)) {
-      let removeMainBody:any = document.querySelector('.main-body')
+      let removeMainBody: any = document.querySelector('.main-body')
       removeMainBody.classList.remove('sidenav-toggled');
     }
   }
 
-  search(){
-    let navabarForm:any = document.querySelector('.navbar-form ')
+  search() {
+    let navabarForm: any = document.querySelector('.navbar-form ')
     navabarForm.classList.toggle('d-none')
   }
-  close(){
-    let navbarD:any = document.querySelector('.navbar-form ')
+  close() {
+    let navbarD: any = document.querySelector('.navbar-form ')
     navbarD.classList.add('d-none')
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
 
     // const chat:any = document.querySelector('.chat-scroll');
     // let ps1 = new PerfectScrollbar(chat,{
@@ -90,12 +91,12 @@ export class HeaderOneComponent implements OnInit {
   }
 
   SearchActive = "Notactive"
-  searchClass(item:any){
+  searchClass(item: any) {
     // this.SearchActive=="nonactive"? "active":"nonactive"
-    if (item=="active") {
+    if (item == "active") {
       this.SearchActive = "active"
     }
-    if (item=="Notactive") {
+    if (item == "Notactive") {
       this.SearchActive = "Notactive"
     }
   }

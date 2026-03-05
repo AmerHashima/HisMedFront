@@ -1,3 +1,4 @@
+<!-- src\app\patients\component\patient-form\patient-form.component.html -->
 <form
   [formGroup]="form"
   (ngSubmit)="onSubmit()"
@@ -162,8 +163,8 @@
     <div class="col-lg-3">
       <spk-flatpickr
         formControlName="birthDate"
-        [enableTime]="true"
-        [dateFormat]="'Y-m-d H:i'"
+        [enableTime]="false"
+        [dateFormat]="'Y-m-d'"
         placeholder="Choose Date"
         label="Birth day"
       ></spk-flatpickr>
@@ -228,6 +229,143 @@
         placeholder="Choose Branch"
         selectClass="form-control"
       />
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">Addresses</h6>
+      <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAddresses = !showAddresses">
+        {{ showAddresses ? 'Collapse' : 'Expand' }}
+      </button>
+    </div>
+    <div class="card-body" *ngIf="showAddresses" formArrayName="addresses">
+      <div class="border rounded p-3 mb-3" *ngFor="let item of addresses.controls; let i = index" [formGroupName]="i">
+        <div class="row gy-2">
+          <div class="col-lg-3">
+            <spk-ng-select
+              formControlName="countryId"
+              label="Country"
+              [options]="$any((countries$ | async)?.lookupDetails ?? [])"
+              bindLabel="valueNameEn"
+              bindValue="oid"
+              [multiple]="false"
+              placeholder="Choose Country"
+              selectClass="form-control"
+            />
+          </div>
+          <div class="col-lg-3">
+            <spk-ng-select
+              formControlName="cityId"
+              label="City"
+              [options]="$any((cities$ | async)?.lookupDetails ?? [])"
+              bindLabel="valueNameEn"
+              bindValue="oid"
+              [multiple]="false"
+              placeholder="Choose City"
+              selectClass="form-control"
+            />
+          </div>
+          <div class="col-lg-3"><app-input formControlName="district" label="District" type="text" placeholder="District" /></div>
+          <div class="col-lg-3"><app-input formControlName="street" label="Street" type="text" placeholder="Street" /></div>
+          <div class="col-lg-3"><app-input formControlName="buildingNumber" label="Building Number" type="text" placeholder="Building Number" /></div>
+          <div class="col-lg-3"><app-input formControlName="postalCode" label="Postal Code" type="text" placeholder="Postal Code" /></div>
+          <div class="col-lg-3"><app-input formControlName="additionalNumber" label="Additional Number" type="text" placeholder="Additional Number" /></div>
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+          <button type="button" class="btn btn-sm btn-danger" (click)="removeAddress(i)">Remove</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm btn-primary" (click)="addAddress()">Add Address</button>
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">Contacts</h6>
+      <button type="button" class="btn btn-sm btn-outline-primary" (click)="showContacts = !showContacts">
+        {{ showContacts ? 'Collapse' : 'Expand' }}
+      </button>
+    </div>
+    <div class="card-body" *ngIf="showContacts" formArrayName="contacts">
+      <div class="border rounded p-3 mb-3" *ngFor="let item of contacts.controls; let i = index" [formGroupName]="i">
+        <div class="row gy-2">
+          <div class="col-lg-3"><app-input formControlName="contactName" label="Contact Name" type="text" placeholder="Contact Name" /></div>
+          <div class="col-lg-3"><app-input formControlName="relationshipId" label="Relationship Id" type="text" placeholder="Relationship Id" /></div>
+          <div class="col-lg-3"><app-input formControlName="mobile" label="Mobile" type="text" placeholder="Mobile" /></div>
+          <div class="col-lg-3"><app-input formControlName="phone" label="Phone" type="text" placeholder="Phone" /></div>
+          <div class="col-lg-3"><app-input formControlName="email" label="Email" type="email" placeholder="user@example.com" /></div>
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+          <button type="button" class="btn btn-sm btn-danger" (click)="removeContact(i)">Remove</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm btn-primary" (click)="addContact()">Add Contact</button>
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">Attachments</h6>
+      <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAttachments = !showAttachments">
+        {{ showAttachments ? 'Collapse' : 'Expand' }}
+      </button>
+    </div>
+    <div class="card-body" *ngIf="showAttachments" formArrayName="attachments">
+      <div class="border rounded p-3 mb-3" *ngFor="let item of attachments.controls; let i = index" [formGroupName]="i">
+        <div class="row gy-2">
+          <div class="col-lg-3"><app-input formControlName="attachmentTypeId" label="Attachment Type Id" type="text" placeholder="Attachment Type Id" /></div>
+          <div class="col-lg-3"><app-input formControlName="fileName" label="File Name" type="text" placeholder="File Name" /></div>
+          <div class="col-lg-3"><app-input formControlName="filePath" label="File Path" type="text" placeholder="File Path" /></div>
+          <div class="col-lg-3"><app-input formControlName="fileExtension" label="File Extension" type="text" placeholder=".pdf" /></div>
+          <div class="col-lg-3"><app-input formControlName="fileSize" label="File Size" type="number" placeholder="0" /></div>
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+          <button type="button" class="btn btn-sm btn-danger" (click)="removeAttachment(i)">Remove</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm btn-primary" (click)="addAttachment()">Add Attachment</button>
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">Insurances</h6>
+      <button type="button" class="btn btn-sm btn-outline-primary" (click)="showInsurances = !showInsurances">
+        {{ showInsurances ? 'Collapse' : 'Expand' }}
+      </button>
+    </div>
+    <div class="card-body" *ngIf="showInsurances" formArrayName="insurances">
+      <div class="border rounded p-3 mb-3" *ngFor="let item of insurances.controls; let i = index" [formGroupName]="i">
+        <div class="row gy-2">
+          <div class="col-lg-3"><app-input formControlName="insuranceCompanyId" label="Insurance Company Id" type="text" placeholder="Insurance Company Id" /></div>
+          <div class="col-lg-3"><app-input formControlName="policyNumber" label="Policy Number" type="text" placeholder="Policy Number" /></div>
+          <div class="col-lg-3"><app-input formControlName="memberId" label="Member Id" type="text" placeholder="Member Id" /></div>
+          <div class="col-lg-3"><app-input formControlName="insuranceClass" label="Insurance Class" type="text" placeholder="Insurance Class" /></div>
+          <div class="col-lg-3">
+            <spk-flatpickr
+              formControlName="startDate"
+              [enableTime]="false"
+              [dateFormat]="'Y-m-d'"
+              placeholder="Start Date"
+              label="Start Date"
+            ></spk-flatpickr>
+          </div>
+          <div class="col-lg-3">
+            <spk-flatpickr
+              formControlName="expiryDate"
+              [enableTime]="false"
+              [dateFormat]="'Y-m-d'"
+              placeholder="Expiry Date"
+              label="Expiry Date"
+            ></spk-flatpickr>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+          <button type="button" class="btn btn-sm btn-danger" (click)="removeInsurance(i)">Remove</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm btn-primary" (click)="addInsurance()">Add Insurance</button>
     </div>
   </div>
 

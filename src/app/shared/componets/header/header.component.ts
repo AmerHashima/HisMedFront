@@ -1,3 +1,4 @@
+// src\app\shared\componets\header\header.component.ts
 import {
   Component,
   OnInit,
@@ -9,7 +10,8 @@ import {
   HostListener,
 } from '@angular/core';
 import { filter, Observable, Subscription } from 'rxjs';
-import { Menu, NavService } from '../../services/nav.service';
+import { NavService } from 'src/app/shared/services/nav.service';
+import { Menu } from 'src/app/shared/models/menu.model';
 import { SidebarRightService } from '../../services/sidebar-right.service';
 import { SwitcherService } from '../../services/switcher.service';
 import { NgbOffcanvas, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -124,7 +126,7 @@ export class HeaderComponent implements OnInit {
   } else {
     this.selectedItem = storedSelectedItem;
   }
-    this.navServices.items.subscribe((menuItems) => {
+    this.navServices.items.subscribe((menuItems: Menu[]) => {
       this.items = menuItems;
     });
     // To clear and close the search field by clicking on body

@@ -1,3 +1,4 @@
+// src\app\doctors\doctorStore\doctor.mapper.ts
 import { ApiDocor } from '../models/api-docor';
 import { Doctor } from '../models/doctor';
 import { DoctorVM } from '../models/doctor-vm';
