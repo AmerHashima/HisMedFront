@@ -1,3 +1,4 @@
+// src\app\doctors\component\doctor-form\doctor-form.component.ts
 import { Component, computed, effect, EventEmitter, inject, input, Output } from '@angular/core';
 import { DoctorStore } from '../../doctorStore/doctorStore';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,11 +14,12 @@ import { HospitalBranchService } from 'src/app/Hospital/Services/hospital-branch
 import { SpecialityService } from 'src/app/Hospital/Services/speciality.service';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
+import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
 
 @Component({
   selector: 'app-doctor-form',
   imports: [ButtonComponent, ToggleBtnComponent, InputComponent,
-    SpkNgSelectComponent, ReactiveFormsModule, AsyncPipe],
+    SpkNgSelectComponent, ReactiveFormsModule, AsyncPipe, SpkFlatpickrComponent],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
   providers: [UsersStore, SpecialityStore]
@@ -33,29 +35,69 @@ export class DoctorFormComponent {
   branchService = inject(HospitalBranchService);
   specialityService = inject(SpecialityService);
   specialityStore = inject(SpecialityStore);
-  specialities=computed(()=> this.specialityStore.items())
-    validationErrorService = inject(ValidationErrorService);
+  specialities = computed(() => this.specialityStore.items())
+  validationErrorService = inject(ValidationErrorService);
 
   users = computed(() => this.userStore.users());
   departments$ = this.lookupService.getDepartment();
+  genders$ = this.lookupService.getGender();
+  licenseTypes$ = this.lookupService.getLookUpByCode('LICENSE_TYPE');
+  subSpecialties$ = this.lookupService.getLookUpByCode('SUB_SPECIALTY');
   branches$ = this.branchService.getBranches();
   specialities$ = this.specialityService.getSpecialities();
 
   form = this.fb.group({
     userId: ['', Validators.required],
+    firstNameAr: ['', Validators.required],
+    middleNameAr: ['', Validators.required],
+    lastNameAr: ['', Validators.required],
+    firstNameEn: ['', Validators.required],
+    middleNameEn: ['', Validators.required],
+    lastNameEn: ['', Validators.required],
+    genderId: ['', Validators.required],
     licenseNumber: ['', Validators.required],
+    licenseTypeId: ['', Validators.required],
+    licenseIssueDate: ['', Validators.required],
+    licenseExpiryDate: ['', Validators.required],
     specialtyId: ['', Validators.required],
-    departmentLookupId: ['', Validators.required],
+    subSpecialtyId: ['', Validators.required],
+    departmentId: ['', Validators.required],
+    mobile: ['', Validators.required],
+    phone: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    yearsOfExperience: [0, [Validators.required, Validators.min(0)]],
+    consultationFee: [0, [Validators.required, Validators.min(0)]],
     branchId: ['', Validators.required],
     nphiesProviderId: [''],
+    nphiesLicenseNumber: [''],
     isNphiesEnabled: [false],
     isActive: [false],
   });
 
   private backendErrorKeyMap: Record<string, string[]> = {
     userId: ['userId'],
+    firstNameAr: ['firstNameAr'],
+    middleNameAr: ['middleNameAr'],
+    lastNameAr: ['lastNameAr'],
+    firstNameEn: ['firstNameEn'],
+    middleNameEn: ['middleNameEn'],
+    lastNameEn: ['lastNameEn'],
+    genderId: ['genderId'],
     licenseNumber: ['licenseNumber'],
+    licenseTypeId: ['licenseTypeId'],
+    licenseIssueDate: ['licenseIssueDate'],
+    licenseExpiryDate: ['licenseExpiryDate'],
     specialtyId: ['specialtyId'],
+    subSpecialtyId: ['subSpecialtyId'],
+    departmentId: ['departmentId'],
+    mobile: ['mobile'],
+    phone: ['phone'],
+    email: ['email'],
+    yearsOfExperience: ['yearsOfExperience'],
+    consultationFee: ['consultationFee'],
+    branchId: ['branchId'],
+    nphiesProviderId: ['nphiesProviderId'],
+    nphiesLicenseNumber: ['nphiesLicenseNumber'],
   };
   apiFieldErrors: Record<string, string> = {};
 
@@ -75,12 +117,29 @@ export class DoctorFormComponent {
       if (doctor) {
         this.form.patchValue({
           userId: doctor.userId,
+          firstNameAr: doctor.firstNameAr,
+          middleNameAr: doctor.middleNameAr,
+          lastNameAr: doctor.lastNameAr,
+          firstNameEn: doctor.firstNameEn,
+          middleNameEn: doctor.middleNameEn,
+          lastNameEn: doctor.lastNameEn,
+          genderId: doctor.genderId,
           licenseNumber: doctor.licenseNumber,
+          licenseTypeId: doctor.licenseTypeId,
+          licenseIssueDate: doctor.licenseIssueDate,
+          licenseExpiryDate: doctor.licenseExpiryDate,
           specialtyId: doctor.specialtyId,
-          departmentLookupId: doctor.departmentLookupId,
+          subSpecialtyId: doctor.subSpecialtyId,
+          departmentId: doctor.departmentId,
+          mobile: doctor.mobile,
+          phone: doctor.phone,
+          email: doctor.email,
+          yearsOfExperience: doctor.yearsOfExperience,
+          consultationFee: doctor.consultationFee,
           branchId: doctor.branchId,
-          nphiesProviderId: doctor.nphiesProviderId ?? null,
-          isActive: doctor.isActive ?? false ,
+          nphiesProviderId: doctor.nphiesProviderId ?? '',
+          nphiesLicenseNumber: doctor.nphiesLicenseNumber ?? '',
+          isActive: doctor.isActive ?? false,
           isNphiesEnabled: doctor.isNphiesEnabled ?? false,
         });
       }
@@ -114,6 +173,14 @@ export class DoctorFormComponent {
 
 
 
+  formatDateOnly(value: string | Date): string {
+    const d = new Date(value);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -141,11 +208,28 @@ export class DoctorFormComponent {
       ...(this.oid() ? { oid: this.oid() } : {}),
 
       userId: v.userId!,
+      firstNameAr: v.firstNameAr!,
+      middleNameAr: v.middleNameAr!,
+      lastNameAr: v.lastNameAr!,
+      firstNameEn: v.firstNameEn!,
+      middleNameEn: v.middleNameEn!,
+      lastNameEn: v.lastNameEn!,
+      genderId: v.genderId!,
       licenseNumber: v.licenseNumber!,
+      licenseTypeId: v.licenseTypeId!,
+      licenseIssueDate: this.formatDateOnly(v.licenseIssueDate!),
+      licenseExpiryDate: this.formatDateOnly(v.licenseExpiryDate!),
       branchId: v.branchId!,
       specialtyId: v.specialtyId!,
-      departmentLookupId: v.departmentLookupId!,
-      nphiesProviderId: v.nphiesProviderId ? v.nphiesProviderId :null,
+      subSpecialtyId: v.subSpecialtyId!,
+      departmentId: v.departmentId!,
+      mobile: v.mobile!,
+      phone: v.phone!,
+      email: v.email!,
+      yearsOfExperience: Number(v.yearsOfExperience) || 0,
+      consultationFee: Number(v.consultationFee) || 0,
+      nphiesProviderId: v.nphiesProviderId ?? '',
+      nphiesLicenseNumber: v.nphiesLicenseNumber ?? '',
       isNphiesEnabled: v.isNphiesEnabled ?? false,
       isActive: v.isActive ?? true,
     };

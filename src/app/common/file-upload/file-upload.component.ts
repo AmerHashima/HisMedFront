@@ -1,8 +1,11 @@
+// src\app\common\file-upload\file-upload.component.ts
 import {
   Component,
   ViewChild,
   Input,
-  forwardRef
+  forwardRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -34,6 +37,7 @@ export class FileUploadComponent implements ControlValueAccessor {
 
   @Input() multiple = true;
   @Input() label = 'Drop files here to Upload...';
+  @Output() filesChange = new EventEmitter<File[]>();
 
   pondOptions: FilePond.FilePondOptions = {};
   pondFiles: FilePond.FilePondOptions['files'] = [];
@@ -110,6 +114,7 @@ export class FileUploadComponent implements ControlValueAccessor {
       .map((f: FilePondFile) => f.file) || [];
 
     this.onChange(files);
+    this.filesChange.emit(files);
     this.onTouched();
   }
 
@@ -124,7 +129,7 @@ export class FileUploadComponent implements ControlValueAccessor {
     return this.myPond?.getFiles() || [];
   }
 
-  uploadAll(endPoint:string) {
+  uploadAll(endPoint: string) {
     const files = this.getFiles();
     if (!files.length) return;
 

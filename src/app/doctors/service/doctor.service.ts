@@ -1,3 +1,4 @@
+// src\app\doctors\service\doctor.service.ts
 import { Injectable } from '@angular/core';
 import { ApiDocor } from '../models/api-docor';
 import { map, Observable } from 'rxjs';
@@ -11,7 +12,7 @@ import { RequestWrapper } from 'src/app/common/Models/request';
 })
 export class DoctorService {
 
-constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) { }
 
 
   getDoctors(): Observable<ApiDocor[]> {

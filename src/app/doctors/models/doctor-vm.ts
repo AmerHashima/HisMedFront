@@ -1,3 +1,4 @@
+// src\app\doctors\models\doctor-vm.ts
 import { Doctor } from "./doctor";
 
 export interface DoctorVM extends Doctor {

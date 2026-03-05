@@ -1,4 +1,4 @@
-// import { Doctor } from "./doctor";
+// src\app\doctors\models\doctor-state.ts
 
 import { DoctorVM } from "./doctor-vm";
 
@@ -7,13 +7,13 @@ export interface DoctorState {
   // selectedDoctor: Doctor | null;
   doctors: DoctorVM[];
   selectedDoctor: DoctorVM | null;
-    success: boolean
-    loading: boolean;
-    error: string | null;
-    page: number;
-    pageSize: number;
-    total: number;
-    search: string;
-    sortBy: string;
-    sortDirection: 'asc' | 'desc' | '';
+  success: boolean
+  loading: boolean;
+  error: string | null;
+  page: number;
+  pageSize: number;
+  total: number;
+  search: string;
+  sortBy: string;
+  sortDirection: 'asc' | 'desc' | '';
 }

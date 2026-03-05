@@ -1,3 +1,4 @@
+// src\app\doctors\doctorStore\doctorStore.ts
 import { signalStore, withState, withMethods, withComputed, withHooks, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { inject, computed, effect } from '@angular/core';

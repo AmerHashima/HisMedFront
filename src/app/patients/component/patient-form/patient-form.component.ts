@@ -12,11 +12,12 @@ import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select
 import { InputComponent } from 'src/app/common/input/input.component';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
+import { FileUploadComponent } from 'src/app/common/file-upload/file-upload.component';
 
 @Component({
   selector: 'app-patient-form',
   imports: [ButtonComponent, SpkFlatpickrComponent, SpkNgSelectComponent,
-    InputComponent, AsyncPipe, ReactiveFormsModule, NgFor, NgIf],
+    InputComponent, AsyncPipe, ReactiveFormsModule, NgFor, NgIf, FileUploadComponent],
   templateUrl: './patient-form.component.html',
   styleUrl: './patient-form.component.scss'
 })
@@ -36,6 +37,9 @@ export class PatientFormComponent {
   gender$ = this.lookupService.getGender();
   countries$ = this.lookupService.getCountries();
   cities$ = this.lookupService.getCities();
+  relationshipTypes$ = this.lookupService.getLookUpByCode('RELATIONSHIP');
+  attachmentTypes$ = this.lookupService.getLookUpByCode('ATTACHMENT_TYPE');
+  insuranceCompanies$ = this.lookupService.getLookUpByCode('INSURANCE_COMPANY');
 
   showAddresses = true;
   showContacts = true;
@@ -191,6 +195,7 @@ export class PatientFormComponent {
       filePath: ['', Validators.required],
       fileExtension: ['', Validators.required],
       fileSize: [0, [Validators.required, Validators.min(0)]],
+      files: [null],
     });
   }
 
@@ -237,6 +242,31 @@ export class PatientFormComponent {
 
   addInsurance() {
     this.insurances.push(this.createInsuranceGroup());
+  }
+
+  onAttachmentFilesChanged(index: number, files: File[]) {
+    const group = this.attachments.at(index) as FormGroup;
+    const file = files?.[0];
+    if (!file) {
+      group.patchValue({
+        fileName: '',
+        filePath: '',
+        fileExtension: '',
+        fileSize: 0,
+      });
+      return;
+    }
+
+    const extension = file.name.includes('.')
+      ? `.${file.name.split('.').pop()}`
+      : '';
+
+    group.patchValue({
+      fileName: file.name,
+      filePath: file.name,
+      fileExtension: extension,
+      fileSize: file.size,
+    });
   }
 
   removeInsurance(index: number) {
@@ -363,6 +393,7 @@ export class PatientFormComponent {
         filePath: this.toStringValue(attachment['filePath']),
         fileExtension: this.toStringValue(attachment['fileExtension']),
         fileSize: Number(attachment['fileSize']) || 0,
+        files: null,
       })),
       insurances: ((patient.insurances ?? []) as Array<Record<string, unknown>>).map((insurance) => ({
         insuranceCompanyId: this.toStringValue(insurance['insuranceCompanyId']),

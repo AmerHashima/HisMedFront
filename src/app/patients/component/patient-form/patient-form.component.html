@@ -291,7 +291,18 @@
       <div class="border rounded p-3 mb-3" *ngFor="let item of contacts.controls; let i = index" [formGroupName]="i">
         <div class="row gy-2">
           <div class="col-lg-3"><app-input formControlName="contactName" label="Contact Name" type="text" placeholder="Contact Name" /></div>
-          <div class="col-lg-3"><app-input formControlName="relationshipId" label="Relationship Id" type="text" placeholder="Relationship Id" /></div>
+          <div class="col-lg-3">
+            <spk-ng-select
+              formControlName="relationshipId"
+              label="Relationship"
+              [options]="$any((relationshipTypes$ | async)?.lookupDetails ?? [])"
+              bindLabel="valueNameEn"
+              bindValue="oid"
+              [multiple]="false"
+              placeholder="Choose Relationship"
+              selectClass="form-control"
+            />
+          </div>
           <div class="col-lg-3"><app-input formControlName="mobile" label="Mobile" type="text" placeholder="Mobile" /></div>
           <div class="col-lg-3"><app-input formControlName="phone" label="Phone" type="text" placeholder="Phone" /></div>
           <div class="col-lg-3"><app-input formControlName="email" label="Email" type="email" placeholder="user@example.com" /></div>
@@ -314,7 +325,26 @@
     <div class="card-body" *ngIf="showAttachments" formArrayName="attachments">
       <div class="border rounded p-3 mb-3" *ngFor="let item of attachments.controls; let i = index" [formGroupName]="i">
         <div class="row gy-2">
-          <div class="col-lg-3"><app-input formControlName="attachmentTypeId" label="Attachment Type Id" type="text" placeholder="Attachment Type Id" /></div>
+          <div class="col-lg-3">
+            <spk-ng-select
+              formControlName="attachmentTypeId"
+              label="Attachment Type"
+              [options]="$any((attachmentTypes$ | async)?.lookupDetails ?? [])"
+              bindLabel="valueNameEn"
+              bindValue="oid"
+              [multiple]="false"
+              placeholder="Choose Attachment Type"
+              selectClass="form-control"
+            />
+          </div>
+          <div class="col-lg-12">
+            <app-file-upload
+              formControlName="files"
+              [multiple]="false"
+              label="Drop attachment file here"
+              (filesChange)="onAttachmentFilesChanged(i, $event)"
+            />
+          </div>
           <div class="col-lg-3"><app-input formControlName="fileName" label="File Name" type="text" placeholder="File Name" /></div>
           <div class="col-lg-3"><app-input formControlName="filePath" label="File Path" type="text" placeholder="File Path" /></div>
           <div class="col-lg-3"><app-input formControlName="fileExtension" label="File Extension" type="text" placeholder=".pdf" /></div>
@@ -338,7 +368,18 @@
     <div class="card-body" *ngIf="showInsurances" formArrayName="insurances">
       <div class="border rounded p-3 mb-3" *ngFor="let item of insurances.controls; let i = index" [formGroupName]="i">
         <div class="row gy-2">
-          <div class="col-lg-3"><app-input formControlName="insuranceCompanyId" label="Insurance Company Id" type="text" placeholder="Insurance Company Id" /></div>
+          <div class="col-lg-3">
+            <spk-ng-select
+              formControlName="insuranceCompanyId"
+              label="Insurance Company"
+              [options]="$any((insuranceCompanies$ | async)?.lookupDetails ?? [])"
+              bindLabel="valueNameEn"
+              bindValue="oid"
+              [multiple]="false"
+              placeholder="Choose Insurance Company"
+              selectClass="form-control"
+            />
+          </div>
           <div class="col-lg-3"><app-input formControlName="policyNumber" label="Policy Number" type="text" placeholder="Policy Number" /></div>
           <div class="col-lg-3"><app-input formControlName="memberId" label="Member Id" type="text" placeholder="Member Id" /></div>
           <div class="col-lg-3"><app-input formControlName="insuranceClass" label="Insurance Class" type="text" placeholder="Insurance Class" /></div>
