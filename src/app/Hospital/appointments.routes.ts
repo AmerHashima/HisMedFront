@@ -13,7 +13,7 @@ const APPOINTMENTS_ROUTES: Routes = [
     loadComponent: () =>
       import('./Components/Appointments/create-new-appointment/create-new-appointment.component')
         .then(m => m.CreateNewAppointmentComponent),
-    data: { breadcrumb: 'Create Appointment' },
+    data: { breadcrumb: 'Add Appointment' },
   },
 ];
 

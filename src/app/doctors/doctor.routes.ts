@@ -20,14 +20,14 @@ export const DOCTOR_ROUTES: Routes = [
         loadComponent: () =>
           import('./component/create-doctor/create-doctor.component')
             .then(m => m.CreateDoctorComponent),
-        data: { breadcrumb: 'Create Doctor' }
+        data: { breadcrumb: 'Add Doctor' }
       },
       {
         path: 'doctorSchedule/create',
         loadComponent: () =>
           import('./component/doctor-schedule/doctor-schedule.component')
             .then(m => m.DoctorScheduleComponent),
-        data: { breadcrumb: 'Create Doctor Schedule' }
+        data: { breadcrumb: 'Add Doctor Schedule' }
 
       },
       {
@@ -35,7 +35,7 @@ export const DOCTOR_ROUTES: Routes = [
         loadComponent: () =>
           import('./component/doctor-schedule-exception/doctor-schedule-exception.component')
             .then(m => m.DoctorScheduleExceptionComponent),
-        data: { breadcrumb: 'Create Doctor Exception' }
+        data: { breadcrumb: 'Add Doctor Exception' }
 
       },
     ],

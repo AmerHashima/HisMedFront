@@ -13,7 +13,7 @@ const BRANCH_ROUTES: Routes = [
     loadComponent: () =>
       import('./Components/Branches/create-new-branch/create-new-branch.component')
         .then(m => m.CreateNewBranchComponent),
-    data: { breadcrumb: 'Create Branch' },
+    data: { breadcrumb: 'Add Branch' },
   },
 ];
 

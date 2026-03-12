@@ -22,14 +22,14 @@ const LOOKUP_ROUTES: Routes = [
         loadComponent: () =>
           import('./components/create-new-lookupmaster/create-new-lookupmaster.component')
             .then(m => m.CreateNewLookupmasterComponent),
-        data: { breadcrumb: 'Create LookUP' },
+        data: { breadcrumb: 'Add LookUP' },
       },
       {
         path: 'createDetails',
         loadComponent: () =>
           import('./components/create-look-up-master-details/create-look-up-master-details.component')
             .then(m => m.CreateLookUpMasterDetailsComponent),
-        data: { breadcrumb: 'Create Lookup Details' },
+        data: { breadcrumb: 'Add Lookup Details' },
       },
 
     ]

@@ -13,7 +13,7 @@ import { Routes } from '@angular/router';
     loadComponent: () =>
       import('./Components/Specialities/create-new-speciality/create-new-speciality.component')
         .then(m => m.CreateNewSpecialityComponent),
-    data: { breadcrumb: 'Create Speciality' },
+    data: { breadcrumb: 'Add Speciality' },
   },
 ];
 

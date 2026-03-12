@@ -21,6 +21,8 @@ export const PATIENTS_ROUTES: Routes = [
         loadComponent: () =>
           import('./component/create-patient/create-patient.component')
             .then(m => m.CreatePatientComponent),
+        data: { breadcrumb: 'Add Patient' },
+
       },
     ],
   },
