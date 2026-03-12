@@ -14,11 +14,12 @@ import { SpecialityService } from 'src/app/Hospital/Services/speciality.service'
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
 import { WorkingDayCardComponent } from '../doctor-schedule-form/working-day-card/working-day-card.component';
+import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
 
 @Component({
   selector: 'app-doctor-form',
   imports: [ButtonComponent, ToggleBtnComponent, InputComponent,
-    SpkNgSelectComponent, ReactiveFormsModule, AsyncPipe, WorkingDayCardComponent],
+    SpkNgSelectComponent, SpkFlatpickrComponent ,ReactiveFormsModule, AsyncPipe, WorkingDayCardComponent],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
   providers: [UsersStore, SpecialityStore]
@@ -170,8 +171,6 @@ export class DoctorFormComponent {
     });
 
   }
-
-
 
 
   formatDateOnly(value: string | Date): string {
