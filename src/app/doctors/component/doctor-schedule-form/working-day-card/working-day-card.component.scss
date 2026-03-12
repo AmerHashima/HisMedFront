@@ -1,0 +1,12 @@
+
+.dayCard{
+  background-color: var(--bs-gray-100);
+  border: 1px solid var(--bs-gray-300);
+  border-radius: 10px;
+  transition: all .2s ease;
+}
+
+.dayCard:hover{
+  background-color: white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}

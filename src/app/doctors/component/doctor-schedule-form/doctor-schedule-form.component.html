@@ -1,0 +1,76 @@
+<div class="col-12">
+  <form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="d-flex flex-column gap-4 p-3"
+  class="row g-2">
+       <div class="col-12 col-md-6 col-xl-3">
+      <spk-ng-select
+        formControlName="doctorId"
+        label="Doctor"
+        [options]="doctors()"
+        bindLabel="username"
+        bindValue="oid"
+        [multiple]="false"
+        placeholder="Choose Doctor"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+      <spk-ng-select
+        formControlName="dayOfWeekId"
+        label="Working Day"
+        [options]="$any((weekDays$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="oid"
+        [multiple]="false"
+        placeholder="Choose Working Day"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+      <spk-ng-select
+        formControlName="startTime"
+        label="Start Time"
+        [options]="$any((workingHours$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose Start Time"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+      <spk-ng-select
+        formControlName="endTime"
+        label="End Time"
+        [options]="$any((workingHours$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose End Time"
+        selectClass="form-control"
+      />
+    </div>
+      <div class="col-12 col-md-6 col-xl-3">
+      <spk-ng-select
+        formControlName="slotDurationMinutes"
+        label="Slot Duration"
+        [options]="$any((slotDurations$ | async)?.lookupDetails ?? [])"
+        bindLabel="valueNameEn"
+        bindValue="valueNameEn"
+        [multiple]="false"
+        placeholder="Choose Slot Duration"
+        selectClass="form-control"
+      />
+    </div>
+    <div class="col-12 ">
+    <div class="d-flex justify-content-end gap-2">
+    <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
+    <app-button btnLabel="Add Day" buttonType="submit" />
+  </div>
+</div>
+  </form>
+</div>
+
+

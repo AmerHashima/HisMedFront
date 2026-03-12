@@ -13,11 +13,12 @@ import { HospitalBranchService } from 'src/app/Hospital/Services/hospital-branch
 import { SpecialityService } from 'src/app/Hospital/Services/speciality.service';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
+import { WorkingDayCardComponent } from '../doctor-schedule-form/working-day-card/working-day-card.component';
 
 @Component({
   selector: 'app-doctor-form',
   imports: [ButtonComponent, ToggleBtnComponent, InputComponent,
-    SpkNgSelectComponent, ReactiveFormsModule, AsyncPipe],
+    SpkNgSelectComponent, ReactiveFormsModule, AsyncPipe, WorkingDayCardComponent],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
   providers: [UsersStore, SpecialityStore]
@@ -35,7 +36,7 @@ export class DoctorFormComponent {
   specialityStore = inject(SpecialityStore);
   specialities=computed(()=> this.specialityStore.items())
     validationErrorService = inject(ValidationErrorService);
-
+  doctorSchedules=this.store.selectedDoctorSchedules;
   users = computed(() => this.userStore.users());
   departments$ = this.lookupService.getDepartment();
   branches$ = this.branchService.getBranches();
@@ -111,9 +112,6 @@ export class DoctorFormComponent {
 
   }
 
-
-
-
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -159,4 +157,8 @@ export class DoctorFormComponent {
   back() {
     this.cancalEvent.emit();
   }
+
+  addAnotherWorkingHours() {
+   }
+
 }

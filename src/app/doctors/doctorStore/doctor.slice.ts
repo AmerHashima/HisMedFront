@@ -4,6 +4,8 @@ import { DoctorState } from "../models/doctor-state";
 export const initialDoctorState: DoctorState = {
   doctors: [],
   selectedDoctor: null,
+  selectedDoctorSchedules:[],
+  selectedDoctorSchedule: null,
 success:false,
   loading: false,
   error: null,

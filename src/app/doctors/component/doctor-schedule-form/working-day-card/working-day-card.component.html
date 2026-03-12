@@ -1,0 +1,39 @@
+
+
+<div class="dayCard p-3">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h6 class="mb-0 fw-semibold">
+      {{ schedule().dayOfWeekNameEn }}
+    </h6>
+
+    <div class="d-flex gap-2">
+      <button class="btn btn-sm btn-outline-primary" (click)="editWorkingHour()">
+        <i class="bi bi-pencil"></i>
+      </button>
+
+      <button class="btn btn-sm btn-outline-danger" (click)="deleteWorkingHour()">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Working Hours -->
+  <div class="d-flex align-items-center mb-2 text-muted">
+    <i class="bi bi-clock"></i>
+    <span class="ms-2">
+      {{ formatTo12Hour(schedule().startTime) }} -
+      {{ formatTo12Hour(schedule().endTime) }}
+    </span>
+  </div>
+
+  <!-- Slot Duration -->
+  <div class="d-flex align-items-center text-muted">
+    <i class="bi bi-stopwatch"></i>
+    <span class="ms-2">
+      {{ schedule().slotDurationMinutes }} Minutes
+    </span>
+  </div>
+
+</div>

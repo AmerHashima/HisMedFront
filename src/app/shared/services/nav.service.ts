@@ -95,21 +95,21 @@ export class NavService implements OnDestroy {
       type: 'sub',
       active: false,
       children: [
-
         {
           title: 'Users',
+          path: '/users',
           dirchange: false,
           type: 'sub',
           active: false,
           children: [
-            {
-              path: '/users',
-              title: 'All Users',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
+            // {
+            //   path: '/users',
+            //   title: 'All Users',
+            //   dirchange: false,
+            //   type: 'link',
+            //   active: false,
+            //   selected: false,
+            // },
             {
               path: '/users/create',
               title: 'Add New Uer',
@@ -123,18 +123,19 @@ export class NavService implements OnDestroy {
         },
         {
           title: 'Looks UP',
+          path: '/looks-up',
           dirchange: false,
           type: 'sub',
           active: false,
           children: [
-            {
-              path: '/looks-up',
-              title: 'All Looks UP',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
+            // {
+            //   path: '/looks-up',
+            //   title: 'All Looks UP',
+            //   dirchange: false,
+            //   type: 'link',
+            //   active: false,
+            //   selected: false,
+            // },
             {
               path: '/looks-up/create',
               title: 'Add New Look UP',
@@ -153,35 +154,36 @@ export class NavService implements OnDestroy {
       icon: `<svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M5 9h14V5H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5S7.83 8.5 7 8.5 5.5 7.83 5.5 7 6.17 5.5 7 5.5zM5 19h14v-4H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" opacity=".3"></path><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm-1 6H5v-4h14v4zm-12-.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-1 6H5V5h14v4zM7 8.5c.83 0 1.5-.67 1.5-1.5S7.83 5.5 7 5.5 5.5 6.17 5.5 7 6.17 8.5 7 8.5z"></path></svg>`,
       dirchange: false,
       type: 'sub',
+      path: '/patients',
       active: false,
       children: [
 
-        {
-          title: 'All Patients',
-          dirchange: false,
-          type: 'link',
-          active: false,
-          path: '/patients',
-          // children: [
-          //   {
-          //     path: '/patients',
-          //     title: 'All Patients',
-          //     dirchange: false,
-          //     type: 'link',
-          //     active: false,
-          //     selected: false,
-          //   },
-          //   {
-          //     path: '/patients/create',
-          //     title: 'Add New Patient',
-          //     dirchange: false,
-          //     type: 'link',
-          //     active: false,
-          //     selected: false,
-          //   },
+        // {
+        //   title: 'All Patients',
+        //   dirchange: false,
+        //   type: 'link',
+        //   active: false,
+        //   path: '/patients',
+        //   // children: [
+        //   //   {
+        //   //     path: '/patients',
+        //   //     title: 'All Patients',
+        //   //     dirchange: false,
+        //   //     type: 'link',
+        //   //     active: false,
+        //   //     selected: false,
+        //   //   },
+        //   //   {
+        //   //     path: '/patients/create',
+        //   //     title: 'Add New Patient',
+        //   //     dirchange: false,
+        //   //     type: 'link',
+        //   //     active: false,
+        //   //     selected: false,
+        //   //   },
 
-          // ],
-        },
+        //   // ],
+        // },
         {
           title: 'Add New Patient',
           dirchange: false,
@@ -216,20 +218,35 @@ export class NavService implements OnDestroy {
       dirchange: false,
       type: 'sub',
       active: false,
+      path: '/doctors',
       children: [
-        {
-          title: 'All Doctors',
-          dirchange: false,
-          type: 'link',
-          active: false,
-          path: '/doctors',
-        },
+        // {
+        //   title: 'All Doctors',
+        //   dirchange: false,
+        //   type: 'link',
+        //   active: false,
+        //   path: '/doctors',
+        // },
         {
           title: 'Add New Doctor',
           dirchange: false,
           type: 'link',
           active: false,
           path: '/doctors/create',
+        },
+        {
+          title: 'Add Doctor Schedule',
+          dirchange: false,
+          type: 'link',
+          active: false,
+          path: '/doctors/doctorSchedule/create',
+        },
+        {
+          title: 'Add Doctor Exception',
+          dirchange: false,
+          type: 'link',
+          active: false,
+          path: '/doctors/doctorScheduleException/create',
         },
         // {
         //   title: 'Doctors',
@@ -270,15 +287,16 @@ export class NavService implements OnDestroy {
           dirchange: false,
           type: 'sub',
           active: false,
+          path: '/hospital/appointments',
           children: [
-            {
-              path: '/hospital/appointments',
-              title: 'All Appointments',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
+            // {
+            //   path: '/hospital/appointments',
+            //   title: 'All Appointments',
+            //   dirchange: false,
+            //   type: 'link',
+            //   active: false,
+            //   selected: false,
+            // },
             {
               path: '/hospital/appointments/create',
               title: 'Add New Appointment',
@@ -295,15 +313,16 @@ export class NavService implements OnDestroy {
           dirchange: false,
           type: 'sub',
           active: false,
+          path: '/hospital/branches',
           children: [
-            {
-              path: '/hospital/branches',
-              title: 'All Branches',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
+            // {
+            //   path: '/hospital/branches',
+            //   title: 'All Branches',
+            //   dirchange: false,
+            //   type: 'link',
+            //   active: false,
+            //   selected: false,
+            // },
             {
               path: '/hospital/branches/create',
               title: 'Add New branch',
@@ -320,15 +339,16 @@ export class NavService implements OnDestroy {
           dirchange: false,
           type: 'sub',
           active: false,
+          path: '/hospital/specialities',
           children: [
-            {
-              path: '/hospital/specialities',
-              title: 'All Specialities',
-              dirchange: false,
-              type: 'link',
-              active: false,
-              selected: false,
-            },
+            // {
+            //   path: '/hospital/specialities',
+            //   title: 'All Specialities',
+            //   dirchange: false,
+            //   type: 'link',
+            //   active: false,
+            //   selected: false,
+            // },
             {
               path: '/hospital/specialities/create',
               title: 'Add New Speciality',

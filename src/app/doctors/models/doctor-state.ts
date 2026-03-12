@@ -1,5 +1,6 @@
 // import { Doctor } from "./doctor";
 
+import { APIDoctorSchedule } from "./doctor-schedule";
 import { DoctorVM } from "./doctor-vm";
 
 export interface DoctorState {
@@ -7,6 +8,8 @@ export interface DoctorState {
   // selectedDoctor: Doctor | null;
   doctors: DoctorVM[];
   selectedDoctor: DoctorVM | null;
+  selectedDoctorSchedules: APIDoctorSchedule[],
+  selectedDoctorSchedule: APIDoctorSchedule | null,
     success: boolean
     loading: boolean;
     error: string | null;

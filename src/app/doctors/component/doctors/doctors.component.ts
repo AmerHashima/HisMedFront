@@ -7,6 +7,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
+type ViewMode = 'table' | 'doctorForm' | 'scheduleForm';
+
 @Component({
   selector: 'app-doctors',
   imports: [ReusableMaterialTableComponent,DoctorFormComponent],
@@ -14,6 +16,8 @@ import { Sort } from '@angular/material/sort';
   styleUrl: './doctors.component.scss',
   // providers: [DoctorStore]
 })
+
+
 export class DoctorsComponent {
   private breadcrumb = inject(BreadcrumbService);
   private store = inject(DoctorStore);
@@ -23,6 +27,7 @@ export class DoctorsComponent {
   loading = computed(() => this.store.loading());
   hidden = signal<boolean>(false);
   oid: string = '';
+    viewMode = signal<ViewMode>('table');
   // 🔹 table columns
   columns = [
     { field: 'username', header: 'Username', type: 'text' },

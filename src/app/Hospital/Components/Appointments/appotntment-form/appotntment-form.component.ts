@@ -139,7 +139,6 @@ export class AppotntmentFormComponent {
     const v = this.form.getRawValue();
     const payload: Appointment = {
       ...(this.oid() ? { oid: this.oid() } : {}),
-
       patientId: v.patientId!,
       doctorId: v.doctorId!,
       appointmentDate: v.appointmentDate!,
@@ -148,6 +147,7 @@ export class AppotntmentFormComponent {
       reason: v.reason!,
       branchId: v.branchId!,
     };
+    console.log(payload);
     return payload;
   }
   cancel() {

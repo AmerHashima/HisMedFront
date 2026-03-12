@@ -18,16 +18,24 @@ import {
   setPageUpdater,
   setSortUpdater,
   setSuccess,
+  setSelectedDoctoSchedule,
+  deleteDoctorSchedule,
+  setSelectedDoctoSchedules,
 } from './doctor.updater';
 import { Doctor } from '../models/doctor';
 import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
 import { LoadingService } from 'src/app/common/service/loading.service';
+import { DoctorSchedule, DoctorScheduleBulk } from '../models/doctor-schedule';
 
 type UpdatePayload = {
   id: string;
   body: Doctor;
 };
 
+type UpdateSchedulePayload={
+  id: string;
+  body: DoctorSchedule;
+}
 export const DoctorStore = signalStore(
   withState(initialDoctorState),
 
@@ -122,30 +130,51 @@ export const DoctorStore = signalStore(
         tap(() => {
           patchState(store, activateLoading);
           loader.start();
-        }), switchMap(id =>
+        }),
+
+        switchMap(id =>
           service.getDoctor(id).pipe(
-            tap(d => patchState(store, setSelectedDoctor(d))),
+
+            tap(d => {
+              patchState(store, setSelectedDoctor(d));
+              console.log('d', d);
+            }),
+
+            switchMap(d => {
+              const filters: Filter[] = [{
+                propertyName: "doctorId",
+                value: d.oid,
+                operation: 0
+              }];
+
+              return service.getDoctorSchedules(filters);
+            }),
+
+            tap(schedules => {
+              patchState(store, setSelectedDoctoSchedules(schedules));
+            }),
+
             catchError(err => {
               const error = err.error.errors;
+
               patchState(
                 store,
-                setError(
-                  error ?? 'Failed to get doctor'
-                )
+                setError(error ?? 'Failed to get doctor')
               );
-              toast.showToast('Falied to retrieve doctor', 'error');
+
+              toast.showToast('Failed to retrieve doctor', 'error');
 
               return of(null);
             }),
 
             finalize(() => {
               patchState(store, deactivateLoading);
-              loader.stop()
-            }))
+              loader.stop();
+            })
+          )
         )
       )
     ),
-
     addDoctor: rxMethod<Doctor>(
       pipe(
         tap(() => {
@@ -256,7 +285,161 @@ export const DoctorStore = signalStore(
       patchState(store, setSortUpdater(sort.active, sort.direction));
     },
   })),
+  withMethods((store, loader = inject(LoadingService), toast = inject(ToastingMessagesService), service = inject(DoctorService)) => ({
 
+    getDoctorSchedule: rxMethod<string>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }), switchMap(id =>
+          service.getDoctorSchedule(id).pipe(
+            tap(d => patchState(store, setSelectedDoctoSchedule(d))),
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to get doctor schedule'
+                )
+              );
+              toast.showToast('Falied to retrieve doctor schedule', 'error');
+
+              return of(null);
+            }),
+
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
+        )
+      )
+    ),
+
+    addDoctorSchedule: rxMethod<DoctorSchedule>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }),
+        switchMap((body) =>
+          service.createDoctorSchedule(body).pipe(
+            tap(() => {
+              patchState(store, setSuccess(true));
+              toast.showToast('Doctor slot has been added successfully', 'success');
+            }),
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to add doctor slot'
+                )
+              );
+              toast.showToast('Falied to add doctor slot', 'error');
+
+              return of(null);
+            }),
+
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
+        )
+      )
+    ),
+    addDoctorBulkSchedule: rxMethod<DoctorScheduleBulk>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }),
+        switchMap((body) =>
+          service.createBulkDoctorSchedule(body).pipe(
+            tap(() => {
+              patchState(store, setSuccess(true));
+              toast.showToast('Doctor schedule has been added successfully', 'success');
+            }),
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to add doctor schedule'
+                )
+              );
+              toast.showToast('Falied to add doctor schedule', 'error');
+
+              return of(null);
+            }),
+
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
+        )
+      )
+    ),
+    updateDoctorSchedule: rxMethod<UpdateSchedulePayload>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }), switchMap(({ id, body }) =>
+          service.updateDoctorSchedule(id, body).pipe(
+            // tap(() => patchState(store, setError(''))),
+            tap(() => {
+              patchState(store, setSuccess(true));
+              toast.showToast('Doctor slot has been updated successfully', 'success');
+
+              // store.queryDoctors(store.queryRequest());
+            }),
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to update doctor schedule'
+                )
+              );
+              toast.showToast('Falied to update doctor schedule', 'error');
+
+              return of(null);
+            }),
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
+        )
+      )
+    ),
+    deleteDoctorSchedule: rxMethod<string>(
+      pipe(
+        switchMap(id =>
+          service.deleteDoctoSchedule(id).pipe(
+            tap(() => {
+              patchState(store, deleteDoctorSchedule(id));
+              toast.showToast('Doctor schedule has been deleted successfully', 'success');
+            }),
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to delete doctor schedule'
+                )
+              );
+              toast.showToast('Falied to delete doctor schedule', 'error');
+
+              return of(null);
+            }),
+          )
+        )
+      )
+    ),
+
+
+  })),
   withHooks({
     onInit(store) {
       effect(() => {

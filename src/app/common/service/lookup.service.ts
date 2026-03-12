@@ -19,7 +19,11 @@ export const LOOKUP_CODES = {
   CITY_TYPE:'CITY',
   STATE_TYPE:'STATE',
   APPOINTMENT_TYPE:'APPOINTMENT_TYPES',
-  APPOINTMENT_REASON:'APPOINTMENT_REASON'
+  APPOINTMENT_REASON:'APPOINTMENT_REASON',
+  WEEK_DAYS:'Days',
+  Day_Hours:"WORKING_HOURS",
+    SLOT_DURATION: "SLOT_DURATION"
+
 } as const;
 
 @Injectable({
@@ -122,4 +126,14 @@ export class LookupService {
   getAppointmentReasons(){
     return this.getLookUpByCode(LOOKUP_CODES.APPOINTMENT_REASON);
   }
+  getDays() {
+    return this.getLookUpByCode(LOOKUP_CODES.WEEK_DAYS);
+  }
+  getDayHours() {
+    return this.getLookUpByCode(LOOKUP_CODES.Day_Hours);
+  }
+  getSlotDuration() {
+    return this.getLookUpByCode(LOOKUP_CODES.SLOT_DURATION);
+  }
 }
+

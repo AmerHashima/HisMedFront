@@ -88,7 +88,7 @@
           @if (menuItem.type === 'sub') {
           <a
             class="side-menu__item"
-            [routerLink]="menuItem.type ? null : [menuItem.path]"
+            [routerLink]="!menuItem.path ? null : [menuItem.path]"
             [ngClass]="{ active: menuItem.selected }"
             (click)="toggleNavActive($event, menuItem, undefined, true)"
           >
@@ -155,7 +155,7 @@
               <a
                 class="side-menu__item"
                 [ngClass]="{ 'active': childrenItem.selected }"
-                [routerLink]="childrenItem.type ? null : [childrenItem.path]"
+                [routerLink]="!childrenItem.path ? null : [childrenItem.path]"
                 (click)="toggleNavActive($event, childrenItem)"
               >
                 <span class="">{{ childrenItem.title }}</span>
