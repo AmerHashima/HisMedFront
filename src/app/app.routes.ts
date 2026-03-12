@@ -1,3 +1,4 @@
+// src\app\app.routes.ts
 import { Routes } from '@angular/router';
 import { Content_Routes } from './shared/routes/content.routes';
 import { Full_Content_Routes } from './shared/routes/full.routes';
@@ -24,4 +25,4 @@ export const routes: Routes = [
 ];
 
 
-  
+

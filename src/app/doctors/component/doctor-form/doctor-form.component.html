@@ -1,83 +1,222 @@
+<!-- src\app\doctors\component\doctor-form\doctor-form.component.html -->
 <form
   [formGroup]="form"
   (ngSubmit)="onSubmit()"
   class="d-flex flex-column gap-4 p-3"
 >
-  <div class="row flex-wrap gy-2">
-    <div class="col-lg-3">
-      <spk-ng-select
-        formControlName="userId"
-        label="User Id"
-        [options]="$any(users())"
-        bindLabel="firstName"
-        bindValue="oid"
-        [multiple]="false"
-        placeholder="Choose user"
-        selectClass="form-control"
-      />
+  <div class="card custom-card">
+    <div class="card-header">
+      <h6 class="mb-0">Identity Information</h6>
     </div>
-    <div class="col-lg-3">
-      <app-input
-        formControlName="licenseNumber"
-        label="Lcense Number"
-        type="text"
-        placeholder="29303-4-4---4"
-        icon="bi bi-card-text"
-        [errorMessages]="{
-          required: 'licenseNumber is required',
-          backendError: apiFieldErrors['licenseNumber'],
-        }"
-      />
-    </div>
-    <div class="col-lg-3">
-      <spk-ng-select
-        formControlName="specialtyId"
-        label="Speciality Id"
-        [options]="specialities()"
-        bindLabel="nameEn"
-        bindValue="oid"
-        [multiple]="false"
-        placeholder="Choose speciality"
-        selectClass="form-control"
-      />
-    </div>
-    <div class="col-lg-3">
-      <spk-ng-select
-        formControlName="departmentLookupId"
-        label="Department Id"
-        [options]="$any((departments$ | async)?.lookupDetails ?? [])"
-        bindLabel="valueNameEn"
-        bindValue="oid"
-        [multiple]="false"
-        placeholder="Choose department"
-        selectClass="form-control"
-      />
-    </div>
-    <div class="col-lg-3">
-      <spk-ng-select
-        formControlName="branchId"
-        label="Branch Id"
-        [options]="$any((branches$ | async) ?? [])"
-        bindLabel="name"
-        bindValue="oid"
-        [multiple]="false"
-        placeholder="Choose branch"
-        selectClass="form-control"
-      />
-    </div>
-    <div class="col-lg-3">
-      <spk-ng-select
-        formControlName="nphiesProviderId"
-        label="nphies Provider Id"
-        [options]="$any(users())"
-        bindLabel="firstName"
-        bindValue="oid"
-        [multiple]="false"
-        placeholder="Choose provider"
-        selectClass="form-control"
-      />
+    <div class="card-body">
+      <div class="row flex-wrap gy-2">
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="userId"
+            label="User Id"
+            [options]="$any(users())"
+            bindLabel="firstName"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose user"
+            selectClass="form-control"
+          />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="firstNameAr" label="First Name (AR)" type="text" placeholder="First name" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="middleNameAr" label="Middle Name (AR)" type="text" placeholder="Middle name" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="lastNameAr" label="Last Name (AR)" type="text" placeholder="Last name" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="firstNameEn" label="First Name (EN)" type="text" placeholder="First name" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="middleNameEn" label="Middle Name (EN)" type="text" placeholder="Middle name" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="lastNameEn" label="Last Name (EN)" type="text" placeholder="Last name" />
+        </div>
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="genderId"
+            label="Gender"
+            [options]="$any((genders$ | async)?.lookupDetails ?? [])"
+            bindLabel="valueNameEn"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose gender"
+            selectClass="form-control"
+          />
+        </div>
+      </div>
     </div>
   </div>
+
+  <div class="card custom-card">
+    <div class="card-header">
+      <h6 class="mb-0">License Information</h6>
+    </div>
+    <div class="card-body">
+      <div class="row flex-wrap gy-2">
+        <div class="col-lg-3">
+          <app-input
+            formControlName="licenseNumber"
+            label="Lcense Number"
+            type="text"
+            placeholder="29303-4-4---4"
+            icon="bi bi-card-text"
+            [errorMessages]="{
+              required: 'licenseNumber is required',
+              backendError: apiFieldErrors['licenseNumber'],
+            }"
+          />
+        </div>
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="licenseTypeId"
+            label="License Type"
+            [options]="$any((licenseTypes$ | async)?.lookupDetails ?? [])"
+            bindLabel="valueNameEn"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose license type"
+            selectClass="form-control"
+          />
+        </div>
+        <div class="col-lg-3">
+          <spk-flatpickr
+            formControlName="licenseIssueDate"
+            [enableTime]="false"
+            [dateFormat]="'Y-m-d'"
+            placeholder="Choose Date"
+            label="License Issue Date"
+          ></spk-flatpickr>
+        </div>
+        <div class="col-lg-3">
+          <spk-flatpickr
+            formControlName="licenseExpiryDate"
+            [enableTime]="false"
+            [dateFormat]="'Y-m-d'"
+            placeholder="Choose Date"
+            label="License Expiry Date"
+          ></spk-flatpickr>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-header">
+      <h6 class="mb-0">Professional Information</h6>
+    </div>
+    <div class="card-body">
+      <div class="row flex-wrap gy-2">
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="specialtyId"
+            label="Speciality Id"
+            [options]="specialities()"
+            bindLabel="nameEn"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose speciality"
+            selectClass="form-control"
+          />
+        </div>
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="subSpecialtyId"
+            label="Sub Speciality Id"
+            [options]="$any((subSpecialties$ | async)?.lookupDetails ?? [])"
+            bindLabel="valueNameEn"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose sub speciality"
+            selectClass="form-control"
+          />
+        </div>
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="departmentId"
+            label="Department Id"
+            [options]="$any((departments$ | async)?.lookupDetails ?? [])"
+            bindLabel="valueNameEn"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose department"
+            selectClass="form-control"
+          />
+        </div>
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="branchId"
+            label="Branch Id"
+            [options]="$any((branches$ | async) ?? [])"
+            bindLabel="name"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose branch"
+            selectClass="form-control"
+          />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="yearsOfExperience" label="Years Of Experience" type="number" placeholder="0" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="consultationFee" label="Consultation Fee" type="number" placeholder="0" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-header">
+      <h6 class="mb-0">Contact Information</h6>
+    </div>
+    <div class="card-body">
+      <div class="row flex-wrap gy-2">
+        <div class="col-lg-3">
+          <app-input formControlName="mobile" label="Mobile" type="text" placeholder="Mobile" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="phone" label="Phone" type="text" placeholder="Phone" />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="email" label="Email" type="email" placeholder="user@example.com" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-header">
+      <h6 class="mb-0">Nphies Information</h6>
+    </div>
+    <div class="card-body">
+      <div class="row flex-wrap gy-2">
+        <div class="col-lg-3">
+          <spk-ng-select
+            formControlName="nphiesProviderId"
+            label="nphies Provider Id"
+            [options]="$any(users())"
+            bindLabel="firstName"
+            bindValue="oid"
+            [multiple]="false"
+            placeholder="Choose provider"
+            selectClass="form-control"
+          />
+        </div>
+        <div class="col-lg-3">
+          <app-input formControlName="nphiesLicenseNumber" label="Nphies License Number" type="text" placeholder="Nphies license" />
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="d-flex flex-column gap-2">
     <app-toggle-btn
       formControlName="isActive"

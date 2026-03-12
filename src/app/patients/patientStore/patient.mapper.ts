@@ -1,3 +1,4 @@
+// src\app\patients\patientStore\patient.mapper.ts
 import { ApiPatient } from '../models/api-patient';
 import { Patient } from '../models/patient';
 import { PatientVM } from '../models/patient-vm';
@@ -22,6 +23,10 @@ export function mapApiPatientToPatient(api: ApiPatient): Patient {
     phone: api.phone,
     email: api.email,
     branchId: api.branchId,
+    addresses: [],
+    contacts: [],
+    attachments: [],
+    insurances: [],
   };
 }
 

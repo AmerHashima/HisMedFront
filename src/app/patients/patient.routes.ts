@@ -1,4 +1,4 @@
-// src\app\management\user\user.routes.ts
+// src\app\patients\patient.routes.ts
 import { Routes } from '@angular/router';
 import { PatientsComponent } from '../patients/component/patients/patients.component';
 

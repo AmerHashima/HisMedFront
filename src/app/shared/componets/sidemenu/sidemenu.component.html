@@ -1,4 +1,4 @@
-<!-- Start::app-sidebar -->
+<!-- src\app\shared\componets\sidemenu\sidemenu.component.html -->
 <aside
   class="app-sidebar sticky"
   id="sidebar"
@@ -199,7 +199,7 @@
                   <a
                     class="side-menu__item"
                     [ngClass]="{ active: childrenSubItem.selected }"
-                    [routerLink]="childrenSubItem.type ? null : [childrenSubItem.path]"
+                    [routerLink]="childrenSubItem.path ? [childrenSubItem.path] : null"
                     (click)="toggleNavActive($event, childrenSubItem)"
                   >
                     <span class="">{{ childrenSubItem.title }}</span>

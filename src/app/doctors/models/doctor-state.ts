@@ -1,4 +1,4 @@
-// import { Doctor } from "./doctor";
+// src\app\doctors\models\doctor-state.ts
 
 import { APIDoctorSchedule } from "./doctor-schedule";
 import { DoctorVM } from "./doctor-vm";

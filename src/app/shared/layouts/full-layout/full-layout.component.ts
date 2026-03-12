@@ -1,6 +1,8 @@
+// src\app\shared\layouts\full-layout\full-layout.component.ts
 import { Component, ElementRef, HostListener, inject, OnInit, Renderer2 } from '@angular/core';
 import { SwitcherService } from 'src/app/shared/services/switcher.service';
-import { Menu, NavService } from '../../services/nav.service';
+import { NavService } from 'src/app/shared/services/nav.service';
+import { Menu } from 'src/app/shared/models/menu.model';
 // import { localStorageBackUp } from '../../componets/switcher/switcher';
 import { LoaderComponent } from '../../componets/loader/loader.component';
 import { HeaderComponent } from '../../componets/header/header.component';
@@ -10,29 +12,29 @@ import { HoverEffectSidebarDirective } from '../../directives/hover-effect-sideb
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../../componets/footer/footer.component';
 import { TapToTopComponent } from '../../componets/tap-to-top/tap-to-top.component';
-import { NgbOffcanvas, NgbOffcanvasModule, NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';import { filter, Subscription } from 'rxjs';
+import { NgbOffcanvas, NgbOffcanvasModule, NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap'; import { filter, Subscription } from 'rxjs';
 import { LoadingService } from 'src/app/common/service/loading.service';
 import { AsyncPipe } from '@angular/common';
 @Component({
-    selector: 'app-full-layout',
-    standalone:true,
-    templateUrl: './full-layout.component.html',
-    styleUrls: ['./full-layout.component.scss'],
-    imports: [ LoaderComponent,AsyncPipe, NgbOffcanvasModule,HeaderComponent, NotificationSidebarComponent, SidemenuComponent, HoverEffectSidebarDirective, RouterOutlet, FooterComponent, TapToTopComponent],
-    providers:[NgbActiveOffcanvas]
+  selector: 'app-full-layout',
+  standalone: true,
+  templateUrl: './full-layout.component.html',
+  styleUrls: ['./full-layout.component.scss'],
+  imports: [LoaderComponent, AsyncPipe, NgbOffcanvasModule, HeaderComponent, NotificationSidebarComponent, SidemenuComponent, HoverEffectSidebarDirective, RouterOutlet, FooterComponent, TapToTopComponent],
+  providers: [NgbActiveOffcanvas]
 })
 export class FullLayoutComponent implements OnInit {
-  private loadingService=inject(LoadingService);
+  private loadingService = inject(LoadingService);
   loading$ = this.loadingService.loading$;
 
-  menuItems!:Menu[];
-  menuitemsSubscribe$!:Subscription
+  menuItems!: Menu[];
+  menuitemsSubscribe$!: Subscription
   constructor(
-    private navServices: NavService,  private router:Router,
-    private elementRef: ElementRef,private renderer:Renderer2
+    private navServices: NavService, private router: Router,
+    private elementRef: ElementRef, private renderer: Renderer2
   ) {
     const htmlElement =
-    this.elementRef.nativeElement.ownerDocument.documentElement;
+      this.elementRef.nativeElement.ownerDocument.documentElement;
     let html = document.querySelector('html');
 
     if (window.innerWidth <= 992) {
@@ -43,14 +45,14 @@ export class FullLayoutComponent implements OnInit {
     }
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
-      window.scrollTo(0, 0);
-    });
+      .subscribe(() => {
+        window.scrollTo(0, 0);
+      });
   }
 
   ngOnInit() {
 
-    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items: any) => {
+    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items: Menu[]) => {
       this.menuItems = items;
     });
 
@@ -78,7 +80,7 @@ export class FullLayoutComponent implements OnInit {
 
     this.menuItem.active = !this.menuItem.active;
 
-    if(html.getAttribute('data-nav-layout') =='horizontal' && window.innerWidth >= 992){this.clearNavDropdown();}
+    if (html.getAttribute('data-nav-layout') == 'horizontal' && window.innerWidth >= 992) { this.clearNavDropdown(); }
     const navStyle = document.documentElement.getAttribute('data-nav-style');
     if (navStyle === 'menu-click' || navStyle === 'menu-hover' || navStyle === 'icon-click' || navStyle === 'icon-hover') {
       document.querySelector('.double-menu-active')?.setAttribute('style', 'display: none;');

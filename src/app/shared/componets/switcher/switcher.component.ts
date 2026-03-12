@@ -1,28 +1,31 @@
+// src\app\shared\componets\switcher\switcher.component.ts
 import {
   Component,
   ElementRef,
   inject,
   Renderer2,
 } from '@angular/core';
-import { NavService } from '../../services/nav.service';
+import { NavService } from 'src/app/shared/services/nav.service';
 import { SwitcherService } from '../../services/switcher.service';
-import { NgbNav, NgbNavItem, NgbNavLinkButton, NgbNavLinkBase, 
-  NgbNavContent, NgbNavOutlet, NgbActiveOffcanvas, NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbNav, NgbNavItem, NgbNavLinkButton, NgbNavLinkBase,
+  NgbNavContent, NgbNavOutlet, NgbActiveOffcanvas, NgbOffcanvasModule
+} from '@ng-bootstrap/ng-bootstrap';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-switcher',
-  standalone:true,
-    templateUrl: './switcher.component.html',
+  standalone: true,
+  templateUrl: './switcher.component.html',
   styleUrls: ['./switcher.component.scss'],
-  imports: [NgbNav, NgbNavItem, NgbOffcanvasModule,NgbNavLinkButton, NgbNavLinkBase, NgbNavContent, ColorPickerModule, NgbNavOutlet],
+  imports: [NgbNav, NgbNavItem, NgbOffcanvasModule, NgbNavLinkButton, NgbNavLinkBase, NgbNavContent, ColorPickerModule, NgbNavOutlet],
 
 })
 export class SwitcherComponent {
   activeOffcanvas = inject(NgbActiveOffcanvas);
   active = 1;
-  public localdata: any ;
+  public localdata: any;
   constructor(
     public renderer: Renderer2,
     public switcherServic: SwitcherService,
@@ -33,7 +36,7 @@ export class SwitcherComponent {
     this.appStateService.state$.subscribe(state => {
       this.localdata = state;
     });
-    }
+  }
 
   // Theme color Mode
   updateTheme(theme: string) {
@@ -60,7 +63,7 @@ export class SwitcherComponent {
     }
   }
   //  Directions
-   updateDirection(direction: string) {
+  updateDirection(direction: string) {
     this.appStateService.updateState({ direction });
   }
 
@@ -72,84 +75,84 @@ export class SwitcherComponent {
     if (navigationStyles == 'horizontal') {
       // Set default 'menu-click' if nothing else is set
       // const defaultMenuStyle = currentMenuStyles || '';
-      this.appStateService.updateState({ navigationStyles,menuStyles:'menu-click', layoutStyles: '' });
+      this.appStateService.updateState({ navigationStyles, menuStyles: 'menu-click', layoutStyles: '' });
       this.checkMenuElement(currentMenuStyles);  // Use the default style
       const navStyle = document.documentElement.getAttribute('data-nav-style');
-  
-      if(navStyle === 'menu-click'){
-      const Sidebar: any = document.querySelector(".main-menu");
-      if (Sidebar) {
+
+      if (navStyle === 'menu-click') {
+        const Sidebar: any = document.querySelector(".main-menu");
+        if (Sidebar) {
           Sidebar.style.marginInline = "0px";
+        }
       }
-    }
       setTimeout(() => {
         const mainContentElement = document.querySelector(".main-content") as HTMLElement | null;
         if (mainContentElement) {
-            mainContentElement.click();
+          mainContentElement.click();
         }
       }, 100);
-    } else if(navigationStyles == 'vertical'){
+    } else if (navigationStyles == 'vertical') {
       this.appStateService.updateState({ navigationStyles, menuStyles: '', layoutStyles: 'default' });
     }
-}
-private checkMenuElement(menuStyles: string) {
-  // Define element IDs based on menuStyles
-  const elementIds: { [key: string]: string } = {
-    'menu-click': 'switcher-menu-click',
-    'menu-hover': 'switcher-menu-hover',
-    'icon-hover': 'switcher-icon-hover',
-    'icon-click': 'switcher-icon-click',
+  }
+  private checkMenuElement(menuStyles: string) {
+    // Define element IDs based on menuStyles
+    const elementIds: { [key: string]: string } = {
+      'menu-click': 'switcher-menu-click',
+      'menu-hover': 'switcher-menu-hover',
+      'icon-hover': 'switcher-icon-hover',
+      'icon-click': 'switcher-icon-click',
 
-  };
+    };
 
-  // Get the corresponding element ID
-  const elementId = elementIds[menuStyles];
+    // Get the corresponding element ID
+    const elementId = elementIds[menuStyles];
 
-  if (elementId) {
-    const menuElement = document.getElementById(elementId) as HTMLInputElement;
-    if (menuElement) {
-      menuElement.checked = true;
-    }
-    else{
-          const menuclickclosed = document.getElementById(
-        'switcher-menu-click'
-      ) as HTMLInputElement;
-      menuclickclosed.checked = true;
+    if (elementId) {
+      const menuElement = document.getElementById(elementId) as HTMLInputElement;
+      if (menuElement) {
+        menuElement.checked = true;
+      }
+      else {
+        const menuclickclosed = document.getElementById(
+          'switcher-menu-click'
+        ) as HTMLInputElement;
+        menuclickclosed.checked = true;
+      }
     }
   }
-}
   //Vertical & Horizontal Menu Styles:
   updatemenuStyle(menuStyles: string) {
     this.appStateService.updateState({ menuStyles, layoutStyles: '' });
 
 
     const navStyle = document.documentElement.getAttribute('data-nav-style');
-  
-    if(navStyle === 'icon-hover'){
+
+    if (navStyle === 'icon-hover') {
       document.querySelector('.double-menu-active')?.setAttribute('style', 'display: none;');
       const Sidebar: any = document.querySelector(".main-menu");
       if (Sidebar) {
-          Sidebar.style.marginInline = "0px";
+        Sidebar.style.marginInline = "0px";
       }
     }
-  
-    if(navStyle === 'icon-click'){
+
+    if (navStyle === 'icon-click') {
       const Sidebar: any = document.querySelector(".main-menu");
       if (Sidebar) {
-          Sidebar.style.marginInline = "0px";
+        Sidebar.style.marginInline = "0px";
       }
     }
   }
 
   //Sidemenu Layout Styles:
   updatelayoutStyles(layoutStyles: string) {
-    this.appStateService.updateState({ layoutStyles, menuStyles: '',navigationStyles:'' });
+    this.appStateService.updateState({ layoutStyles, menuStyles: '', navigationStyles: '' });
     if (document.querySelector('html')?.getAttribute('data-vertical-style') == 'doublemenu') {
       document.querySelector('.slide-menu')?.classList.add('double-menu-active');
-       }
-       else{
-        document.querySelector('.slide-menu')?.classList.remove('double-menu-active');
-       }
+    }
+    else {
+      document.querySelector('.slide-menu')?.classList.remove('double-menu-active');
+    }
   }
 
   setAttr(key: string, value: string): void {
@@ -186,7 +189,7 @@ private checkMenuElement(menuStyles: string) {
   updatemenuColor(menuColor: string) {
     this.appStateService.updateState({ menuColor });
   }
- 
+
   //header theme
   updateheaderColor(headerColor: string) {
     this.appStateService.updateState({ headerColor: headerColor });
@@ -197,13 +200,13 @@ private checkMenuElement(menuStyles: string) {
     this.appStateService.updateState({ themePrimary });
   }
   updateBackground(themeBackground: any) {
-    this.appStateService.updateState({ themeBackground, menuColor: 'dark',   headerColor: 'dark',theme:"dark" });
+    this.appStateService.updateState({ themeBackground, menuColor: 'dark', headerColor: 'dark', theme: "dark" });
   }
   updateBgImage(backgroundImage: string) {
     this.appStateService.updateState({ backgroundImage, });
   }
 
-  
+
   defaultPrimary = '#6c5ffc';
   public dynamicLightPrimary(data: any): void {
     this.defaultPrimary = data.color;
@@ -237,16 +240,17 @@ private checkMenuElement(menuStyles: string) {
     bg2Update[0] = Number(bg2Update[0]) + 14;
     bg2Update[1] = Number(bg2Update[1]) + 14;
     bg2Update[2] = Number(bg2Update[2]) + 14;
-    let bgColor = { main: bg1Update, secondary: bg2Update.join(', '),
+    let bgColor = {
+      main: bg1Update, secondary: bg2Update.join(', '),
       accent: bg2Update.join(', '), overlay: 'rgba(255,255,255,0.1)',
       theme: 'dark',
     }
     this.updateBackground(bgColor);
   }
-  
+
   reset() {
     this.appStateService.applyReset();
   }
 
-  
+
 }

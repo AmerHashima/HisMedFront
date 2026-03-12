@@ -1,8 +1,8 @@
+// src\app\Hospital\Components\Appointments\appotntment-form\appotntment-form.component.ts
 import { AsyncPipe } from '@angular/common';
 import { Component, computed, effect, EventEmitter, inject, input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from 'src/app/common/button/button.component';
-import { InputComponent } from 'src/app/common/input/input.component';
 import { LookupService } from 'src/app/common/service/lookup.service';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
@@ -15,7 +15,7 @@ import { PatientStore } from 'src/app/patients/patientStore/patient.store';
 
 @Component({
   selector: 'app-appointment-form',
-  imports: [ReactiveFormsModule, InputComponent, SpkNgSelectComponent,
+  imports: [ReactiveFormsModule, SpkNgSelectComponent,
     SpkFlatpickrComponent, ButtonComponent, AsyncPipe
   ],
   templateUrl: './appotntment-form.component.html',
