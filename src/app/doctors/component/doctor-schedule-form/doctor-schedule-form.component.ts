@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, effect, EventEmitter, inject, input, Output, signal } from '@angular/core';
 import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
 import { LookupService } from 'src/app/common/service/lookup.service';
 import { AsyncPipe } from '@angular/common';
@@ -27,6 +27,7 @@ export class DoctorScheduleFormComponent {
   fb = inject(FormBuilder);
   id: string = '';
   validationErrorService = inject(ValidationErrorService);
+  oid = input<string>('');
 
   form = this.fb.group({
 
@@ -62,10 +63,15 @@ export class DoctorScheduleFormComponent {
     });
 
     effect(() => {
-      const success = this.store.success();
+      const success = this.store.scheduleSuccess();
+      console.log('success effect',success);
+
       if (success)
+       {
+        console.log('success');
         this.cancel();
-      this.store.setSuccess(false);
+        this.store.setScheduleSuccess(false);
+       }
     });
   }
 
@@ -118,6 +124,7 @@ export class DoctorScheduleFormComponent {
     return payload;
   }
     cancel() {
+      console.log('in schedule cancel');
       this.form.markAsUntouched();
       this.form.reset();
       this.cancalEvent.emit();

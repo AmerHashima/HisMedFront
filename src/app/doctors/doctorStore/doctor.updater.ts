@@ -62,3 +62,11 @@ export const setSuccess = (success: boolean): PartialStateUpdater<DoctorState> =
     success: success,
   });
 };
+
+export const setScheduleSuccess = (success: boolean): PartialStateUpdater<DoctorState> => {
+  return (state) => ({
+    scheduleSuccess: success,
+  });
+};
+
+

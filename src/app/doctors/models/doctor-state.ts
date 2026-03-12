@@ -10,6 +10,7 @@ export interface DoctorState {
   selectedDoctor: DoctorVM | null;
   selectedDoctorSchedules: APIDoctorSchedule[],
   selectedDoctorSchedule: APIDoctorSchedule | null,
+  scheduleSuccess:boolean,
     success: boolean
     loading: boolean;
     error: string | null;

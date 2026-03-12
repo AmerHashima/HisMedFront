@@ -19,6 +19,7 @@ import {
   setSortUpdater,
   setSuccess,
   setSelectedDoctoSchedule,
+  setScheduleSuccess,
   deleteDoctorSchedule,
   setSelectedDoctoSchedules,
 } from './doctor.updater';
@@ -274,6 +275,9 @@ export const DoctorStore = signalStore(
     setSuccess(success: boolean) {
       patchState(store, setSuccess(success));
     },
+    setScheduleSuccess(success: boolean) {
+      patchState(store, setScheduleSuccess(success));
+    },
     setSearch(value: string) {
       patchState(store, setSearchUpdater(value));
     },
@@ -325,7 +329,9 @@ export const DoctorStore = signalStore(
         switchMap((body) =>
           service.createDoctorSchedule(body).pipe(
             tap(() => {
-              patchState(store, setSuccess(true));
+              console.log('setting success true');
+              patchState(store, setScheduleSuccess(true));
+              console.log('setting succese',store.success());
               toast.showToast('Doctor slot has been added successfully', 'success');
             }),
             catchError(err => {
@@ -337,7 +343,6 @@ export const DoctorStore = signalStore(
                 )
               );
               toast.showToast('Falied to add doctor slot', 'error');
-
               return of(null);
             }),
 
@@ -442,6 +447,7 @@ export const DoctorStore = signalStore(
   })),
   withHooks({
     onInit(store) {
+      console.log('DoctorStore instance created');
       effect(() => {
         store.queryDoctors(store.queryRequest());
       });

@@ -52,6 +52,7 @@ export class AllLooksupsComponent {
       if (!crumb) return;
 
       if (crumb.label === 'LookUps') {
+        this.viewMode.set('table');
         this.lookupCode = '';
         this.breadcrumb.resetToRoute();
       }

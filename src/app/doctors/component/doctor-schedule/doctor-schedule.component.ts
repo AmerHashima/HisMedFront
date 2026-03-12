@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DoctorScheduleFormComponent } from '../doctor-schedule-form/doctor-schedule-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-doctor-schedule',
@@ -8,5 +9,8 @@ import { DoctorScheduleFormComponent } from '../doctor-schedule-form/doctor-sche
   styleUrl: './doctor-schedule.component.scss'
 })
 export class DoctorScheduleComponent {
-
+  private router = inject(Router);
+  onCancel() {
+    this.router.navigateByUrl(`doctors`);
+  }
 }

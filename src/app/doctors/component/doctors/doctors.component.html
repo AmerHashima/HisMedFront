@@ -1,5 +1,7 @@
 <div class="p-3">
-  <div [hidden]="hidden()">
+  <!-- <div [hidden]="hidden()"> -->
+      <div [hidden]="viewMode() !== 'table'">
+
     <app-reusable-material-table
       [columns]="columns"
       [data]="doctors()"
@@ -17,6 +19,15 @@
     </app-reusable-material-table>
   </div>
   <div>
-    <app-doctor-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/>
+    <!-- <app-doctor-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/> -->
+         <app-doctor-form [hidden]="viewMode() !== 'doctorForm'"
+          (cancalEvent)="onCancal()"
+          [oid]="oid" (addWorkingDay)="addWorkingDay()"/>
+
+  </div>
+   <div>
+    <!-- <app-doctor-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/> -->
+         <app-doctor-schedule-form [hidden]="viewMode() !== 'scheduleForm'" (cancalEvent)="onCancelSchedule()" [oid]="scheduleOid"/>
+
   </div>
 </div>

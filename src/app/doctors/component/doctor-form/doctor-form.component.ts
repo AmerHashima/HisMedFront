@@ -1,4 +1,4 @@
-import { Component, computed, effect, EventEmitter, inject, input, Output } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, input, output, Output } from '@angular/core';
 import { DoctorStore } from '../../doctorStore/doctorStore';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Doctor } from '../../models/doctor';
@@ -27,6 +27,8 @@ import { WorkingDayCardComponent } from '../doctor-schedule-form/working-day-car
 export class DoctorFormComponent {
   @Output() cancalEvent = new EventEmitter<any>();
   oid = input<string>('');
+  addWorkingDay = output<void>();
+
   fb = inject(FormBuilder);
   store = inject(DoctorStore);
   userStore = inject(UsersStore);
@@ -159,6 +161,7 @@ export class DoctorFormComponent {
   }
 
   addAnotherWorkingHours() {
+    this.addWorkingDay.emit();
    }
 
 }

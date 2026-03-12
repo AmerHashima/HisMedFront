@@ -7,6 +7,7 @@ export const initialDoctorState: DoctorState = {
   selectedDoctorSchedules:[],
   selectedDoctorSchedule: null,
 success:false,
+scheduleSuccess:false,
   loading: false,
   error: null,
   page: 1,
