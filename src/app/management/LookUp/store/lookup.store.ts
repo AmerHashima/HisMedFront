@@ -8,7 +8,7 @@ import { activateLoading, deactivateLoading, deleteItem, setError, setItems, set
 import { initialLookUPState } from "./lookup.slice";
 import { LookupService } from "src/app/common/service/lookup.service";
 import { LookUPDetailVM, LookUPMaster, LookUPMasterVM, LookupDetail } from "../models/lookup";
-import { LookUpService } from "src/app/shared/services/look-up.service";
+// import { LookUpService } from "src/app/shared/services/look-up.service";
 import { mapApiLookupDetailsToLookupDetailVms, mapApiLookupMastersToLookupMasterVms, mapApiLookupMasterToLookupMasterVm } from "./lookup.mappers";
 import { ToastingMessagesService } from "src/app/common/service/toasting.service";
 import { LoadingService } from "src/app/common/service/loading.service";

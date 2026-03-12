@@ -70,3 +70,22 @@ export const setScheduleSuccess = (success: boolean): PartialStateUpdater<Doctor
 };
 
 
+export const updateDoctorSchedule = (
+  schedule: APIDoctorSchedule
+): PartialStateUpdater<DoctorState> =>
+  (state) => ({
+    selectedDoctorSchedules: state.selectedDoctorSchedules.map(s =>
+      s.oid === schedule.oid ? schedule : s
+    ),
+  });
+
+
+export const addDoctorSchedule = (
+  schedules: APIDoctorSchedule[]
+): PartialStateUpdater<DoctorState> =>
+  (state) => ({
+    selectedDoctorSchedules: [
+      ...state.selectedDoctorSchedules,
+      ...schedules
+    ],
+  });

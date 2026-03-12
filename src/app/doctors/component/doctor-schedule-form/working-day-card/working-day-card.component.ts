@@ -1,6 +1,6 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, EventEmitter, inject, input, Output } from '@angular/core';
 import { DoctorStore } from 'src/app/doctors/doctorStore/doctorStore';
-import { APIDoctorSchedule } from 'src/app/doctors/models/doctor-schedule';
+import { APIDoctorSchedule, DoctorSchedule } from 'src/app/doctors/models/doctor-schedule';
 
 @Component({
   selector: 'app-working-day-card',
@@ -10,6 +10,9 @@ import { APIDoctorSchedule } from 'src/app/doctors/models/doctor-schedule';
 })
 export class WorkingDayCardComponent {
   private store=inject(DoctorStore);
+  @Output() editSchedule = new EventEmitter<APIDoctorSchedule>();
+  @Output() deleteSchedule = new EventEmitter<APIDoctorSchedule>();
+
   schedule = input.required<APIDoctorSchedule>();
   formatTo12Hour(time24h: string | null): string {
     if (!time24h) return '';
@@ -27,7 +30,6 @@ export class WorkingDayCardComponent {
 
     return `${hours}:${minutes.toString().padStart(2, '0')} ${modifier}`;
   }
-  editWorkingHour(){}
-  deleteWorkingHour() { }
+
 
 }

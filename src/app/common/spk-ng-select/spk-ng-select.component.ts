@@ -137,6 +137,11 @@ export class SpkNgSelectComponent implements ControlValueAccessor {
     switch (key) {
       case 'required':
         return 'Selection is required';
+      case 'duplicateDay':
+        return 'This day is already scheduled for the doctor';
+
+      case 'invalidTimeRange':
+        return 'End time must be after start time';
       default:
         return 'Invalid selection';
     }

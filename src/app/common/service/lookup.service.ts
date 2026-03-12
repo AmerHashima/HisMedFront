@@ -23,7 +23,8 @@ export const LOOKUP_CODES = {
   APPOINTMENT_REASON:'APPOINTMENT_REASON',
   WEEK_DAYS:'Days',
   Day_Hours:"WORKING_HOURS",
-    SLOT_DURATION: "SLOT_DURATION"
+    SLOT_DURATION: "SLOT_DURATION",
+  ACTIVE_STATUS:"ACTIVE_STATUS"
 
 } as const;
 
@@ -135,6 +136,9 @@ export class LookupService {
   }
   getSlotDuration() {
     return this.getLookUpByCode(LOOKUP_CODES.SLOT_DURATION);
+  }
+  getActiveStatus() {
+    return this.getLookUpByCode(LOOKUP_CODES.ACTIVE_STATUS);
   }
 }
 

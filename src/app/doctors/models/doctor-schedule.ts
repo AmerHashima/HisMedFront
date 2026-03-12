@@ -4,21 +4,20 @@ export interface DoctorSchedule {
   dayOfWeekId:string
   startTime: string,
   endTime: string,
-  slotDurationMinutes:string
+  slotDurationMinutes:number
 }
 
 export interface DoctorScheduleBulk{
 
   doctorId: string,
-  doctorSchedules: [
-    {
-      startTime: string,
-      endTime: string,
-      slotDurationMinutes: number,
-      dayOfWeekId:string
-    }
-  ]
+  doctorSchedules: {
+    startTime: string,
+    endTime: string,
+    slotDurationMinutes: number,
+    dayOfWeekId: string
+  }[]
 }
+
 
 export interface APIDoctorScheduleItem {
   doctorId: string;

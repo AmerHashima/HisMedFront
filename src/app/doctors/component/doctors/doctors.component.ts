@@ -140,11 +140,11 @@ export class DoctorsComponent {
     ]);
   }
 
-  onCancelSchedule(){
-    console.log('in cancel schedule');
-    this.viewMode.set('doctorForm');
-    // this.oid = "";
-    // this.store.clearSelectedItem();
-    // this.breadcrumb.resetToRoute();
-  }
+  // onCancelSchedule(){
+  //   console.log('in cancel schedule');
+  //   this.viewMode.set('doctorForm');
+  //   // this.oid = "";
+  //   // this.store.clearSelectedItem();
+  //   // this.breadcrumb.resetToRoute();
+  // }
 }

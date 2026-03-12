@@ -1,4 +1,4 @@
-import { Component, computed, effect, EventEmitter, inject, input, output, Output } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, input, output, Output, signal } from '@angular/core';
 import { DoctorStore } from '../../doctorStore/doctorStore';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Doctor } from '../../models/doctor';
@@ -15,10 +15,12 @@ import { ValidationErrorService } from 'src/app/common/service/validation-error.
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
 import { WorkingDayCardComponent } from '../doctor-schedule-form/working-day-card/working-day-card.component';
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
+import { APIDoctorSchedule } from '../../models/doctor-schedule';
+import { DoctorScheduleFormComponent } from '../doctor-schedule-form/doctor-schedule-form.component';
 
 @Component({
   selector: 'app-doctor-form',
-  imports: [ButtonComponent, ToggleBtnComponent, InputComponent,
+  imports: [ButtonComponent, ToggleBtnComponent, InputComponent,DoctorScheduleFormComponent,
     SpkNgSelectComponent, SpkFlatpickrComponent ,ReactiveFormsModule, AsyncPipe, WorkingDayCardComponent],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
@@ -38,16 +40,19 @@ export class DoctorFormComponent {
   specialityService = inject(SpecialityService);
   specialityStore = inject(SpecialityStore);
   specialities=computed(()=> this.specialityStore.items())
-    validationErrorService = inject(ValidationErrorService);
+  validationErrorService = inject(ValidationErrorService);
   doctorSchedules=this.store.selectedDoctorSchedules;
   users = computed(() => this.userStore.users());
   departments$ = this.lookupService.getDepartment();
   genders$ = this.lookupService.getGender();
+  activeStatus$=this.lookupService.getActiveStatus();
   licenseTypes$ = this.lookupService.getLookUpByCode('LICENSE_TYPE');
   subSpecialties$ = this.lookupService.getLookUpByCode('SUB_SPECIALTY');
   branches$ = this.branchService.getBranches();
   specialities$ = this.specialityService.getSpecialities();
-
+  editingSchedule = signal<APIDoctorSchedule | null>(null);
+  newSchedule=signal<boolean  > (false);
+  showScheduleForm = signal(false);
   form = this.fb.group({
     userId: ['', Validators.required],
     firstNameAr: ['', Validators.required],
@@ -102,6 +107,7 @@ export class DoctorFormComponent {
     nphiesLicenseNumber: ['nphiesLicenseNumber'],
   };
   apiFieldErrors: Record<string, string> = {};
+
 
   constructor() {
 
@@ -244,8 +250,38 @@ export class DoctorFormComponent {
     this.cancalEvent.emit();
   }
 
+  // addAnotherWorkingHours() {
+  //   this.addWorkingDay.emit();
+  //  }
+
   addAnotherWorkingHours() {
-    this.addWorkingDay.emit();
-   }
+    if (this.editingSchedule()) this.editingSchedule.set(null);
+    this.newSchedule.set(true);
+    this.showScheduleForm.set(true);
+}
+
+
+   //handle Schedule
+
+  editSchedule(schedule: APIDoctorSchedule) {
+    if(this.newSchedule()) this.newSchedule.set(false);
+    this.editingSchedule.set(schedule);
+    this.showScheduleForm.set(true);
+  }
+
+  deleteSchedule(schedule: APIDoctorSchedule) {
+    this.store.deleteDoctor(schedule.oid);
+
+  }
+
+  closeScheduleForm() {
+    console.log('in clise form');
+    this.showScheduleForm.set(false);
+    if (this.editingSchedule())
+    this.editingSchedule.set(null);
+  if(this.newSchedule())
+    this.newSchedule.set(false);
+
+  }
 
 }

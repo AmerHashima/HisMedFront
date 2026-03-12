@@ -21,6 +21,8 @@ import {
   setSuccess,
   setSelectedDoctoSchedule,
   setScheduleSuccess,
+  updateDoctorSchedule,
+  addDoctorSchedule,
   deleteDoctorSchedule,
   setSelectedDoctoSchedules,
 } from './doctor.updater';
@@ -34,7 +36,7 @@ type UpdatePayload = {
   body: Doctor;
 };
 
-type UpdateSchedulePayload={
+type UpdateSchedulePayload = {
   id: string;
   body: DoctorSchedule;
 }
@@ -329,10 +331,10 @@ export const DoctorStore = signalStore(
         }),
         switchMap((body) =>
           service.createDoctorSchedule(body).pipe(
-            tap(() => {
-              console.log('setting success true');
+            tap((schedule) => {
               patchState(store, setScheduleSuccess(true));
-              console.log('setting succese',store.success());
+              patchState(store, addDoctorSchedule([schedule]));
+
               toast.showToast('Doctor slot has been added successfully', 'success');
             }),
             catchError(err => {
@@ -354,7 +356,7 @@ export const DoctorStore = signalStore(
         )
       )
     ),
-    addDoctorBulkSchedule: rxMethod<DoctorScheduleBulk>(
+    addBulkDoctorSchedule: rxMethod<DoctorScheduleBulk>(
       pipe(
         tap(() => {
           patchState(store, activateLoading);
@@ -362,9 +364,11 @@ export const DoctorStore = signalStore(
         }),
         switchMap((body) =>
           service.createBulkDoctorSchedule(body).pipe(
-            tap(() => {
-              patchState(store, setSuccess(true));
-              toast.showToast('Doctor schedule has been added successfully', 'success');
+            tap((schedules) => {
+              patchState(store, setScheduleSuccess(true));
+              // patchState(store, addDoctorSchedule(schedules));
+
+              toast.showToast('Doctor Schedule has been added successfully', 'success');
             }),
             catchError(err => {
               const error = err.error.errors;
@@ -375,7 +379,6 @@ export const DoctorStore = signalStore(
                 )
               );
               toast.showToast('Falied to add doctor schedule', 'error');
-
               return of(null);
             }),
 
@@ -386,6 +389,7 @@ export const DoctorStore = signalStore(
         )
       )
     ),
+
     updateDoctorSchedule: rxMethod<UpdateSchedulePayload>(
       pipe(
         tap(() => {
@@ -394,8 +398,9 @@ export const DoctorStore = signalStore(
         }), switchMap(({ id, body }) =>
           service.updateDoctorSchedule(id, body).pipe(
             // tap(() => patchState(store, setError(''))),
-            tap(() => {
-              patchState(store, setSuccess(true));
+            tap((schedule) => {
+              patchState(store, setScheduleSuccess(true));
+              patchState(store, updateDoctorSchedule(schedule));
               toast.showToast('Doctor slot has been updated successfully', 'success');
 
               // store.queryDoctors(store.queryRequest());

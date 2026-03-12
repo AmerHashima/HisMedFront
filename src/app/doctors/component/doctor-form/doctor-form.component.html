@@ -23,22 +23,52 @@
           />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="firstNameAr" label="First Name (AR)" type="text" placeholder="First name" />
+          <app-input
+            formControlName="firstNameAr"
+            label="First Name (AR)"
+            type="text"
+            placeholder="First name"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="middleNameAr" label="Middle Name (AR)" type="text" placeholder="Middle name" />
+          <app-input
+            formControlName="middleNameAr"
+            label="Middle Name (AR)"
+            type="text"
+            placeholder="Middle name"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="lastNameAr" label="Last Name (AR)" type="text" placeholder="Last name" />
+          <app-input
+            formControlName="lastNameAr"
+            label="Last Name (AR)"
+            type="text"
+            placeholder="Last name"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="firstNameEn" label="First Name (EN)" type="text" placeholder="First name" />
+          <app-input
+            formControlName="firstNameEn"
+            label="First Name (EN)"
+            type="text"
+            placeholder="First name"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="middleNameEn" label="Middle Name (EN)" type="text" placeholder="Middle name" />
+          <app-input
+            formControlName="middleNameEn"
+            label="Middle Name (EN)"
+            type="text"
+            placeholder="Middle name"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="lastNameEn" label="Last Name (EN)" type="text" placeholder="Last name" />
+          <app-input
+            formControlName="lastNameEn"
+            label="Last Name (EN)"
+            type="text"
+            placeholder="Last name"
+          />
         </div>
         <div class="col-lg-3">
           <spk-ng-select
@@ -111,7 +141,7 @@
 
   <div class="card custom-card">
     <div class="card-header">
-      <h6 class="mb-0">Professional Information</h6>
+      <h6 class="mb-0">Professonal Information</h6>
     </div>
     <div class="card-body">
       <div class="row flex-wrap gy-2">
@@ -164,10 +194,20 @@
           />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="yearsOfExperience" label="Years Of Experience" type="number" placeholder="0" />
+          <app-input
+            formControlName="yearsOfExperience"
+            label="Years Of Experience"
+            type="number"
+            placeholder="0"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="consultationFee" label="Consultation Fee" type="number" placeholder="0" />
+          <app-input
+            formControlName="consultationFee"
+            label="Consultation Fee"
+            type="number"
+            placeholder="0"
+          />
         </div>
       </div>
     </div>
@@ -180,13 +220,28 @@
     <div class="card-body">
       <div class="row flex-wrap gy-2">
         <div class="col-lg-3">
-          <app-input formControlName="mobile" label="Mobile" type="text" placeholder="Mobile" />
+          <app-input
+            formControlName="mobile"
+            label="Mobile"
+            type="text"
+            placeholder="Mobile"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="phone" label="Phone" type="text" placeholder="Phone" />
+          <app-input
+            formControlName="phone"
+            label="Phone"
+            type="text"
+            placeholder="Phone"
+          />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="email" label="Email" type="email" placeholder="user@example.com" />
+          <app-input
+            formControlName="email"
+            label="Email"
+            type="email"
+            placeholder="user@example.com"
+          />
         </div>
       </div>
     </div>
@@ -211,24 +266,71 @@
           />
         </div>
         <div class="col-lg-3">
-          <app-input formControlName="nphiesLicenseNumber" label="Nphies License Number" type="text" placeholder="Nphies license" />
+          <app-input
+            formControlName="nphiesLicenseNumber"
+            label="Nphies License Number"
+            type="text"
+            placeholder="Nphies license"
+          />
         </div>
       </div>
     </div>
   </div>
 
-  <div class="d-flex flex-column gap-2">
-    <app-toggle-btn
-      formControlName="isActive"
-      label="Set doctor as active doctor"
-    />
-    <app-toggle-btn
-      formControlName="isNphiesEnabled"
-      label="Is Nphies enabled"
-    />
-  </div>
-
   @if (oid()) {
+    <div class="card custom-card">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
+        <h6 class="mb-0">Working Hours</h6>
+        @if (!newSchedule()) {
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary"
+            (click)="addAnotherWorkingHours()"
+          >
+            Add Working Hours
+          </button>
+        }
+      </div>
+      @if (showScheduleForm() && editingSchedule()) {
+        <app-doctor-schedule-form
+          [schedule]="editingSchedule()"
+          (cancalEvent)="closeScheduleForm()"
+        />
+      }
+      @if (showScheduleForm() && newSchedule()) {
+        <app-doctor-schedule-form
+          [new]="newSchedule()"
+          (cancalEvent)="closeScheduleForm()"
+        />
+      }
+      <div class="card-body">
+        @if (doctorSchedules().length) {
+          <div class="row gy-2">
+            @for (schedule of doctorSchedules(); track schedule) {
+              <div class="col-12 col-md-6 col-xl-3">
+                <app-working-day-card
+                  [schedule]="schedule"
+                  (editSchedule)="editSchedule($event)"
+                  (deleteSchedule)="deleteSchedule($event)"
+                />
+              </div>
+            }
+          </div>
+        } @else {
+          <div
+            class="d-flex align-items-center justify-content-center gap-2 py-4 text-muted"
+          >
+            <i class="bi bi-clock-history fs-4"></i>
+            <p class="mb-0">No working hours added yet</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- @if (oid()) {
     <div class="col-12">
       <div class="row g-2 px-3 pt-2 pb-4 rounded-3 bg-white">
         @if (doctorSchedules().length > 0) {
@@ -253,8 +355,17 @@
         </div>
       </div>
     </div>
-  }
-
+  } -->
+  <div class="d-flex flex-column gap-2">
+    <app-toggle-btn
+      formControlName="isActive"
+      label="Set doctor as active doctor"
+    />
+    <app-toggle-btn
+      formControlName="isNphiesEnabled"
+      label="Is Nphies enabled"
+    />
+  </div>
   <div class="d-flex justify-content-end gap-2">
     <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
     <app-button btnLabel="Save Doctor" buttonType="submit" />
