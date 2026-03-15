@@ -13,6 +13,7 @@ import { LookupService } from 'src/app/common/service/lookup.service';
 import { AsyncPipe } from '@angular/common';
 import { RoleService } from 'src/app/common/service/role.service';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
+import { SharedService } from '../../../../shared/services/shared.service';
 @Component({
   selector: 'app-user-form',
   imports: [SpkNgSelectComponent, ButtonComponent, InputComponent, ToggleBtnComponent,
@@ -23,6 +24,7 @@ import { ValidationErrorService } from 'src/app/common/service/validation-error.
 export class UserFormComponent {
   private lookupService=inject(LookupService);
   private roleService = inject(RoleService);
+  private sharedService = inject(SharedService);
 
   @Output() cancalEvent = new EventEmitter<any>();
   oid = input<string>('');
@@ -132,13 +134,7 @@ export class UserFormComponent {
 
 
 
-  formatDateOnly(value: string | Date): string {
-    const d = new Date(value);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
+
 
 
   onSubmit() {
@@ -164,7 +160,7 @@ export class UserFormComponent {
 
   getPayload() {
     const v = this.form.getRawValue();
-    const birthday = this.formatDateOnly(v.birthDate!)
+    const birthday = this.sharedService.formatDateOnly(v.birthDate!)
     const payload: User = {
       ...(this.oid() ? { oid: this.oid() } : {}),
       username: v.username!,

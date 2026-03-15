@@ -278,8 +278,8 @@
   </div>
 
   @if (oid()) {
-    <div class="card custom-card">
-      <div
+    <div class="card  custom-card">
+      <!-- <div
         class="card-header d-flex justify-content-between align-items-center"
       >
         <h6 class="mb-0">Working Hours</h6>
@@ -292,14 +292,79 @@
             Add Working Hours
           </button>
         }
+      </div> -->
+
+      <div
+        class="card-header py-2   d-flex justify-content-between align-items-center "
+        (click)="toggleWorkingHours()"
+        style="cursor: pointer"
+      >
+        <h6 class="mb-0  d-flex align-items-center gap-2">
+          <i
+            class="bi"
+            [class.bi-chevron-down]="!workingHoursCollapsed()"
+            [class.bi-chevron-right]="workingHoursCollapsed()"
+          >
+          </i>
+
+          Working Hours
+        </h6>
+
+        @if (!newSchedule()) {
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary"
+            (click)="$event.stopPropagation(); addAnotherWorkingHours()"
+          >
+            Add Working Hours
+          </button>
+        }
       </div>
+
       <!-- @if (showScheduleForm() && editingSchedule()) {
         <app-doctor-schedule-form
           [schedule]="editingSchedule()"
           (cancalEvent)="closeScheduleForm()"
         />
       } -->
-      @if (showScheduleForm() && newSchedule()) {
+
+      @if (!workingHoursCollapsed()) {
+        <div class="card-body">
+          @if (showScheduleForm() && newSchedule()) {
+            <app-doctor-schedule-form
+              [new]="newSchedule()"
+              [showTitle]="false"
+              (cancalEvent)="closeScheduleForm()"
+            />
+          }
+
+          @if (doctorSchedules().length) {
+            <div class="row gy-2">
+              @for (group of groupedSchedules() | keyvalue; track group.key) {
+                <div class="col-md-6 col-lg-4">
+                  <app-working-day-card
+                    [dayName]="group.key"
+                    [slots]="group.value"
+                    [editingSlotId]="editingSlotId()"
+                    (startingEdit)="startEdit($event)"
+                    (editSchedule)="editSchedule($event)"
+                    (deleteSchedule)="deleteSchedule($event)"
+                  />
+                </div>
+              }
+            </div>
+          } @else {
+            <div
+              class="d-flex align-items-center justify-content-center gap-2 py-4 text-muted"
+            >
+              <i class="bi bi-clock-history fs-4"></i>
+              <p class="mb-0">No working hours added yet</p>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- @if (showScheduleForm() && newSchedule()) {
         <app-doctor-schedule-form
           [new]="newSchedule()"
           [showTitle]="false"
@@ -330,7 +395,7 @@
             <p class="mb-0">No working hours added yet</p>
           </div>
         }
-      </div>
+      </div> -->
     </div>
   }
 

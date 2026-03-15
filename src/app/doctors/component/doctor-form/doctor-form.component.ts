@@ -17,6 +17,7 @@ import { WorkingDayCardComponent } from '../doctor-schedule-form/working-day-car
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
 import { APIDoctorSchedule } from '../../models/doctor-schedule';
 import { DoctorScheduleFormComponent } from '../doctor-schedule-form/doctor-schedule-form.component';
+import { Speciality } from '../../../Hospital/models/speciality';
 
 @Component({
   selector: 'app-doctor-form',
@@ -54,7 +55,7 @@ export class DoctorFormComponent {
   newSchedule=signal<boolean  > (false);
   showScheduleForm = signal(false);
   editingSlotId = signal<string | null>(null);
-
+  firstTimeToggle=signal(true);
   groupedSchedules = computed(() => {
 
     const groups: Record<string, APIDoctorSchedule[]> = {};
@@ -132,9 +133,8 @@ export class DoctorFormComponent {
   };
   apiFieldErrors: Record<string, string> = {};
 
-
+  workingHoursCollapsed = signal(true);
   constructor() {
-
     this.weekDays$.subscribe(res => {
       this.weekDaysSnapshot = res?.lookupDetails ?? [];
     });
@@ -210,6 +210,13 @@ export class DoctorFormComponent {
 
   }
 
+  toggleWorkingHours() {
+    if (this.firstTimeToggle()){
+      this.store.loadDoctorSchedules(this.oid());
+      this.firstTimeToggle.set(false);
+    }
+    this.workingHoursCollapsed.update(v => !v);
+  }
 
   formatDateOnly(value: string | Date): string {
     const d = new Date(value);
@@ -286,6 +293,7 @@ export class DoctorFormComponent {
   //   this.addWorkingDay.emit();
   //  }
 
+
   addAnotherWorkingHours() {
     // if (this.editingSchedule()) this.editingSchedule.set(null);
     this.newSchedule.set(true);
@@ -307,9 +315,12 @@ export class DoctorFormComponent {
   getEditPayload(schedule: any) {
     const day = this.weekDaysSnapshot.find(d => d.dayOfWeekNameEn === schedule.dayOfWeekNameEn);
 
-    const { isActive, dayOfWeekNameAr,dayOfWeekNameEn, ...payload } = schedule;
+    const { startDate, endDate,status,branch,Speciality, dayOfWeekNameAr,dayOfWeekNameEn, ...payload } = schedule;
     return {...payload,
-      dayOfWeekId: day.dayOfWeekId
+    dayOfWeekId: day.dayOfWeekId,
+    statusId: null,
+    branchId: null,
+    specialtyId: null
     };
   }
 

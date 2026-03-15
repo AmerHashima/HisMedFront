@@ -596,6 +596,9 @@ import {  DoctorSchedule, DoctorScheduleBulk } from '../../models/doctor-schedul
 import { timeRangeValidator } from 'src/app/common/validators/time.range.validator';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { WorkingDayCardComponent } from './working-day-card/working-day-card.component';
+import { BranchStore } from 'src/app/Hospital/Store/Branch/branch.store';
+import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
+import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
 
 @Component({
   selector: 'app-doctor-schedule-form',
@@ -608,10 +611,11 @@ import { WorkingDayCardComponent } from './working-day-card/working-day-card.com
     NgFor,
     ButtonComponent,
     WorkingDayCardComponent,
-    KeyValuePipe
+    KeyValuePipe,
+    SpkFlatpickrComponent
   ],
   templateUrl: './doctor-schedule-form.component.html',
-  styleUrl: './doctor-schedule-form.component.scss'
+  styleUrl: './doctor-schedule-form.component.scss',
 })
 export class DoctorScheduleFormComponent {
   // oid = input<string>('');
@@ -626,9 +630,12 @@ export class DoctorScheduleFormComponent {
 
   private fb = inject(FormBuilder);
   private shared = inject(SharedService);
-
   private lookupService = inject(LookupService);
   private store = inject(DoctorStore);
+  private branchStore = inject(BranchStore);
+    specialityStore = inject(SpecialityStore);
+    specialities=computed(()=> this.specialityStore.items())
+  branches = computed(() => this.branchStore.items());
   validationErrorService = inject(ValidationErrorService);
 
   doctors = this.store.doctors;
@@ -636,16 +643,29 @@ export class DoctorScheduleFormComponent {
   weekDays$ = this.lookupService.getDays();
   workingHours$ = this.lookupService.getDayHours();
   slotDurations$ = this.lookupService.getSlotDuration();
+   clinicNumbers = [
+    { oid: 1, name: 'Clinic 1' },
+    { oid: 2, name: 'Clinic 2' },
+    { oid: 3, name: 'Clinic 3' }
+  ];
 
   apiFieldErrors: Record<string, string> = {};
 
 
   form = this.fb.group({
     doctorId: [null as string | null, Validators.required],
+    statusId: [null as string | null, Validators.required],
+    branchId: [null as string | null, Validators.required],
+    specialityId: [null as string | null, Validators.required],
+    clinicNumber:[null as string | null, Validators.required],
     dayOfWeekId: [[] as string[], Validators.required],
     startTime: [null as string | null, Validators.required],
     endTime: [null as string | null, Validators.required],
+    startDate: ['', [Validators.required]],
+    endDate: ['', [Validators.required]],
     slotDurationMinutes: [null as number | null, Validators.required],
+    isPriority:[false],
+    isActive:[false],
   });
   weekDaysSnapshot: any[] = [];
 
@@ -883,13 +903,21 @@ if(!this.showTitle()){
 
     return {
       doctorId: schedules[0]?.doctorId,
-      doctorSchedules: schedules.map(s => ({
+      statusId: schedules[0]?.statusId,
+      branchId: schedules[0]?.branchId,
+      specialtyId: schedules[0]?.specialtyId,
+      isActive: schedules[0]?.isActive,
+      isPriority: schedules[0]?.isPriority,
+      startDate: this.shared.formatDateOnly(schedules[0]?.startDate),
+      endDate: this.shared.formatDateOnly(schedules[0]?.endDate),
+      doctorSchedulesList: schedules.map(s => ({
         startTime: s.startTime,
         endTime: s.endTime,
         slotDurationMinutes: Number(s.slotDurationMinutes),
         dayOfWeekId: s.dayOfWeekId
       }))
     };
+
 
   }
 
@@ -902,7 +930,14 @@ if(!this.showTitle()){
       dayOfWeekId: schedule.dayOfWeekId,
       startTime: schedule.startTime,
       endTime: schedule.endTime,
-      slotDurationMinutes: Number(schedule.slotDurationMinutes)
+      slotDurationMinutes: Number(schedule.slotDurationMinutes),
+      isActive:true,
+      isPriority:false,
+      statusId: schedule.statusId,
+      branchId: schedule.branchId,
+      specialtyId: schedule.specialtyId,
+      startDate: this.shared.formatDateOnly(schedule.startDate),
+      endDate: this.shared.formatDateOnly(schedule.endDate),
     };
 
   }

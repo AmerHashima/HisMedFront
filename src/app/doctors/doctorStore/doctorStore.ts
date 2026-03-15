@@ -144,19 +144,19 @@ export const DoctorStore = signalStore(
               console.log('d', d);
             }),
 
-            switchMap(d => {
-              const filters: Filter[] = [{
-                propertyName: "doctorId",
-                value: d.oid,
-                operation: 0
-              }];
+            // switchMap(d => {
+            //   const filters: Filter[] = [{
+            //     propertyName: "doctorId",
+            //     value: d.oid,
+            //     operation: 0
+            //   }];
 
-              return service.getDoctorSchedules(filters);
-            }),
+            //   return service.getDoctorSchedules(filters);
+            // }),
 
-            tap(schedules => {
-              patchState(store, setSelectedDoctoSchedules(schedules));
-            }),
+            // tap(schedules => {
+            //   patchState(store, setSelectedDoctoSchedules(schedules));
+            // }),
 
             catchError(err => {
               const error = err.error.errors;
@@ -177,6 +177,49 @@ export const DoctorStore = signalStore(
             })
           )
         )
+      )
+    ),
+
+    loadDoctorSchedules: rxMethod<string>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }),
+
+        switchMap((doctorId) => {
+
+          const filters: Filter[] = [{
+            propertyName: "doctorId",
+            value: doctorId,
+            operation: 0
+          }];
+
+          return service.getDoctorSchedules(filters).pipe(
+
+            tap(schedules => {
+              patchState(store, setSelectedDoctoSchedules(schedules));
+            }),
+
+            catchError(err => {
+              const error = err.error.errors;
+
+              patchState(
+                store,
+                setError(error ?? 'Failed to get doctor schedules')
+              );
+
+              toast.showToast('Failed to retrieve doctor schedules', 'error');
+
+              return of([]);
+            }),
+
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop();
+            })
+          );
+        })
       )
     ),
     addDoctor: rxMethod<Doctor>(
