@@ -34,7 +34,7 @@ export interface APIDoctorSchedule {
   dayOfWeekNameAr: string,
   startTime: string,
   endTime: string,
-  slotDurationMinutes: 0,
+  slotDurationMinutes: number,
   isActive: true
 }
 

@@ -1,5 +1,4 @@
-<!-- src\app\Hospital\Components\Appointments\appotntment-form\appotntment-form.component.html -->
-<form
+<!-- <form
   [formGroup]="form"
   (ngSubmit)="onSubmit()"
   class="d-flex flex-column gap-4 p-3"
@@ -85,21 +84,110 @@
         placeholder="Choose Reason"
         selectClass="form-control"
       />
-      <!-- <app-input
-        formControlName="reason"
-        label="Reason"
-        type="text"
-        placeholder=""
-        icon="bi bi-card-text"
-        [errorMessages]="{
-          required: 'Reason is required',
-          backendError: apiFieldErrors['reason'],
-        }"
-      /> -->
     </div>
   </div>
   <div class="d-flex justify-content-end gap-2">
     <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
     <app-button btnLabel="Save Appointment" buttonType="submit" />
   </div>
-</form>
+</form> -->
+
+<div class="card custom-card">
+  <div class="card-header">
+    <div class="card-title">Doctor Appointments</div>
+  </div>
+
+  <div class="card-body">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+</div>
+
+<!--
+<div class="container py-3">
+
+  <div class="card custom-card mb-3">
+    <div class="card-body row g-2">
+
+      <div class="col-md-4">
+        <spk-ng-select
+          label="Doctor"
+          [options]="doctors()"
+          bindLabel="username"
+          bindValue="oid"
+          formControlName="doctorId"
+          (change)="selectDoctor($event)"
+          placeholder="Select Doctor"
+        />
+      </div>
+
+      <div class="col-md-3">
+        <spk-flatpickr
+          label="Date"
+          [enableTime]="false"
+          [dateFormat]="'Y-m-d'"
+          (change)="selectDate($event)"
+        />
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="card custom-card">
+
+    <div class="card-header">
+      <h6 class="mb-0">Available Time Slots</h6>
+    </div>
+
+    <div class="card-body">
+
+      <div class="slot-grid">
+
+        <button
+          *ngFor="let slot of slots()"
+          class="slot-btn"
+          [class.selected]="slot === selectedSlot()"
+          [class.booked]="slot.booked"
+          (click)="selectSlot(slot)"
+        >
+          {{ slot.time }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card custom-card mt-3">
+
+    <div class="card-header">
+      <h6 class="mb-0">Patient Information</h6>
+    </div>
+
+    <div class="card-body row g-2">
+
+      <div class="col-md-4">
+        <spk-ng-select
+          label="Patient"
+          [options]="patients()"
+          bindLabel="name"
+          bindValue="oid"
+          formControlName="patientId"
+          placeholder="Select Patient"
+        />
+      </div>
+
+      <div class="col-md-4 d-flex align-items-end">
+        <app-button
+          btnLabel="Book Appointment"
+          (click)="bookAppointment()"
+        />
+      </div>
+
+    </div>
+
+  </div>
+
+</div> -->

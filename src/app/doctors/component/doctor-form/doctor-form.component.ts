@@ -8,7 +8,7 @@ import { InputComponent } from 'src/app/common/input/input.component';
 import { UsersStore } from 'src/app/management/user/userStore/userStore';
 import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
 import { LookupService } from 'src/app/common/service/lookup.service';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import { HospitalBranchService } from 'src/app/Hospital/Services/hospital-branch.service';
 import { SpecialityService } from 'src/app/Hospital/Services/speciality.service';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
@@ -20,7 +20,7 @@ import { DoctorScheduleFormComponent } from '../doctor-schedule-form/doctor-sche
 
 @Component({
   selector: 'app-doctor-form',
-  imports: [ButtonComponent, ToggleBtnComponent, InputComponent,DoctorScheduleFormComponent,
+  imports: [ButtonComponent, ToggleBtnComponent, InputComponent,DoctorScheduleFormComponent,KeyValuePipe,
     SpkNgSelectComponent, SpkFlatpickrComponent ,ReactiveFormsModule, AsyncPipe, WorkingDayCardComponent],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
@@ -50,9 +50,29 @@ export class DoctorFormComponent {
   subSpecialties$ = this.lookupService.getLookUpByCode('SUB_SPECIALTY');
   branches$ = this.branchService.getBranches();
   specialities$ = this.specialityService.getSpecialities();
-  editingSchedule = signal<APIDoctorSchedule | null>(null);
+  // editingSchedule = signal<APIDoctorSchedule | null>(null);
   newSchedule=signal<boolean  > (false);
   showScheduleForm = signal(false);
+  editingSlotId = signal<string | null>(null);
+
+  groupedSchedules = computed(() => {
+
+    const groups: Record<string, APIDoctorSchedule[]> = {};
+
+    const schedules = this.doctorSchedules();
+    schedules.forEach(s => {
+
+      if (!groups[s.dayOfWeekNameEn]) {
+        groups[s.dayOfWeekNameEn] = [];
+      }
+
+      groups[s.dayOfWeekNameEn].push(s);
+
+    });
+
+    return groups;
+
+  });
   form = this.fb.group({
     userId: ['', Validators.required],
     firstNameAr: ['', Validators.required],
@@ -80,6 +100,10 @@ export class DoctorFormComponent {
     isNphiesEnabled: [false],
     isActive: [false],
   });
+
+  weekDays$ = this.lookupService.getDays();
+  weekDaysSnapshot: any[] = [];
+
 
   private backendErrorKeyMap: Record<string, string[]> = {
     userId: ['userId'],
@@ -111,6 +135,11 @@ export class DoctorFormComponent {
 
   constructor() {
 
+    this.weekDays$.subscribe(res => {
+      this.weekDaysSnapshot = res?.lookupDetails ?? [];
+    });
+
+
     effect(() => {
       const oid = this.oid();
       if (!oid) {
@@ -119,6 +148,9 @@ export class DoctorFormComponent {
       }
       this.store.getDoctor(oid);
     });
+
+
+
 
     effect(() => {
       const doctor = this.store.selectedDoctor();
@@ -255,7 +287,7 @@ export class DoctorFormComponent {
   //  }
 
   addAnotherWorkingHours() {
-    if (this.editingSchedule()) this.editingSchedule.set(null);
+    // if (this.editingSchedule()) this.editingSchedule.set(null);
     this.newSchedule.set(true);
     this.showScheduleForm.set(true);
 }
@@ -264,9 +296,21 @@ export class DoctorFormComponent {
    //handle Schedule
 
   editSchedule(schedule: APIDoctorSchedule) {
-    if(this.newSchedule()) this.newSchedule.set(false);
-    this.editingSchedule.set(schedule);
-    this.showScheduleForm.set(true);
+      this.updateSchedule(schedule);
+  }
+
+  updateSchedule(schedule: any) {
+    const payload = this.getEditPayload(schedule);
+    this.store.updateDoctorSchedule({ id: payload.oid, body: payload });
+  }
+
+  getEditPayload(schedule: any) {
+    const day = this.weekDaysSnapshot.find(d => d.dayOfWeekNameEn === schedule.dayOfWeekNameEn);
+
+    const { isActive, dayOfWeekNameAr,dayOfWeekNameEn, ...payload } = schedule;
+    return {...payload,
+      dayOfWeekId: day.dayOfWeekId
+    };
   }
 
   deleteSchedule(schedule: APIDoctorSchedule) {
@@ -275,13 +319,19 @@ export class DoctorFormComponent {
   }
 
   closeScheduleForm() {
-    console.log('in clise form');
     this.showScheduleForm.set(false);
-    if (this.editingSchedule())
-    this.editingSchedule.set(null);
+    // if (this.editingSchedule())
+    // this.editingSchedule.set(null);
   if(this.newSchedule())
     this.newSchedule.set(false);
 
   }
 
+  startEdit(slot: any) {
+    if (slot)
+      this.editingSlotId.set(slot.oid);
+    else this.editingSlotId.set(null);
+
+  }
 }
+

@@ -74,7 +74,7 @@
   </form>
 </div> -->
 
-<form
+<!-- <form
   [formGroup]="form"
   (ngSubmit)="onSubmit()"
   class="d-flex flex-column gap-3"
@@ -208,6 +208,118 @@
       <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
 
       <app-button btnLabel="Save Schedule" buttonType="submit" />
+    </div>
+  }
+</form> -->
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="addSchedule()"
+  class="d-flex flex-column gap-3"
+>
+  <div [ngClass]="{ 'card custom-card': showTitle() }">
+    <div class="card-header d-flex justify-content-between align-items-center">
+       @if(showTitle()){
+        <h6 class="mb-2">Working Hours</h6>
+       }
+    </div>
+
+    <div class="card-body py-3">
+      <div class="border rounded p-3">
+        <div  class="mb-3">
+          <div class="row g-2">
+            <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="doctorId"
+                label="Doctor"
+                [options]="doctors()"
+                bindLabel="username"
+                bindValue="oid"
+                placeholder="Choose Doctor"
+                selectClass="form-control"
+              />
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="dayOfWeekId"
+                label="Working Day"
+                [options]="weekDaysSnapshot"
+                bindLabel="valueNameEn"
+                [multiple]="true"
+                bindValue="oid"
+                placeholder="Choose Working Day"
+                selectClass="form-control"
+              />
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="startTime"
+                label="Start Time"
+                [options]="$any((workingHours$ | async)?.lookupDetails ?? [])"
+                bindLabel="valueNameEn"
+                bindValue="valueNameEn"
+                placeholder="Choose Start Time"
+                selectClass="form-control"
+              />
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="endTime"
+                label="End Time"
+                [options]="$any((workingHours$ | async)?.lookupDetails ?? [])"
+                bindLabel="valueNameEn"
+                bindValue="valueNameEn"
+                placeholder="Choose End Time"
+                selectClass="form-control"
+              />
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="slotDurationMinutes"
+                label="Slot Duration"
+                [options]="$any((slotDurations$ | async)?.lookupDetails ?? [])"
+                bindLabel="valueNameEn"
+                bindValue="valueNameEn"
+                placeholder="Choose Slot Duration"
+                selectClass="form-control"
+              />
+            </div>
+          </div>
+        </div>
+          <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-sm btn-outline-primary">
+              Add Working Day
+            </button>
+          </div>
+      </div>
+
+      <div class="row g-3 mt-3">
+
+
+        @for(group of groupedSchedules() | keyvalue; track group.key){
+            <div class="col-md-6 col">
+          <app-working-day-card
+            [dayName]="group.key"
+            [slots]="group.value"
+            [editingSlotId]="editingSlotId()"
+            (startingEdit)="startEdit($event)"
+            (editSchedule)="editSchedule($event)"
+            (deleteSchedule)="deleteSchedule($event)"
+          />
+        </div>
+        }
+
+      </div>
+    </div>
+  </div>
+  @if (showTitle()) {
+    <div class="d-flex justify-content-end gap-2">
+      <app-button btnLabel="Cancel" [mainBtn]="false" (click)="cancel()" />
+      <app-button btnLabel="Save Schedule" (click)="saveSchedule()" />
     </div>
   }
 </form>
