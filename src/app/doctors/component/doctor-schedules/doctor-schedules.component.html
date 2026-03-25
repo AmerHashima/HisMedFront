@@ -1,0 +1,25 @@
+<div class="p-3">
+      <div [hidden]="viewMode() !== 'table'">
+    <app-reusable-material-table
+      [columns]="columns"
+      [data]="schedules()"
+      [totalCount]="total()"
+      title="schedule"
+      [pageSize]="pageSize()"
+      (pageChange)="onPageChange($event)"
+      (filterChange)="onFilterChange($event)"
+      (sortChange)="onSortChange($event)"
+      (editRow)="handleEdit($event)"
+      (deleteRow)="handleDelete($event)"
+      (onFirstCellClickChange)="handleSingleUserNavigation($event)"
+      (onAddNewChange)="handleAddNew()"
+    >
+    </app-reusable-material-table>
+  </div>
+  <div>
+         <app-doctor-schedule-form  [hidden]="viewMode() !== 'doctorScheduleForm'"
+          (cancalEvent)="onCancal()" [oid]="oid"
+          />
+
+  </div>
+</div>

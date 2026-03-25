@@ -218,7 +218,8 @@
   class="d-flex flex-column gap-3"
 >
 
-<div class="card custom-card">
+@if(showTitle()){
+<div class="card custom-card" >
   <div class="card-header">
     <h6 class="mb-0">Clinic Information</h6>
   </div>
@@ -248,7 +249,7 @@
                 selectClass="form-control"
               />
             </div>
-               <div class="col-12 col-md-6 col-xl-3">
+            <div class="col-12 col-md-6 col-xl-3">
               <spk-ng-select
                 formControlName="clinicNumber"
                 label="Clinic Number"
@@ -271,36 +272,7 @@
                 selectClass="form-control"
               />
             </div>
-
-               <!-- <div>
-            <hr>
-            </div> -->
-    </div>
-  </div>
-</div>
-
-  <div [ngClass]="{ 'card custom-card': showTitle() }">
-    <div class="card-header d-flex justify-content-between align-items-center">
-       @if(showTitle()){
-        <h6 class="mb-2">Working Hours</h6>
-       }
-    </div>
-
-    <div class="card-body py-3">
-      <div class="border rounded p-3">
-        <div  class="mb-3">
-          <div class="row g-2">
-
-    <div class="col-12 col-md-6 col-xl-3">
-      <spk-flatpickr
-        formControlName="birthDate"
-        [enableTime]="true"
-        [dateFormat]="'Y-m-d H:i'"
-        placeholder="Choose Date"
-        label="Birth day"
-      ></spk-flatpickr>
-    </div>
-      <div class="col-12 col-md-6 col-xl-3">
+                  <div class="col-12 col-md-6 col-xl-3">
       <spk-flatpickr
         formControlName="startDate"
         [enableTime]="true"
@@ -318,7 +290,65 @@
         label="End Date"
       ></spk-flatpickr>
     </div>
-            <div class="col-12 col-md-6 col-xl-3">
+     <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="statusId"
+                label="Status"
+                   [options]="$any((scheduleStatus$ | async)?.lookupDetails ?? [])"
+                bindLabel="valueNameEn"
+                [multiple]="false"
+                bindValue="oid"
+                placeholder="Choose Status"
+                selectClass="form-control"
+              />
+      </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="isActive"
+                label="Active"
+                [options]="$any((activeStatus$ | async)?.lookupDetails ?? [])"
+                bindLabel="valueNameEn"
+                [multiple]="false"
+                bindValue="valueNameEn"
+                placeholder="Choose Active Status"
+                selectClass="form-control"
+              />
+      </div>
+          <div class="col-12 col-md-6 col-xl-3">
+              <spk-ng-select
+                formControlName="isPriority"
+                label="Priority"
+                [options]="$any((pirorityStatus$ | async)?.lookupDetails ?? [])"
+                bindLabel="valueNameEn"
+                [multiple]="false"
+                bindValue="valueNameEn"
+                placeholder="Choose Priority"
+                selectClass="form-control"
+              />
+      </div>
+               <!-- <div>
+            <hr>
+            </div> -->
+    </div>
+  </div>
+</div>
+}
+
+
+  <div [ngClass]="{ 'card custom-card': showTitle() }">
+    <div class="card-header d-flex justify-content-between align-items-center">
+       @if(showTitle()){
+        <h6 class="mb-2">Working Hours</h6>
+       }
+    </div>
+
+    <div class="card-body py-3">
+      <div class="border rounded p-3">
+        <div  class="mb-3">
+          <div class="row g-2">
+
+            <div class="col-12">
               <spk-ng-select
                 formControlName="dayOfWeekId"
                 label="Working Day"

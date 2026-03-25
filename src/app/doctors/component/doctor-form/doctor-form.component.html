@@ -332,7 +332,7 @@
         <div class="card-body">
           @if (showScheduleForm() && newSchedule()) {
             <app-doctor-schedule-form
-              [new]="newSchedule()"
+              [doctor]="doctor"
               [showTitle]="false"
               (cancalEvent)="closeScheduleForm()"
             />

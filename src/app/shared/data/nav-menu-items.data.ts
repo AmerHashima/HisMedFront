@@ -170,44 +170,38 @@ export const NAV_MENU_ITEMS: Menu[] = [
         path: '/doctors/create',
       },
       {
-        title: 'Add Doctor Schedule',
+        title: 'Schedules',
+        path: '/doctors/schedules',
         dirchange: false,
-        type: 'link',
+        type: 'sub',
         active: false,
-        path: '/doctors/doctorSchedule/create',
+        children: [
+          {
+            title: 'Add New Schedule',
+            path: '/doctors/schedules/create',
+            dirchange: false,
+            type: 'link',
+            active: false,
+            selected: false,
+          }
+        ]
       },
       {
-        title: 'Add Doctor Exception',
+        title: 'Exceptions',
+        path: '/doctors/exceptions',
+        type: 'sub',
         dirchange: false,
-        type: 'link',
         active: false,
-        path: '/doctors/doctorScheduleException/create',
+        children: [
+          {
+            title: 'Add Doctor Exception',
+            dirchange: false,
+            type: 'link',
+            active: false,
+            path: '/doctors/exceptions/create',
+          }
+        ]
       },
-      // {
-      //   title: 'Doctors',
-      //   dirchange: false,
-      //   type: 'sub',
-      //   active: false,
-      //   children: [
-      //     {
-      //       path: '/doctors',
-      //       title: 'All Doctors',
-      //       dirchange: false,
-      //       type: 'link',
-      //       active: false,
-      //       selected: false,
-      //     },
-      //     {
-      //       path: '/doctors/create',
-      //       title: 'Add New Doctor',
-      //       dirchange: false,
-      //       type: 'link',
-      //       active: false,
-      //       selected: false,
-      //     },
-
-      //   ],
-      // },
     ],
   },
   {

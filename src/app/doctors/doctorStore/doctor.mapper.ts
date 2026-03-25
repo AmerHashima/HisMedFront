@@ -1,6 +1,7 @@
 // src\app\doctors\doctorStore\doctor.mapper.ts
 import { ApiDocor } from '../models/api-docor';
 import { Doctor } from '../models/doctor';
+import { APIDoctorSchedule, APIDoctorScheduleBulk, DoctorScheduleBulk } from '../models/doctor-schedule';
 import { DoctorVM } from '../models/doctor-vm';
 
 export function mapApiDoctorToDoctor(api: ApiDocor): Doctor {
@@ -33,6 +34,8 @@ export function mapApiDoctorToDoctor(api: ApiDocor): Doctor {
     isActive: api.isActive,
   };
 }
+
+
 
 export function mapApiDoctorToDoctorVM(api: ApiDocor): DoctorVM {
   return {
@@ -75,6 +78,23 @@ export function mapApiDoctorToDoctorVM(api: ApiDocor): DoctorVM {
   };
 }
 
+
+
+export function mapBulKScheduleToApiSchedule(body:DoctorScheduleBulk,schedule: APIDoctorScheduleBulk): APIDoctorSchedule {
+  return {
+    oid: schedule.oid,
+    doctorId: schedule.doctorId,
+    doctorName: "string",
+    statusId: body.statusId,
+    status: schedule.status,
+    branchId: body.branchId,
+    branchName: schedule.branch,
+    specialtyId: body.specialtyId,
+    specialtyName: schedule.specialty,
+    isActive: schedule.isActive,
+    isPriority: schedule.isPriority
+  };
+}
 
 export const mapApiDoctorsToDoctors = (doctors: ApiDocor[]): Doctor[] =>
   doctors.map(mapApiDoctorToDoctor);

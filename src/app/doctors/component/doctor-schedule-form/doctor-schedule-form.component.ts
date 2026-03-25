@@ -1,572 +1,3 @@
-// // import { Component, effect, EventEmitter, inject, input, Output, signal } from '@angular/core';
-// // import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
-// // import { LookupService } from 'src/app/common/service/lookup.service';
-// // import { AsyncPipe } from '@angular/common';
-// // import { DoctorStore } from '../../doctorStore/doctorStore';
-// // import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-// // import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
-// // import { ButtonComponent } from 'src/app/common/button/button.component';
-// // import { DoctorSchedule } from '../../models/doctor-schedule';
-
-// // @Component({
-// //   selector: 'app-doctor-schedule-form',
-// //   imports: [SpkNgSelectComponent, AsyncPipe,ReactiveFormsModule,
-// //     ButtonComponent
-// //   ],
-// //   templateUrl: './doctor-schedule-form.component.html',
-// //   styleUrl: './doctor-schedule-form.component.scss'
-// // })
-// // export class DoctorScheduleFormComponent {
-// //   @Output() cancalEvent = new EventEmitter<any>();
-// //   private lookupService = inject(LookupService);
-// //   private store=inject(DoctorStore);
-// //   doctors = this.store.doctors;
-// //   weekDays$=this.lookupService.getDays();
-// //   workingHours$=this.lookupService.getDayHours();
-// //   slotDurations$ = this.lookupService.getSlotDuration();
-// //   fb = inject(FormBuilder);
-// //   id: string = '';
-// //   validationErrorService = inject(ValidationErrorService);
-// //   oid = input<string>('');
-
-// //   form = this.fb.group({
-
-// //     doctorId: [null, [Validators.required]],
-// //     dayOfWeekId: [null, [Validators.required]],
-// //     startTime: [null, [Validators.required]],
-// //     endTime: [null, [Validators.required]],
-// //     slotDurationMinutes: [null, [Validators.required]],
-
-// //   });
-
-// //   private backendErrorKeyMap: Record<string, string[]> = {
-// //     doctorId: ['doctorId'],
-// //     StartTime: ['startTime'],
-// //     EndTime: ['endTime'],
-// //   };
-// //   apiFieldErrors: Record<string, string> = {};
-
-// //   constructor(){
-// //     effect(() => {
-// //       const error = this.store.error();
-
-// //       if (!error) {
-// //         this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
-// //       } else {
-// //         this.validationErrorService.handleApiErrors(
-// //           this.form,
-// //           error,
-// //           this.backendErrorKeyMap,
-// //           this.apiFieldErrors
-// //         );
-// //       }
-// //     });
-
-// //     effect(() => {
-// //       const success = this.store.scheduleSuccess();
-// //       console.log('success effect',success);
-
-// //       if (success)
-// //        {
-// //         console.log('success');
-// //         this.cancel();
-// //         this.store.setScheduleSuccess(false);
-// //        }
-// //     });
-// //   }
-
-// //   onSubmit(){
-// //     console.log(this.form.invalid);
-// //     if (this.form.invalid) {
-// //       this.form.markAllAsTouched();
-// //       return;
-// //     }
-// //     if (this.form.valid) {
-// //       this.createDoctotSchedule();}
-
-// //   }
-// //   createDoctotSchedule(){
-// //     this.store.addDoctorSchedule(this.getPayload());
-// //   }
-
-
-// //   getPayload() {
-// //     const v = this.form.getRawValue();
-
-// //     const to24Hour = (time12h: string | null): string => {
-// //       if (!time12h) return '00:00:00'; // handles null or empty string
-// //       const parts = time12h.split(' ');
-// //       if (parts.length !== 2) return '00:00:00';
-
-// //       const [time, modifier] = parts;
-// //       const [hoursStr, minutesStr] = time.split(':');
-// //       if (!hoursStr || !minutesStr) return '00:00:00';
-
-// //       let hours = Number(hoursStr);
-// //       const minutes = Number(minutesStr);
-
-// //       if (modifier.toUpperCase() === 'PM' && hours < 12) hours += 12;
-// //       if (modifier.toUpperCase() === 'AM' && hours === 12) hours = 0;
-
-// //       return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
-// //     };
-
-// //     const payload: DoctorSchedule = {
-// //       doctorId: v.doctorId!,
-// //       dayOfWeekId: v.dayOfWeekId!,
-// //       startTime: to24Hour(v.startTime),
-// //       endTime: to24Hour(v.endTime),
-// //       slotDurationMinutes: v.slotDurationMinutes!
-// //     };
-
-// //     console.log('payload', payload);
-
-// //     return payload;
-// //   }
-// //     cancel() {
-// //       console.log('in schedule cancel');
-// //       this.form.markAsUntouched();
-// //       this.form.reset();
-// //       this.cancalEvent.emit();
-// //     }
-// // }
-
-
-// import {
-//   Component,
-//   effect,
-//   EventEmitter,
-//   inject,
-//   input,
-//   Output
-// } from '@angular/core';
-
-// import {
-//   FormArray,
-//   FormBuilder,
-//   FormGroup,
-//   ReactiveFormsModule,
-//   Validators
-// } from '@angular/forms';
-
-// import { AsyncPipe, NgClass, NgFor } from '@angular/common';
-// import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
-// import { LookupService } from 'src/app/common/service/lookup.service';
-// import { DoctorStore } from '../../doctorStore/doctorStore';
-// import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
-// import { ButtonComponent } from 'src/app/common/button/button.component';
-// import { APIDoctorSchedule, DoctorSchedule, DoctorScheduleBulk } from '../../models/doctor-schedule';
-// import { timeRangeValidator } from 'src/app/common/validators/time.range.validator';
-// import { SharedService } from 'src/app/shared/services/shared.service';
-
-// @Component({
-//   selector: 'app-doctor-schedule-form',
-//   standalone: true,
-//   imports: [
-//     ReactiveFormsModule,
-//     SpkNgSelectComponent,
-//     NgClass,
-//     AsyncPipe,
-//     NgFor,
-//     ButtonComponent
-//   ],
-//   templateUrl: './doctor-schedule-form.component.html',
-//   styleUrl: './doctor-schedule-form.component.scss'
-// })
-// export class DoctorScheduleFormComponent {
-//   // oid = input<string>('');
-//   schedule = input<APIDoctorSchedule|null>(null);
-//   new = input<boolean >(false);
-
-//   @Output() cancalEvent = new EventEmitter<void>();
-
-//   private fb = inject(FormBuilder);
-//   private shared = inject(SharedService);
-
-//   private lookupService = inject(LookupService);
-//   private store = inject(DoctorStore);
-//   validationErrorService = inject(ValidationErrorService);
-
-//   doctors = this.store.doctors;
-
-//   weekDays$ = this.lookupService.getDays();
-//   workingHours$ = this.lookupService.getDayHours();
-//   slotDurations$ = this.lookupService.getSlotDuration();
-
-//   apiFieldErrors: Record<string, string> = {};
-
-//   form = this.fb.group({
-//     workingHours: this.fb.array([this.createWorkingHourGroup()])
-//   });
-
-//   constructor() {
-
-//     this.form.valueChanges.subscribe(() => {
-//       this.validateDuplicateDays();
-//     });
-
-//     effect(() => {
-//       console.log('in scedule feff');
-//       const schedule = this.schedule();
-//       if (!schedule) return;
-
-//       this.weekDays$.subscribe(days => {
-//         const lookupDays = days?.lookupDetails ?? [];
-//         const day = lookupDays.find(
-//           d => d.valueNameEn === schedule.dayOfWeekNameEn
-//         );
-
-//         const dayId = day?.oid ?? null;
-//         this.workingHours.clear();
-
-//         this.workingHours.push(
-//           this.fb.group({
-//             doctorId: schedule.doctorId,
-//             dayOfWeekId: dayId,
-//             startTime: schedule.startTime,
-//             endTime: schedule.endTime,
-//             slotDurationMinutes: schedule.slotDurationMinutes
-//           })
-//         );
-//       });
-
-//     });
-
-//     effect(() => {
-
-//       console.log('in new effect');
-
-//       const newSchedule = this.new();
-//       if (!newSchedule) return;
-//      console.log('in new');
-//       this.workingHours.clear();
-
-//       this.workingHours.push(
-//         this.fb.group({
-//           doctorId: this.store.selectedDoctor()?.oid,
-//           dayOfWeekId: null,
-//           startTime: null,
-//           endTime: null,
-//           slotDurationMinutes: null
-//         })
-//       );
-
-//     });
-
-
-//     effect(() => {
-//       const error = this.store.error();
-
-//       if (!error) {
-//         this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
-//       } else {
-//         this.validationErrorService.handleApiErrors(
-//           this.form,
-//           error,
-//           {},
-//           this.apiFieldErrors
-//         );
-//       }
-//     });
-
-//     effect(() => {
-//       const success = this.store.scheduleSuccess();
-//       if (success) {
-//         this.cancel();
-//         this.store.setScheduleSuccess(false);
-//       }
-//     });
-
-//   }
-
-//   get workingHours(): FormArray {
-//     return this.form.get('workingHours') as FormArray;
-//   }
-
-//   createWorkingHourGroup(): FormGroup {
-//     return this.fb.group(
-//       {
-//         doctorId: [null, Validators.required],
-//         dayOfWeekId: [null, Validators.required],
-//         startTime: [null, Validators.required],
-//         endTime: [null, Validators.required],
-//         slotDurationMinutes: [null, Validators.required],
-//       },
-//       { validators: timeRangeValidator }
-//     );
-//   }
-
-//   addWorkingHour() {
-//     this.workingHours.push(this.createWorkingHourGroup());
-//     this.validateDuplicateDays();
-
-//   }
-
-
-//   removeWorkingHour(index: number) {
-//     if (this.workingHours.length > 1) {
-//       this.workingHours.removeAt(index);
-//       this.validateDuplicateDays();
-//     }
-//   }
-
-//   onSubmit() {
-//     if (this.form.invalid) {
-
-//       this.form.markAllAsTouched();
-//       return;
-//     }
-//     if (this.schedule()) {
-//       this.updateSchedule();
-//     } else{
-//       this.createSchedule();
-//     }
-
-
-
-//   }
-//   createSchedule(){
-//     // if(this.new())
-//     //   this.createSingle();
-//     // else this.createBulk()
-//      this.createBulk();
-
-//   }
-
-//   createSingle(){
-//     console.log('in createSingle');
-//    const payload=this.getSinglePayload()
-//     this.store.addDoctorSchedule(payload);
-//   }
-
-
-//   createBulk(){
-//     const payload = this.getPayload();
-//     this.store.addBulkDoctorSchedule(payload);
-//   }
-
-//   updateSchedule(){
-//     const payload = this.getEditPayload();
-//     this.store.updateDoctorSchedule({ id: payload.oid, body: payload });
-
-//   }
-
-//   validateDuplicateDays() {
-
-//     const days = this.workingHours.controls.map(
-//       c => c.get('dayOfWeekId')?.value
-//     );
-
-//     this.workingHours.controls.forEach(control => {
-//       const dayControl = control.get('dayOfWeekId');
-
-//       if (!dayControl) return;
-
-//       const currentValue = dayControl.value;
-
-//       const occurrences = days.filter(d => d === currentValue).length;
-
-//       if (currentValue && occurrences > 1) {
-//         dayControl.setErrors({
-//           ...(dayControl.errors || {}),
-//           duplicateDay: true
-//         });
-//       } else {
-//         if (dayControl.errors?.['duplicateDay']) {
-//           const { duplicateDay, ...rest } = dayControl.errors;
-//           dayControl.setErrors(Object.keys(rest).length ? rest : null);
-//         }
-//       }
-
-//     });
-
-//   }
-
-//   private buildSchedulePayload() {
-//     const v = this.workingHours.at(0).getRawValue();
-
-//     return {
-//       doctorId: v.doctorId,
-//       dayOfWeekId: v.dayOfWeekId,
-//       startTime: this.shared.to24Hour(v.startTime),
-//       endTime: this.shared.to24Hour(v.endTime),
-//       slotDurationMinutes: Number(v.slotDurationMinutes),
-//     };
-//   }
-
-//   getSinglePayload() {
-//     return this.buildSchedulePayload();
-//   }
-
-//   getEditPayload(){
-//     return {
-//       oid: this.schedule()!.oid,
-//       ...this.buildSchedulePayload()
-//     };
-//   }
-
-//   getPayload(): DoctorScheduleBulk {
-
-//     const values = this.form.getRawValue();
-
-//     const doctorId = values.workingHours[0]?.['doctorId'];
-
-//     return {
-//       doctorId,
-//       doctorSchedules: values.workingHours.map((v: any) => ({
-//         startTime: this.shared.to24Hour(v.startTime),
-//         endTime: this.shared.to24Hour(v.endTime),
-//         slotDurationMinutes: Number(v.slotDurationMinutes),
-//         dayOfWeekId: v.dayOfWeekId
-//       }))
-//     };
-
-//   }
-
-//   cancel() {
-//     this.form.reset();
-//     this.workingHours.clear();
-//     this.addWorkingHour();
-//     this.cancalEvent.emit();
-//   }
-
-// }
-
-
-// import { Component, effect, EventEmitter, inject, input, Output, signal } from '@angular/core';
-// import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
-// import { LookupService } from 'src/app/common/service/lookup.service';
-// import { AsyncPipe } from '@angular/common';
-// import { DoctorStore } from '../../doctorStore/doctorStore';
-// import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-// import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
-// import { ButtonComponent } from 'src/app/common/button/button.component';
-// import { DoctorSchedule } from '../../models/doctor-schedule';
-
-// @Component({
-//   selector: 'app-doctor-schedule-form',
-//   imports: [SpkNgSelectComponent, AsyncPipe,ReactiveFormsModule,
-//     ButtonComponent
-//   ],
-//   templateUrl: './doctor-schedule-form.component.html',
-//   styleUrl: './doctor-schedule-form.component.scss'
-// })
-// export class DoctorScheduleFormComponent {
-//   @Output() cancalEvent = new EventEmitter<any>();
-//   private lookupService = inject(LookupService);
-//   private store=inject(DoctorStore);
-//   doctors = this.store.doctors;
-//   weekDays$=this.lookupService.getDays();
-//   workingHours$=this.lookupService.getDayHours();
-//   slotDurations$ = this.lookupService.getSlotDuration();
-//   fb = inject(FormBuilder);
-//   id: string = '';
-//   validationErrorService = inject(ValidationErrorService);
-//   oid = input<string>('');
-
-//   form = this.fb.group({
-
-//     doctorId: [null, [Validators.required]],
-//     dayOfWeekId: [null, [Validators.required]],
-//     startTime: [null, [Validators.required]],
-//     endTime: [null, [Validators.required]],
-//     slotDurationMinutes: [null, [Validators.required]],
-
-//   });
-
-//   private backendErrorKeyMap: Record<string, string[]> = {
-//     doctorId: ['doctorId'],
-//     StartTime: ['startTime'],
-//     EndTime: ['endTime'],
-//   };
-//   apiFieldErrors: Record<string, string> = {};
-
-//   constructor(){
-//     effect(() => {
-//       const error = this.store.error();
-
-//       if (!error) {
-//         this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
-//       } else {
-//         this.validationErrorService.handleApiErrors(
-//           this.form,
-//           error,
-//           this.backendErrorKeyMap,
-//           this.apiFieldErrors
-//         );
-//       }
-//     });
-
-//     effect(() => {
-//       const success = this.store.scheduleSuccess();
-//       console.log('success effect',success);
-
-//       if (success)
-//        {
-//         console.log('success');
-//         this.cancel();
-//         this.store.setScheduleSuccess(false);
-//        }
-//     });
-//   }
-
-//   onSubmit(){
-//     console.log(this.form.invalid);
-//     if (this.form.invalid) {
-//       this.form.markAllAsTouched();
-//       return;
-//     }
-//     if (this.form.valid) {
-//       this.createDoctotSchedule();}
-
-//   }
-//   createDoctotSchedule(){
-//     this.store.addDoctorSchedule(this.getPayload());
-//   }
-
-
-//   getPayload() {
-//     const v = this.form.getRawValue();
-
-//     const to24Hour = (time12h: string | null): string => {
-//       if (!time12h) return '00:00:00'; // handles null or empty string
-//       const parts = time12h.split(' ');
-//       if (parts.length !== 2) return '00:00:00';
-
-//       const [time, modifier] = parts;
-//       const [hoursStr, minutesStr] = time.split(':');
-//       if (!hoursStr || !minutesStr) return '00:00:00';
-
-//       let hours = Number(hoursStr);
-//       const minutes = Number(minutesStr);
-
-//       if (modifier.toUpperCase() === 'PM' && hours < 12) hours += 12;
-//       if (modifier.toUpperCase() === 'AM' && hours === 12) hours = 0;
-
-//       return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
-//     };
-
-//     const payload: DoctorSchedule = {
-//       doctorId: v.doctorId!,
-//       dayOfWeekId: v.dayOfWeekId!,
-//       startTime: to24Hour(v.startTime),
-//       endTime: to24Hour(v.endTime),
-//       slotDurationMinutes: v.slotDurationMinutes!
-//     };
-
-//     console.log('payload', payload);
-
-//     return payload;
-//   }
-//     cancel() {
-//       console.log('in schedule cancel');
-//       this.form.markAsUntouched();
-//       this.form.reset();
-//       this.cancalEvent.emit();
-//     }
-// }
-
-
 import {
   Component,
   computed,
@@ -592,13 +23,13 @@ import { LookupService } from 'src/app/common/service/lookup.service';
 import { DoctorStore } from '../../doctorStore/doctorStore';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
 import { ButtonComponent } from 'src/app/common/button/button.component';
-import {  DoctorSchedule, DoctorScheduleBulk } from '../../models/doctor-schedule';
-import { timeRangeValidator } from 'src/app/common/validators/time.range.validator';
+import { APIDoctorScheduleBulk, DoctorSchedule, DoctorScheduleBulk } from '../../models/doctor-schedule';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { WorkingDayCardComponent } from './working-day-card/working-day-card.component';
 import { BranchStore } from 'src/app/Hospital/Store/Branch/branch.store';
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
+import { DoctorVM } from '../../models/doctor-vm';
 
 @Component({
   selector: 'app-doctor-schedule-form',
@@ -618,23 +49,21 @@ import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.co
   styleUrl: './doctor-schedule-form.component.scss',
 })
 export class DoctorScheduleFormComponent {
-  // oid = input<string>('');
+  oid = input<string>('');
+  editingSchedule = signal<APIDoctorScheduleBulk | null>(null)
   editingSlotId = signal<string | null>(null);
-  // schedule = input<APIDoctorSchedule | null>(null);
-  new = input<boolean>(false);
+  doctor = input<DoctorVM | null>(null);
   showTitle = input<boolean>(true);
-
-  // selectedSchedules: any[] = [];
   selectedSchedules = signal<any[]>([]);
-    @Output() cancalEvent = new EventEmitter<void>();
+  @Output() cancalEvent = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
   private shared = inject(SharedService);
   private lookupService = inject(LookupService);
   private store = inject(DoctorStore);
   private branchStore = inject(BranchStore);
-    specialityStore = inject(SpecialityStore);
-    specialities=computed(()=> this.specialityStore.items())
+  specialityStore = inject(SpecialityStore);
+  specialities = computed(() => this.specialityStore.items())
   branches = computed(() => this.branchStore.items());
   validationErrorService = inject(ValidationErrorService);
 
@@ -643,7 +72,11 @@ export class DoctorScheduleFormComponent {
   weekDays$ = this.lookupService.getDays();
   workingHours$ = this.lookupService.getDayHours();
   slotDurations$ = this.lookupService.getSlotDuration();
-   clinicNumbers = [
+  scheduleStatus$ = this.lookupService.getScheduleStatus();
+  activeStatus$ = this.lookupService.getActiveStatus();
+  pirorityStatus$ = this.lookupService.getPirority();
+
+  clinicNumbers = [
     { oid: 1, name: 'Clinic 1' },
     { oid: 2, name: 'Clinic 2' },
     { oid: 3, name: 'Clinic 3' }
@@ -657,34 +90,23 @@ export class DoctorScheduleFormComponent {
     statusId: [null as string | null, Validators.required],
     branchId: [null as string | null, Validators.required],
     specialityId: [null as string | null, Validators.required],
-    clinicNumber:[null as string | null, Validators.required],
+    clinicNumber: [null as string | null, Validators.required],
     dayOfWeekId: [[] as string[], Validators.required],
     startTime: [null as string | null, Validators.required],
     endTime: [null as string | null, Validators.required],
     startDate: ['', [Validators.required]],
     endDate: ['', [Validators.required]],
     slotDurationMinutes: [null as number | null, Validators.required],
-    isPriority:[false],
-    isActive:[false],
+    isActive: [null as string | null],
+    isPriority: [null as string | null],
   });
   weekDaysSnapshot: any[] = [];
 
-  // groupedSchedules = computed(() => {
-  //   const groups: Record<string, any[]> = {};
 
-  //   this.selectedSchedules().forEach(s => {
-  //     if (!groups[s.dayOfWeekNameEn]) {
-  //       groups[s.dayOfWeekNameEn] = [];
-  //     }
-  //     groups[s.dayOfWeekNameEn].push(s);
-  //   });
-
-  //   return groups;
-  // });
 
   groupedSchedules = computed(() => {
     const groups: Record<string, any[]> = {};
-    if(this.showTitle()){
+    if (this.showTitle()) {
       this.selectedSchedules().forEach(s => {
         if (!groups[s.dayOfWeekNameEn]) {
           groups[s.dayOfWeekNameEn] = [];
@@ -692,65 +114,80 @@ export class DoctorScheduleFormComponent {
         groups[s.dayOfWeekNameEn].push(s);
       });
     }
-
+   console.log('groups',groups);
     return groups;
   });
 
   constructor() {
+
+
 
     this.weekDays$.subscribe(res => {
       this.weekDaysSnapshot = res?.lookupDetails ?? [];
     });
 
 
-    // effect(() => {
-    //   console.log('in scedule feff');
-    //   const schedule = this.schedule();
-    //   if (!schedule) return;
+    effect(() => {
+      const oid = this.oid();
+      if (!oid) {
+        this.selectedSchedules.set([]);
+        this.form.reset();
+        return;
+      }
+      this.store.getDoctorSchedule(oid);
+    });
 
-    //   // this.weekDays$.subscribe(days => {
-    //   //   const lookupDays = days?.lookupDetails ?? [];
-    //   //   const day = lookupDays.find(
-    //   //     d => d.valueNameEn === schedule.dayOfWeekNameEn
-    //   //   );
+    effect(() => {
+      const doctorSchedule = this.store.selectedDoctorSchedule();
+      const oid = this.oid();
 
-    //   //   const dayId = day?.oid ?? null;
-    //   //   this.workingHours.clear();
+      if (!doctorSchedule || !oid) return;
 
-    //   //   this.workingHours.push(
-    //   //     this.fb.group({
-    //   //       doctorId: schedule.doctorId,
-    //   //       dayOfWeekId: dayId,
-    //   //       startTime: schedule.startTime,
-    //   //       endTime: schedule.endTime,
-    //   //       slotDurationMinutes: schedule.slotDurationMinutes
-    //   //     })
-    //   //   );
-    //   // });
+      if (doctorSchedule) {
+        this.editingSchedule.set(doctorSchedule);
+        this.form.patchValue({
+          doctorId: doctorSchedule.doctorId,
+          // statusId: doctorSchedule.statusId ?? null,
+          // branchId: doctorSchedule.branchId ?? null,
+          // specialityId: doctorSchedule.specialityId  ?? null,
+          statusId: null,
+          branchId: null,
+          specialityId: null,
+          clinicNumber: '1',
+          isPriority: doctorSchedule.isPriority ? 'Yes' : 'No',
+          isActive: doctorSchedule.isActive ? "Active":"Inactive",
+          endDate: doctorSchedule.endDate,
+          startDate: doctorSchedule.startDate,
+          dayOfWeekId: [],
+          startTime: null,
+          endTime: null,
+          slotDurationMinutes: null,
+        });
 
-    // });
+        const mappedSchedule = doctorSchedule.details.map((detail: any) => ({
+          oid: detail.oid,
+          isLocal: false,
+          doctorId: doctorSchedule.doctorId!,
+          // specialtyId: doctorSchedule.specialityId!,
+          // branchId: doctorSchedule.branchId!,
+          // statusId: doctorSchedule.statusId!,
+          specialtyId: null,
+          branchId: null,
+          statusId: null,
+          dayOfWeekId: detail.dayOfWeekId,
+          dayOfWeekNameEn: detail.dayOfWeekNameEn,
+          startTime: detail.startTime,
+          startDate: doctorSchedule.startDate,
+          endDate: doctorSchedule.endDate,
+          endTime: detail.endTime,
+          isActive: doctorSchedule.isActive,
+          isPriority: doctorSchedule.isPriority,
+          slotDurationMinutes: Number(detail.slotDurationMinutes!)
+        }))
 
-    // effect(() => {
-
-    //   console.log('in new effect');
-
-    //   const newSchedule = this.new();
-    //   if (!newSchedule) return;
-    //   console.log('in new');
-    //   // this.workingHours.clear();
-
-    //   // this.workingHours.push(
-    //   //   this.fb.group({
-    //   //     doctorId: this.store.selectedDoctor()?.oid,
-    //   //     dayOfWeekId: null,
-    //   //     startTime: null,
-    //   //     endTime: null,
-    //   //     slotDurationMinutes: null
-    //   //   })
-    //   // );
-
-    // });
-
+        this.selectedSchedules.set(mappedSchedule);
+      }
+    });
 
     effect(() => {
       const error = this.store.error();
@@ -767,21 +204,31 @@ export class DoctorScheduleFormComponent {
       }
     });
 
+
     effect(() => {
       const success = this.store.scheduleSuccess();
       if (success) {
-        this.cancel();
+
+        if (this.oid()) {
+          this.store.getDoctorSchedule(this.oid());
+        }else{
+          this.cancel();
+        }
         this.store.setScheduleSuccess(false);
       }
     });
 
+    // effect(() => {
+    //   const success = this.store.scheduleSuccess();
+    //   if (success) {
+    //     this.cancel();
+    //     this.store.setScheduleSuccess(false);
+    //   }
+    // });
+
   }
 
 
-
-  // addWorkingHour() {
-  // console.log('addWorkingHouts');
-  // }
 
 
   addSchedule() {
@@ -792,6 +239,22 @@ export class DoctorScheduleFormComponent {
     }
 
     const v = this.form.getRawValue();
+
+    if (this.oid()) {
+      this.selectedSchedules.update(list =>
+        list.map(item => ({
+          ...item,
+          doctorId: v.doctorId!,
+          specialtyId: v.specialityId!,
+          branchId: v.branchId!,
+          statusId: v.statusId!,
+          clinicNumber: v.clinicNumber,
+          startDate: v.startDate,
+          endDate: v.endDate,
+        }))
+      );
+    }
+
     const days = v.dayOfWeekId ?? [];
 
     const start = this.shared.to24Hour(v.startTime!);
@@ -825,20 +288,45 @@ export class DoctorScheduleFormComponent {
         {
           oid: crypto.randomUUID(),
           doctorId: v.doctorId!,
+          specialtyId: v.specialityId!,
+          branchId: v.branchId!,
+          statusId: v.statusId!,
           dayOfWeekId: dayId,
           dayOfWeekNameEn: day?.valueNameEn ?? '',
           startTime: start,
+          isLocal: true,
+          startDate: v.startDate,
+          endDate: v.endDate,
           endTime: end,
+          isActive: v.isActive === 'Active',
+          isPriority: v.isPriority === 'Yes',
+          // isActive: v.isActive,
+          // isPriority: v.isPriority,
           slotDurationMinutes: Number(v.slotDurationMinutes!)
         }
       ]);
-
     });
 
- this.form.reset();
-if(!this.showTitle()){
-   this.saveSchedule();
-}
+    //  this.form.reset();
+
+    this.form.patchValue({
+      dayOfWeekId: [],
+      startTime: null,
+      endTime: null,
+      slotDurationMinutes: null
+    });
+
+    // mark only these controls as untouched + pristine
+    ['dayOfWeekId', 'startTime', 'endTime', 'slotDurationMinutes']
+      .forEach(field => {
+        const control = this.form.get(field);
+        control?.markAsUntouched();
+        control?.markAsPristine();
+      });
+
+    if (!this.showTitle()) {
+      this.saveSchedule();
+    }
   }
 
 
@@ -848,21 +336,59 @@ if(!this.showTitle()){
   }
 
   saveSchedule() {
-    if(this.selectedSchedules().length == 1)
-      this.createSingle();
+    if (this.oid())
+      this.updateMasterSchedule()
     else
-    this.createBulk()
-   }
-
-  createSingle() {
-    const payload = this.getSinglePayload()
-    this.store.addDoctorSchedule(payload);
+      this.createSchedule();
   }
+
+  // createSingle() {
+  //   const payload = this.getSinglePayload()
+  //   this.store.addDoctorSchedule(payload);
+  // }
 
 
   createBulk() {
     const payload = this.getPayload();
     this.store.addBulkDoctorSchedule(payload);
+  }
+
+  updateMasterSchedule() {
+    const schedules = this.selectedSchedules();
+    const newDetails = schedules
+      .filter(s => s.isLocal)
+      .map(s => ({
+        masterId: this.oid(),
+        dayOfWeekId: s.dayOfWeekId,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        slotDurationMinutes: Number(s.slotDurationMinutes)
+      }));
+
+    const masterPayload = {
+      id: this.oid(),
+      body: this.getEditMasterSchedulePayload()
+    };
+
+    this.store.updateDoctorScheduleWithDetails({
+      master: masterPayload,
+      newDetails
+    });
+  }
+
+  getEditMasterSchedulePayload() {
+    const schedules = this.selectedSchedules();
+    return {
+      oid: this.oid(),
+      doctorId: schedules[0]?.doctorId,
+      statusId: schedules[0]?.statusId,
+      branchId: schedules[0]?.branchId,
+      specialtyId: schedules[0]?.specialtyId,
+      isActive: schedules[0]?.isActive,
+      isPriority: schedules[0]?.isPriority,
+      startDate: this.shared.formatDateOnly(schedules[0]?.startDate),
+      endDate: this.shared.formatDateOnly(schedules[0]?.endDate),
+    };
   }
 
   startEdit(slot: any) {
@@ -871,16 +397,12 @@ if(!this.showTitle()){
     else this.editingSlotId.set(null);
 
   }
-
-  // updateSchedule(schedule:any) {
-  //   const payload = this.getEditPayload(schedule);
-  //   this.store.updateDoctorSchedule({ id: payload.oid, body: payload });
-
-  // }
   editSchedule(schedule: any) {
-    // if (!this.new()) {
-    //   this.updateSchedule(schedule);
-    // } else {
+    if (this.oid() && !schedule.isLocal) {
+      const payload = this.getEditDetailPayload(schedule);
+      this.store.updateDetailDoctorSchedule({ id: schedule.oid, body: payload });
+    }
+    else {
       this.selectedSchedules.update(list =>
         list.filter(s => s.oid !== schedule.oid)
       );
@@ -888,19 +410,23 @@ if(!this.showTitle()){
         ...list,
         schedule
       ]);
-    // }
+    }
   }
 
-  // getEditPayload(schedule: any) {
-  //   const { dayOfWeekNameEn, ...payload } = schedule;
-  //   return payload;
-  // }
-
+  getEditDetailPayload(schedule: any) {
+    return {
+      oid: schedule.oid,
+      masterId: this.oid(),
+      dayOfWeekId: schedule.dayOfWeekId,
+      startTime: schedule.startTime,
+      endTime: schedule.endTime,
+      slotDurationMinutes: schedule.slotDurationMinutes
+    }
+  }
 
   getPayload(): DoctorScheduleBulk {
 
     const schedules = this.selectedSchedules();
-
     return {
       doctorId: schedules[0]?.doctorId,
       statusId: schedules[0]?.statusId,
@@ -910,7 +436,7 @@ if(!this.showTitle()){
       isPriority: schedules[0]?.isPriority,
       startDate: this.shared.formatDateOnly(schedules[0]?.startDate),
       endDate: this.shared.formatDateOnly(schedules[0]?.endDate),
-      doctorSchedulesList: schedules.map(s => ({
+      doctorScheduleDetailList: schedules.map(s => ({
         startTime: s.startTime,
         endTime: s.endTime,
         slotDurationMinutes: Number(s.slotDurationMinutes),
@@ -927,15 +453,15 @@ if(!this.showTitle()){
 
     return {
       doctorId: schedule.doctorId,
+      statusId: schedule.statusId,
+      branchId: schedule.branchId,
+      specialtyId: schedule.specialtyId,
       dayOfWeekId: schedule.dayOfWeekId,
       startTime: schedule.startTime,
       endTime: schedule.endTime,
       slotDurationMinutes: Number(schedule.slotDurationMinutes),
-      isActive:true,
-      isPriority:false,
-      statusId: schedule.statusId,
-      branchId: schedule.branchId,
-      specialtyId: schedule.specialtyId,
+      isActive: true,
+      isPriority: false,
       startDate: this.shared.formatDateOnly(schedule.startDate),
       endDate: this.shared.formatDateOnly(schedule.endDate),
     };
@@ -948,21 +474,17 @@ if(!this.showTitle()){
 
 
   deleteSchedule(schedule: any) {
-
-    // if(!this.new()){
-
-    //   this.store.deleteDoctorSchedule(schedule.oid);
-    // }else{
+    if (this.oid() && !schedule.isLocal) {
+      this.store.deleteDetailDoctorSchedule(schedule.oid);
+    } else
       this.selectedSchedules.update(list =>
         list.filter(s => s.oid !== schedule.oid)
       );
-    // }
-
   }
 
   cancel() {
     this.form.reset();
-    // this.addWorkingHour();
+    this.selectedSchedules.set([]);
     this.cancalEvent.emit();
   }
 }

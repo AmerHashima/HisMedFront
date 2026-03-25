@@ -15,9 +15,12 @@ import { ValidationErrorService } from 'src/app/common/service/validation-error.
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
 import { WorkingDayCardComponent } from '../doctor-schedule-form/working-day-card/working-day-card.component';
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
-import { APIDoctorSchedule } from '../../models/doctor-schedule';
+import { APIDoctorSchedule, APIDoctorScheduleBulk, APIDoctorScheduleItem, DoctorScheduleDetail, GroupedSchedule } from '../../models/doctor-schedule';
 import { DoctorScheduleFormComponent } from '../doctor-schedule-form/doctor-schedule-form.component';
 import { Speciality } from '../../../Hospital/models/speciality';
+import { DoctorVM } from '../../models/doctor-vm';
+import { Filter, RequestWrapper } from 'src/app/common/Models/request';
+import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
   selector: 'app-doctor-form',
@@ -32,7 +35,7 @@ export class DoctorFormComponent {
   @Output() cancalEvent = new EventEmitter<any>();
   oid = input<string>('');
   addWorkingDay = output<void>();
-
+  shared=inject(SharedService);
   fb = inject(FormBuilder);
   store = inject(DoctorStore);
   userStore = inject(UsersStore);
@@ -58,21 +61,63 @@ export class DoctorFormComponent {
   firstTimeToggle=signal(true);
   groupedSchedules = computed(() => {
 
-    const groups: Record<string, APIDoctorSchedule[]> = {};
+    // const groups: Record<string, APIDoctorSchedule[]> = {};
+
+    // const schedules = this.doctorSchedules();
+    // console.log('schedules', schedules);
+    // schedules.forEach(s => {
+
+    //   if (!groups[s.dayOfWeekNameEn]) {
+    //     groups[s.dayOfWeekNameEn] = [];
+    //   }
+
+    //   groups[s.dayOfWeekNameEn].push(s);
+
+    // });
+
+    // const groups: Record<string, GroupedSchedule[]> = {};
+
+    // const schedules = this.doctorSchedules();
+
+    // schedules.forEach(s => {
+    //   s.details?.forEach(detail => {
+    //     const day = detail.dayOfWeekNameEn;
+
+    //     if (!day) return;
+
+    //     if (!groups[day]) {
+    //       groups[day] = [];
+    //     }
+
+    //     groups[day].push({
+    //       ...s,
+    //       detail
+    //     });
+    //   });
+    // });
+
+    const groups: Record<string, (APIDoctorScheduleItem & { masterId: string })[]> = {};
 
     const schedules = this.doctorSchedules();
+
     schedules.forEach(s => {
+      s.details?.forEach(detail => {
+        const day = detail.dayOfWeekNameEn;
 
-      if (!groups[s.dayOfWeekNameEn]) {
-        groups[s.dayOfWeekNameEn] = [];
-      }
+        if (!day) return;
 
-      groups[s.dayOfWeekNameEn].push(s);
+        if (!groups[day]) {
+          groups[day] = [];
+        }
 
+        groups[day].push({
+          ...detail,
+          masterId: s.oid   // 👈 هنا المهم
+        });
+      });
     });
-
+    console.log('groups',groups);
     return groups;
-
   });
   form = this.fb.group({
     userId: ['', Validators.required],
@@ -105,7 +150,7 @@ export class DoctorFormComponent {
   weekDays$ = this.lookupService.getDays();
   weekDaysSnapshot: any[] = [];
 
-
+  doctor: DoctorVM | null=null ;
   private backendErrorKeyMap: Record<string, string[]> = {
     userId: ['userId'],
     firstNameAr: ['firstNameAr'],
@@ -155,6 +200,7 @@ export class DoctorFormComponent {
     effect(() => {
       const doctor = this.store.selectedDoctor();
       if (doctor) {
+        this.doctor=doctor
         this.form.patchValue({
           userId: doctor.userId,
           firstNameAr: doctor.firstNameAr,
@@ -212,19 +258,32 @@ export class DoctorFormComponent {
 
   toggleWorkingHours() {
     if (this.firstTimeToggle()){
-      this.store.loadDoctorSchedules(this.oid());
+      // this.store.loadDoctorSchedules(this.oid());
+
+            const filters: Filter[] = [{
+              propertyName: "doctorId",
+              value: this.oid(),
+              operation: 0
+            }];
+            const body:RequestWrapper={
+              request:{
+                filters: filters,
+                sort: [],
+                pagination: {
+                  getAll: true,
+                  pageNumber: 0,
+                  pageSize: 0,
+                },
+                columns: []
+              }
+            }
+
+      this.store.queryDoctorSchedules(body);
       this.firstTimeToggle.set(false);
     }
     this.workingHoursCollapsed.update(v => !v);
   }
 
-  formatDateOnly(value: string | Date): string {
-    const d = new Date(value);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
 
   onSubmit() {
     if (this.form.invalid) {
@@ -262,8 +321,8 @@ export class DoctorFormComponent {
       genderId: v.genderId!,
       licenseNumber: v.licenseNumber!,
       licenseTypeId: v.licenseTypeId!,
-      licenseIssueDate: this.formatDateOnly(v.licenseIssueDate!),
-      licenseExpiryDate: this.formatDateOnly(v.licenseExpiryDate!),
+      licenseIssueDate: this.shared.formatDateOnly(v.licenseIssueDate!),
+      licenseExpiryDate: this.shared.formatDateOnly(v.licenseExpiryDate!),
       branchId: v.branchId!,
       specialtyId: v.specialtyId!,
       subSpecialtyId: v.subSpecialtyId!,
@@ -303,29 +362,30 @@ export class DoctorFormComponent {
 
    //handle Schedule
 
-  editSchedule(schedule: APIDoctorSchedule) {
+  editSchedule(schedule: any) {
       this.updateSchedule(schedule);
+
   }
 
   updateSchedule(schedule: any) {
     const payload = this.getEditPayload(schedule);
-    this.store.updateDoctorSchedule({ id: payload.oid, body: payload });
+    this.store.updateDetailDoctorSchedule({ id: payload.oid!, body: payload });
   }
 
-  getEditPayload(schedule: any) {
-    const day = this.weekDaysSnapshot.find(d => d.dayOfWeekNameEn === schedule.dayOfWeekNameEn);
-
-    const { startDate, endDate,status,branch,Speciality, dayOfWeekNameAr,dayOfWeekNameEn, ...payload } = schedule;
-    return {...payload,
-    dayOfWeekId: day.dayOfWeekId,
-    statusId: null,
-    branchId: null,
-    specialtyId: null
-    };
+  getEditPayload(schedule: any): DoctorScheduleDetail {
+    const payload={
+      oid:schedule.oid!,
+      masterId: schedule.masterId,
+      dayOfWeekId: schedule.dayOfWeekId,
+      startTime: schedule.startTime,
+      endTime: schedule.endTime,
+      slotDurationMinutes: schedule.slotDurationMinutes
+    }
+    return payload;
   }
 
-  deleteSchedule(schedule: APIDoctorSchedule) {
-    this.store.deleteDoctor(schedule.oid);
+  deleteSchedule(schedule: any) {
+    this.store.deleteDetailDoctorSchedule(schedule.oid);
 
   }
 

@@ -2,13 +2,13 @@
 import { signalStore, withState, withMethods, withComputed, withHooks, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { inject, computed, effect } from '@angular/core';
-import { debounceTime, switchMap, tap, catchError, of, finalize, pipe, EMPTY } from 'rxjs';
-
+import { debounceTime, map,switchMap, tap, catchError, of, finalize, pipe, EMPTY, forkJoin } from 'rxjs';
 import { DoctorService } from '../service/doctor.service';
 import { initialDoctorState } from './doctor.slice';
 import { createQueryRequest } from 'src/app/management/user/userStore/store.helpers';
 import { Filter, Pagination, RequestWrapper, Sort } from 'src/app/common/Models/request';
 import {
+  setDoctoSchedules,
   activateLoading,
   deactivateLoading,
   setDoctors,
@@ -25,11 +25,14 @@ import {
   addDoctorSchedule,
   deleteDoctorSchedule,
   setSelectedDoctoSchedules,
+  deleteDetailDoctorSchedule,
+  updateDoctorSchedules,
+  updateDetailDoctorSchedule,
 } from './doctor.updater';
 import { Doctor } from '../models/doctor';
 import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
 import { LoadingService } from 'src/app/common/service/loading.service';
-import { DoctorSchedule, DoctorScheduleBulk } from '../models/doctor-schedule';
+import { DoctorSchedule, DoctorScheduleBulk, DoctorScheduleDetail, editMasterDoctorSchedule } from '../models/doctor-schedule';
 
 type UpdatePayload = {
   id: string;
@@ -38,7 +41,12 @@ type UpdatePayload = {
 
 type UpdateSchedulePayload = {
   id: string;
-  body: DoctorSchedule;
+  body: editMasterDoctorSchedule;
+}
+
+type UpdateDetailSchedulePayload = {
+  id: string;
+  body: DoctorScheduleDetail;
 }
 export const DoctorStore = signalStore(
   withState(initialDoctorState),
@@ -180,29 +188,101 @@ export const DoctorStore = signalStore(
       )
     ),
 
-    loadDoctorSchedules: rxMethod<string>(
+    loadDoctorSchedules: rxMethod<void>(
+      pipe(
+
+        pipe(
+          tap(() => {
+            patchState(store, activateLoading);
+            loader.start();
+          }),
+
+          switchMap(() =>
+            service.getMasterDoctorSchedules().pipe(
+
+              tap(schedules => {
+                patchState(store, setDoctoSchedules(schedules));
+                console.log(schedules);
+              }),
+
+              catchError(err => {
+                const error = err.error.errors;
+
+                patchState(
+                  store,
+                  setError(error ?? 'Failed to get doctor')
+                );
+
+                toast.showToast('Failed to retrieve doctor', 'error');
+
+                return of(null);
+              }),
+
+              finalize(() => {
+                patchState(store, deactivateLoading);
+                loader.stop();
+              })
+            )
+          )
+        )
+    )
+    ),
+
+    queryDoctorSchedules: rxMethod<RequestWrapper>(
       pipe(
         tap(() => {
           patchState(store, activateLoading);
           loader.start();
         }),
 
-        switchMap((doctorId) => {
+        switchMap((body) => {
+          // const filters: Filter[] = [
+          //   {
+          //     propertyName: 'doctorId',
+          //     value: doctorId,
+          //     operation: 0,
+          //   },
+          // ];
 
-          const filters: Filter[] = [{
-            propertyName: "doctorId",
-            value: doctorId,
-            operation: 0
-          }];
+          // const body: RequestWrapper = {
+          //   request: {
+          //     filters,
+          //     sort: [],
+          //     pagination: {
+          //       getAll: true,
+          //       pageNumber: 0,
+          //       pageSize: 0,
+          //     },
+          //     columns: [],
+          //   },
+          // };
 
-          return service.getDoctorSchedules(filters).pipe(
+          return service.queryMasterDoctorSchedules(body).pipe(
 
-            tap(schedules => {
-              patchState(store, setSelectedDoctoSchedules(schedules));
+            switchMap((response) => {
+              const schedules = response.doctorSchedules;
+
+              if (!schedules.length) {
+                return of([]);
+              }
+
+              const requests = schedules.map((item) =>
+                service.getMasterDoctorSchedule(item.oid)
+              );
+
+              return forkJoin(requests);
             }),
 
-            catchError(err => {
-              const error = err.error.errors;
+            tap((bulkSchedules) => {
+
+              patchState(
+                store,
+                setSelectedDoctoSchedules(bulkSchedules)
+              );
+            }),
+
+            catchError((err) => {
+              const error = err.error?.errors;
 
               patchState(
                 store,
@@ -222,6 +302,8 @@ export const DoctorStore = signalStore(
         })
       )
     ),
+
+
     addDoctor: rxMethod<Doctor>(
       pipe(
         tap(() => {
@@ -343,7 +425,7 @@ export const DoctorStore = signalStore(
           patchState(store, activateLoading);
           loader.start();
         }), switchMap(id =>
-          service.getDoctorSchedule(id).pipe(
+          service.getMasterDoctorSchedule(id).pipe(
             tap(d => patchState(store, setSelectedDoctoSchedule(d))),
             catchError(err => {
               const error = err.error.errors;
@@ -373,7 +455,7 @@ export const DoctorStore = signalStore(
           loader.start();
         }),
         switchMap((body) =>
-          service.createDoctorSchedule(body).pipe(
+          service.createMasterDoctorSchedule(body).pipe(
             tap((schedule) => {
               patchState(store, setScheduleSuccess(true));
               patchState(store, addDoctorSchedule([schedule]));
@@ -409,8 +491,7 @@ export const DoctorStore = signalStore(
           service.createBulkDoctorSchedule(body).pipe(
             tap((schedules) => {
               patchState(store, setScheduleSuccess(true));
-              // patchState(store, addDoctorSchedule(schedules));
-
+              patchState(store, updateDoctorSchedules(body,schedules));
               toast.showToast('Doctor Schedule has been added successfully', 'success');
             }),
             catchError(err => {
@@ -439,10 +520,10 @@ export const DoctorStore = signalStore(
           patchState(store, activateLoading);
           loader.start();
         }), switchMap(({ id, body }) =>
-          service.updateDoctorSchedule(id, body).pipe(
+          service.updateMasterDoctorSchedule(id, body).pipe(
             // tap(() => patchState(store, setError(''))),
             tap((schedule) => {
-              patchState(store, setScheduleSuccess(true));
+              // patchState(store, setScheduleSuccess(true));
               patchState(store, updateDoctorSchedule(schedule));
               toast.showToast('Doctor slot has been updated successfully', 'success');
 
@@ -467,10 +548,44 @@ export const DoctorStore = signalStore(
         )
       )
     ),
+    updateDetailDoctorSchedule: rxMethod<UpdateDetailSchedulePayload>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }), switchMap(({ id, body }) =>
+          service.updateDetailDoctorSchedule(id, body).pipe(
+            tap((schedule) => {
+              // patchState(store, setScheduleSuccess(true));
+              patchState(store, updateDetailDoctorSchedule(schedule));
+              toast.showToast('Doctor slot has been updated successfully', 'success');
+              // store.queryDoctors(store.queryRequest());
+            }),
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to update doctor schedule'
+                )
+              );
+              toast.showToast('Falied to update doctor schedule', 'error');
+
+              return of(null);
+            }),
+            finalize(() => {
+              patchState(store, deactivateLoading);
+              loader.stop()
+            }))
+        )
+      )
+    ),
+
+
     deleteDoctorSchedule: rxMethod<string>(
       pipe(
         switchMap(id =>
-          service.deleteDoctoSchedule(id).pipe(
+          service.deleteMasterDoctoSchedule(id).pipe(
             tap(() => {
               patchState(store, deleteDoctorSchedule(id));
               toast.showToast('Doctor schedule has been deleted successfully', 'success');
@@ -491,7 +606,102 @@ export const DoctorStore = signalStore(
         )
       )
     ),
+    deleteDetailDoctorSchedule: rxMethod<string>(
+      pipe(
+        switchMap(id =>
+          service.deleteDetailDoctoSchedule(id).pipe(
+            tap(() => {
+              patchState(store, deleteDetailDoctorSchedule(id));
+              toast.showToast('Doctor schedule has been deleted successfully', 'success');
+            }),
+            catchError(err => {
+              const error = err.error.errors;
+              patchState(
+                store,
+                setError(
+                  error ?? 'Failed to delete doctor schedule'
+                )
+              );
+              toast.showToast('Falied to delete doctor schedule', 'error');
 
+              return of(null);
+            }),
+          )
+        )
+      )
+    ),
+    updateDoctorScheduleWithDetails: rxMethod<{
+      master: UpdateSchedulePayload,
+      newDetails: DoctorScheduleDetail[]
+    }>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }),
+
+        switchMap(({ master, newDetails }) => {
+          console.log('master', master);
+          console.log('newDetails', newDetails);
+
+          // ✅ STEP 1: update master FIRST
+          return service.updateMasterDoctorSchedule(master.id, master.body).pipe(
+
+            // ✅ STEP 2: then add details
+            switchMap((updatedMaster) => {
+
+              const detailsRequests = newDetails.map(detail =>
+                service.creatDetailDoctorSchedule(detail).pipe(
+                  catchError(err => {
+                    console.error('❌ Detail failed:', detail, err);
+                    return of(null); // prevent full crash
+                  })
+                )
+              );
+
+              return (detailsRequests.length ? forkJoin(detailsRequests) : of([])).pipe(
+                map((addedDetails) => ({
+                  updatedMaster,
+                  addedDetails: addedDetails.filter(d => d !== null)
+                }))
+              );
+            })
+          );
+        }),
+
+        tap(({ updatedMaster, addedDetails }) => {
+
+          patchState(store, updateDoctorSchedule(updatedMaster));
+
+          if (addedDetails?.length) {
+            addedDetails.forEach(detail => {
+              patchState(store, updateDetailDoctorSchedule(detail));
+            });
+          }
+
+          patchState(store, setScheduleSuccess(true));
+
+          toast.showToast('Doctor schedule updated successfully', 'success');
+        }),
+
+        catchError(err => {
+          const error = err.error?.errors;
+
+          console.error('🔥 FULL ERROR:', err);
+
+          patchState(store, setError(error ?? 'Failed to update doctor schedule'));
+
+          toast.showToast('Failed to update doctor schedule', 'error');
+
+          return of(null);
+        }),
+
+        finalize(() => {
+          patchState(store, deactivateLoading);
+          loader.stop();
+        })
+      )
+    ),
 
   })),
   withHooks({

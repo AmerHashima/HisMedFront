@@ -24,8 +24,9 @@ export const LOOKUP_CODES = {
   WEEK_DAYS:'Days',
   Day_Hours:"WORKING_HOURS",
     SLOT_DURATION: "SLOT_DURATION",
-  ACTIVE_STATUS:"ACTIVE_STATUS"
-
+  ACTIVE_STATUS:"ACTIVE_STATUS",
+  SCHEDULE_STATUS:"SCHEDULE_STATUS",
+  PIRORITY:"PIRORITY"
 } as const;
 
 @Injectable({
@@ -139,6 +140,12 @@ export class LookupService {
   }
   getActiveStatus() {
     return this.getLookUpByCode(LOOKUP_CODES.ACTIVE_STATUS);
+  }
+  getScheduleStatus() {
+    return this.getLookUpByCode(LOOKUP_CODES.SCHEDULE_STATUS);
+  }
+  getPirority() {
+    return this.getLookUpByCode(LOOKUP_CODES.PIRORITY);
   }
 }
 

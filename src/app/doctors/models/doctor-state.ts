@@ -1,6 +1,6 @@
 // src\app\doctors\models\doctor-state.ts
 
-import { APIDoctorSchedule } from "./doctor-schedule";
+import { APIDoctorSchedule, APIDoctorScheduleBulk } from "./doctor-schedule";
 import { DoctorVM } from "./doctor-vm";
 
 export interface DoctorState {
@@ -8,8 +8,11 @@ export interface DoctorState {
   // selectedDoctor: Doctor | null;
   doctors: DoctorVM[];
   selectedDoctor: DoctorVM | null;
-  selectedDoctorSchedules: APIDoctorSchedule[],
-  selectedDoctorSchedule: APIDoctorSchedule | null,
+  // selectedDoctorSchedules: APIDoctorSchedule[],
+  // selectedDoctorSchedule: APIDoctorSchedule | null,
+  DoctorSchedules: APIDoctorSchedule[],
+  selectedDoctorSchedules: APIDoctorScheduleBulk[],
+  selectedDoctorSchedule: APIDoctorScheduleBulk | null,
   scheduleSuccess:boolean,
     success: boolean
     loading: boolean;
