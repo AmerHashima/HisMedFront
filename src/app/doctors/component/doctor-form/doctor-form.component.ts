@@ -59,47 +59,12 @@ export class DoctorFormComponent {
   showScheduleForm = signal(false);
   editingSlotId = signal<string | null>(null);
   firstTimeToggle=signal(true);
+doctor: DoctorVM | null=null;
   groupedSchedules = computed(() => {
-
-    // const groups: Record<string, APIDoctorSchedule[]> = {};
-
-    // const schedules = this.doctorSchedules();
-    // console.log('schedules', schedules);
-    // schedules.forEach(s => {
-
-    //   if (!groups[s.dayOfWeekNameEn]) {
-    //     groups[s.dayOfWeekNameEn] = [];
-    //   }
-
-    //   groups[s.dayOfWeekNameEn].push(s);
-
-    // });
-
-    // const groups: Record<string, GroupedSchedule[]> = {};
-
-    // const schedules = this.doctorSchedules();
-
-    // schedules.forEach(s => {
-    //   s.details?.forEach(detail => {
-    //     const day = detail.dayOfWeekNameEn;
-
-    //     if (!day) return;
-
-    //     if (!groups[day]) {
-    //       groups[day] = [];
-    //     }
-
-    //     groups[day].push({
-    //       ...s,
-    //       detail
-    //     });
-    //   });
-    // });
 
     const groups: Record<string, (APIDoctorScheduleItem & { masterId: string })[]> = {};
 
     const schedules = this.doctorSchedules();
-
     schedules.forEach(s => {
       s.details?.forEach(detail => {
         const day = detail.dayOfWeekNameEn;
@@ -112,7 +77,7 @@ export class DoctorFormComponent {
 
         groups[day].push({
           ...detail,
-          masterId: s.oid   // 👈 هنا المهم
+          masterId: s.oid
         });
       });
     });
@@ -150,7 +115,7 @@ export class DoctorFormComponent {
   weekDays$ = this.lookupService.getDays();
   weekDaysSnapshot: any[] = [];
 
-  doctor: DoctorVM | null=null ;
+  // doctor: DoctorVM | null=null ;
   private backendErrorKeyMap: Record<string, string[]> = {
     userId: ['userId'],
     firstNameAr: ['firstNameAr'],
@@ -199,8 +164,9 @@ export class DoctorFormComponent {
 
     effect(() => {
       const doctor = this.store.selectedDoctor();
+      this.doctor=doctor;
       if (doctor) {
-        this.doctor=doctor
+        // this.doctor=doctor
         this.form.patchValue({
           userId: doctor.userId,
           firstNameAr: doctor.firstNameAr,

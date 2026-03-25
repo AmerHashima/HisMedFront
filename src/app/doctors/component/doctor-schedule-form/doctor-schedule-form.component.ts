@@ -50,11 +50,13 @@ import { DoctorVM } from '../../models/doctor-vm';
 })
 export class DoctorScheduleFormComponent {
   oid = input<string>('');
-  editingSchedule = signal<APIDoctorScheduleBulk | null>(null)
-  editingSlotId = signal<string | null>(null);
   doctor = input<DoctorVM | null>(null);
+
+  editingSchedule = signal<APIDoctorScheduleBulk | null>(null);
+  editingSlotId = signal<string | null>(null);
   showTitle = input<boolean>(true);
   selectedSchedules = signal<any[]>([]);
+  originalSchedules = signal<any[]>([]);
   @Output() cancalEvent = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
@@ -64,17 +66,16 @@ export class DoctorScheduleFormComponent {
   private branchStore = inject(BranchStore);
   specialityStore = inject(SpecialityStore);
   specialities = computed(() => this.specialityStore.items())
-  branches = computed(() => this.branchStore.items());
-  validationErrorService = inject(ValidationErrorService);
-
-  doctors = this.store.doctors;
-
+ branches = computed(() => this.branchStore.items());
+ validationErrorService = inject(ValidationErrorService);
+ doctors = this.store.doctors;
   weekDays$ = this.lookupService.getDays();
   workingHours$ = this.lookupService.getDayHours();
   slotDurations$ = this.lookupService.getSlotDuration();
   scheduleStatus$ = this.lookupService.getScheduleStatus();
   activeStatus$ = this.lookupService.getActiveStatus();
   pirorityStatus$ = this.lookupService.getPirority();
+  masterSchedule =this.store.selectedDoctorSchedules;
 
   clinicNumbers = [
     { oid: 1, name: 'Clinic 1' },
@@ -83,6 +84,7 @@ export class DoctorScheduleFormComponent {
   ];
 
   apiFieldErrors: Record<string, string> = {};
+
 
 
   form = this.fb.group({
@@ -137,6 +139,25 @@ export class DoctorScheduleFormComponent {
       this.store.getDoctorSchedule(oid);
     });
 
+
+    effect(() => {
+      const doctor = this.doctor();
+      console.log('doctor',doctor);
+      if (doctor){
+        this.form.patchValue({
+          doctorId: doctor.oid,
+          branchId: doctor.branchId ?? null,
+          specialityId: doctor.specialtyId  ?? null,
+          // statusId: null,
+          // clinicNumber: '1',
+          // isPriority: doctorSchedule.isPriority ? 'Yes' : 'No',
+          // isActive: doctorSchedule.isActive ? "Active" : "Inactive",
+          // endDate: doctorSchedule.endDate,
+          // startDate: doctorSchedule.startDate,
+        });
+      }
+    });
+
     effect(() => {
       const doctorSchedule = this.store.selectedDoctorSchedule();
       const oid = this.oid();
@@ -185,7 +206,9 @@ export class DoctorScheduleFormComponent {
           slotDurationMinutes: Number(detail.slotDurationMinutes!)
         }))
 
-        this.selectedSchedules.set(mappedSchedule);
+        // this.selectedSchedules.set(mappedSchedule);
+        this.originalSchedules.set(mappedSchedule);
+        this.selectedSchedules.set(structuredClone(mappedSchedule));
       }
     });
 
@@ -229,11 +252,42 @@ export class DoctorScheduleFormComponent {
   }
 
 
+  // logFormIssues() {
+  //   const controls = this.form.controls;
 
+  //   console.log('🚨 FORM INVALID — DETAILS BELOW:\n');
+
+  //   (Object.keys(controls) as (keyof typeof controls)[]).forEach(key => {
+  //     const control = controls[key];
+
+  //     if (control.invalid) {
+  //       const value = control.value;
+  //       const errors = control.errors;
+
+  //       let reasons: string[] = [];
+
+  //       if (errors) {
+  //         if (errors['required']) reasons.push('Required field is missing');
+  //         if (errors['email']) reasons.push('Invalid email format');
+  //         if (errors['min']) reasons.push(`Value is less than minimum (${errors['min'].min})`);
+  //         if (errors['max']) reasons.push(`Value exceeds maximum (${errors['max'].max})`);
+  //         if (errors['minlength']) reasons.push(`Too short (min ${errors['minlength'].requiredLength})`);
+  //         if (errors['maxlength']) reasons.push(`Too long (max ${errors['maxlength'].requiredLength})`);
+  //       }
+
+  //       console.log(`❌ FIELD: ${String(key)}`);
+  //       console.log(`   Value:`, value);
+  //       console.log(`   Problem: ${reasons.join(' | ') || 'Unknown error'}`);
+  //       console.log('----------------------------');
+  //     }
+  //   });
+  // }
 
   addSchedule() {
 
     if (this.form.invalid) {
+      // this.logFormIssues();
+      console.log('invalid');
       this.form.markAllAsTouched();
       return;
     }
@@ -325,7 +379,7 @@ export class DoctorScheduleFormComponent {
       });
 
     if (!this.showTitle()) {
-      this.saveSchedule();
+      this.createBulk();
     }
   }
 
@@ -353,8 +407,33 @@ export class DoctorScheduleFormComponent {
     this.store.addBulkDoctorSchedule(payload);
   }
 
+  // updateMasterSchedule() {
+  //   const schedules = this.selectedSchedules();
+  //   const newDetails = schedules
+  //     .filter(s => s.isLocal)
+  //     .map(s => ({
+  //       masterId: this.oid(),
+  //       dayOfWeekId: s.dayOfWeekId,
+  //       startTime: s.startTime,
+  //       endTime: s.endTime,
+  //       slotDurationMinutes: Number(s.slotDurationMinutes)
+  //     }));
+
+  //   const masterPayload = {
+  //     id: this.oid(),
+  //     body: this.getEditMasterSchedulePayload()
+  //   };
+
+  //   this.store.updateDoctorScheduleWithDetails({
+  //     master: masterPayload,
+  //     newDetails
+  //   });
+  // }
+
   updateMasterSchedule() {
     const schedules = this.selectedSchedules();
+    const original = this.originalSchedules();
+
     const newDetails = schedules
       .filter(s => s.isLocal)
       .map(s => ({
@@ -365,14 +444,42 @@ export class DoctorScheduleFormComponent {
         slotDurationMinutes: Number(s.slotDurationMinutes)
       }));
 
+    const updatedDetails = schedules
+      .filter(s => !s.isLocal)
+      .filter(s => {
+        const orig = original.find(o => o.oid === s.oid);
+        if (!orig) return false;
+
+        return (
+          orig.startTime !== s.startTime ||
+          orig.endTime !== s.endTime ||
+          orig.dayOfWeekId !== s.dayOfWeekId ||
+          orig.slotDurationMinutes !== s.slotDurationMinutes
+        );
+      })
+      .map(s => ({
+        oid: s.oid,
+        masterId: this.oid(),
+        dayOfWeekId: s.dayOfWeekId,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        slotDurationMinutes: Number(s.slotDurationMinutes)
+      }));
+
+    const deletedDetails = original
+      .filter(o => !schedules.some(s => s.oid === o.oid))
+      .map(o => o.oid);
+
     const masterPayload = {
       id: this.oid(),
       body: this.getEditMasterSchedulePayload()
     };
 
-    this.store.updateDoctorScheduleWithDetails({
+    this.store.updateDoctorScheduleFull({
       master: masterPayload,
-      newDetails
+      newDetails,
+      updatedDetails,
+      deletedDetails
     });
   }
 
@@ -397,20 +504,26 @@ export class DoctorScheduleFormComponent {
     else this.editingSlotId.set(null);
 
   }
+  // editSchedule(schedule: any) {
+  //   if (this.oid() && !schedule.isLocal) {
+  //     const payload = this.getEditDetailPayload(schedule);
+  //     this.store.updateDetailDoctorSchedule({ id: schedule.oid, body: payload });
+  //   }
+  //   else {
+  //     this.selectedSchedules.update(list =>
+  //       list.filter(s => s.oid !== schedule.oid)
+  //     );
+  //     this.selectedSchedules.update(list => [
+  //       ...list,
+  //       schedule
+  //     ]);
+  //   }
+  // }
+
   editSchedule(schedule: any) {
-    if (this.oid() && !schedule.isLocal) {
-      const payload = this.getEditDetailPayload(schedule);
-      this.store.updateDetailDoctorSchedule({ id: schedule.oid, body: payload });
-    }
-    else {
-      this.selectedSchedules.update(list =>
-        list.filter(s => s.oid !== schedule.oid)
-      );
-      this.selectedSchedules.update(list => [
-        ...list,
-        schedule
-      ]);
-    }
+    this.selectedSchedules.update(list =>
+      list.map(s => s.oid === schedule.oid ? { ...schedule } : s)
+    );
   }
 
   getEditDetailPayload(schedule: any) {
@@ -468,18 +581,24 @@ export class DoctorScheduleFormComponent {
 
   }
 
-  getSinglePayload() {
-    return this.buildSchedulePayload();
-  }
+  // getSinglePayload() {
+  //   return this.buildSchedulePayload();
+  // }
 
+
+  // deleteSchedule(schedule: any) {
+  //   if (this.oid() && !schedule.isLocal) {
+  //     this.store.deleteDetailDoctorSchedule(schedule.oid);
+  //   } else
+  //     this.selectedSchedules.update(list =>
+  //       list.filter(s => s.oid !== schedule.oid)
+  //     );
+  // }
 
   deleteSchedule(schedule: any) {
-    if (this.oid() && !schedule.isLocal) {
-      this.store.deleteDetailDoctorSchedule(schedule.oid);
-    } else
-      this.selectedSchedules.update(list =>
-        list.filter(s => s.oid !== schedule.oid)
-      );
+    this.selectedSchedules.update(list =>
+      list.filter(s => s.oid !== schedule.oid)
+    );
   }
 
   cancel() {

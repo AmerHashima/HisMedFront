@@ -217,38 +217,38 @@
   (ngSubmit)="addSchedule()"
   class="d-flex flex-column gap-3"
 >
+  @if (showTitle()) {
+    <div class="card custom-card">
+      <div class="card-header">
+        <h6 class="mb-0">Clinic Information</h6>
+      </div>
 
-@if(showTitle()){
-<div class="card custom-card" >
-  <div class="card-header">
-    <h6 class="mb-0">Clinic Information</h6>
-  </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-6 col-xl-3">
+            <spk-ng-select
+              formControlName="branchId"
+              label="Branch"
+              [options]="branches()"
+              bindLabel="name"
+              bindValue="oid"
+              placeholder="Choose Branch"
+              selectClass="form-control"
+            />
+          </div>
+          <div class="col-12 col-md-6 col-xl-3">
+            <spk-ng-select
+              formControlName="specialityId"
+              label="Speciality"
+              [options]="specialities()"
+              bindLabel="nameEn"
+              bindValue="oid"
+              placeholder="Choose Speciality"
+              selectClass="form-control"
+            />
+          </div>
 
-  <div class="card-body">
-    <div class="row g-3">
-
-       <div class="col-12 col-md-6 col-xl-3">
-              <spk-ng-select
-                formControlName="branchId"
-                label="Branch"
-                [options]="branches()"
-                bindLabel="name"
-                bindValue="oid"
-                placeholder="Choose Branch"
-                selectClass="form-control"
-              />
-            </div>
-              <div class="col-12 col-md-6 col-xl-3">
-              <spk-ng-select
-                formControlName="specialityId"
-                label="Speciality"
-                [options]="specialities()"
-                bindLabel="nameEn"
-                bindValue="oid"
-                placeholder="Choose Speciality"
-                selectClass="form-control"
-              />
-            </div>
+          @if (!doctor()?.oid) {
             <div class="col-12 col-md-6 col-xl-3">
               <spk-ng-select
                 formControlName="clinicNumber"
@@ -260,50 +260,54 @@
                 selectClass="form-control"
               />
             </div>
+          }
+
+          <div class="col-12 col-md-6 col-xl-3">
+            <spk-ng-select
+              formControlName="doctorId"
+              label="Doctor"
+              [options]="doctors()"
+              bindLabel="username"
+              bindValue="oid"
+              placeholder="Choose Doctor"
+              selectClass="form-control"
+            />
+          </div>
+
+          @if (!doctor()?.oid) {
+            <div class="col-12 col-md-6 col-xl-3">
+              <spk-flatpickr
+                formControlName="startDate"
+                [enableTime]="true"
+                [dateFormat]="'Y-m-d H:i'"
+                placeholder="Choose Start Date"
+                label="Start Date"
+              ></spk-flatpickr>
+            </div>
+            <div class="col-12 col-md-6 col-xl-3">
+              <spk-flatpickr
+                formControlName="endDate"
+                [enableTime]="true"
+                [dateFormat]="'Y-m-d H:i'"
+                placeholder="Choose End Date"
+                label="End Date"
+              ></spk-flatpickr>
+            </div>
 
             <div class="col-12 col-md-6 col-xl-3">
               <spk-ng-select
-                formControlName="doctorId"
-                label="Doctor"
-                [options]="doctors()"
-                bindLabel="username"
-                bindValue="oid"
-                placeholder="Choose Doctor"
-                selectClass="form-control"
-              />
-            </div>
-                  <div class="col-12 col-md-6 col-xl-3">
-      <spk-flatpickr
-        formControlName="startDate"
-        [enableTime]="true"
-        [dateFormat]="'Y-m-d H:i'"
-        placeholder="Choose Start Date"
-        label="Start Date"
-      ></spk-flatpickr>
-    </div>
-        <div class="col-12 col-md-6 col-xl-3">
-      <spk-flatpickr
-        formControlName="endDate"
-        [enableTime]="true"
-        [dateFormat]="'Y-m-d H:i'"
-        placeholder="Choose End Date"
-        label="End Date"
-      ></spk-flatpickr>
-    </div>
-     <div class="col-12 col-md-6 col-xl-3">
-              <spk-ng-select
                 formControlName="statusId"
                 label="Status"
-                   [options]="$any((scheduleStatus$ | async)?.lookupDetails ?? [])"
+                [options]="$any((scheduleStatus$ | async)?.lookupDetails ?? [])"
                 bindLabel="valueNameEn"
                 [multiple]="false"
                 bindValue="oid"
                 placeholder="Choose Status"
                 selectClass="form-control"
               />
-      </div>
+            </div>
 
-        <div class="col-12 col-md-6 col-xl-3">
+            <div class="col-12 col-md-6 col-xl-3">
               <spk-ng-select
                 formControlName="isActive"
                 label="Active"
@@ -314,8 +318,8 @@
                 placeholder="Choose Active Status"
                 selectClass="form-control"
               />
-      </div>
-          <div class="col-12 col-md-6 col-xl-3">
+            </div>
+            <div class="col-12 col-md-6 col-xl-3">
               <spk-ng-select
                 formControlName="isPriority"
                 label="Priority"
@@ -326,28 +330,24 @@
                 placeholder="Choose Priority"
                 selectClass="form-control"
               />
+            </div>
+          }
+        </div>
       </div>
-               <!-- <div>
-            <hr>
-            </div> -->
     </div>
-  </div>
-</div>
-}
-
+  }
 
   <div [ngClass]="{ 'card custom-card': showTitle() }">
     <div class="card-header d-flex justify-content-between align-items-center">
-       @if(showTitle()){
+      @if (showTitle()) {
         <h6 class="mb-2">Working Hours</h6>
-       }
+      }
     </div>
 
     <div class="card-body py-3">
       <div class="border rounded p-3">
-        <div  class="mb-3">
+        <div class="mb-3">
           <div class="row g-2">
-
             <div class="col-12">
               <spk-ng-select
                 formControlName="dayOfWeekId"
@@ -396,31 +396,102 @@
                 selectClass="form-control"
               />
             </div>
+            @if (doctor() && doctor()?.oid) {
+                <div class="col-12 col-md-6 col-xl-3">
+                  <spk-ng-select
+                    formControlName="clinicNumber"
+                    label="Clinic Number"
+                    [options]="clinicNumbers"
+                    bindLabel="name"
+                    bindValue="oid"
+                    placeholder="Choose Clinic Number"
+                    selectClass="form-control"
+                  />
+                </div>
+              <div class="col-12 col-md-6 col-xl-3">
+
+                <spk-flatpickr
+                  formControlName="startDate"
+                  [enableTime]="true"
+                  [dateFormat]="'Y-m-d H:i'"
+                  placeholder="Choose Start Date"
+                  label="Start Date"
+                ></spk-flatpickr>
+              </div>
+              <div class="col-12 col-md-6 col-xl-3">
+                <spk-flatpickr
+                  formControlName="endDate"
+                  [enableTime]="true"
+                  [dateFormat]="'Y-m-d H:i'"
+                  placeholder="Choose End Date"
+                  label="End Date"
+                ></spk-flatpickr>
+              </div>
+
+              <div class="col-12 col-md-6 col-xl-3">
+                <spk-ng-select
+                  formControlName="statusId"
+                  label="Status"
+                  [options]="
+                    $any((scheduleStatus$ | async)?.lookupDetails ?? [])
+                  "
+                  bindLabel="valueNameEn"
+                  [multiple]="false"
+                  bindValue="oid"
+                  placeholder="Choose Status"
+                  selectClass="form-control"
+                />
+              </div>
+
+              <div class="col-12 col-md-6 col-xl-3">
+                <spk-ng-select
+                  formControlName="isActive"
+                  label="Active"
+                  [options]="$any((activeStatus$ | async)?.lookupDetails ?? [])"
+                  bindLabel="valueNameEn"
+                  [multiple]="false"
+                  bindValue="valueNameEn"
+                  placeholder="Choose Active Status"
+                  selectClass="form-control"
+                />
+              </div>
+              <div class="col-12 col-md-6 col-xl-3">
+                <spk-ng-select
+                  formControlName="isPriority"
+                  label="Priority"
+                  [options]="
+                    $any((pirorityStatus$ | async)?.lookupDetails ?? [])
+                  "
+                  bindLabel="valueNameEn"
+                  [multiple]="false"
+                  bindValue="valueNameEn"
+                  placeholder="Choose Priority"
+                  selectClass="form-control"
+                />
+              </div>
+            }
           </div>
         </div>
-          <div class="d-flex justify-content-end gap-2">
-            <button type="submit" class="btn btn-sm btn-outline-primary">
-              Add Working Day
-            </button>
-          </div>
+        <div class="d-flex justify-content-end gap-2">
+          <button type="submit" class="btn btn-sm btn-outline-primary">
+            Add Working Day
+          </button>
+        </div>
       </div>
 
       <div class="row g-3 mt-3">
-
-
-        @for(group of groupedSchedules() | keyvalue; track group.key){
-            <div class="col-md-6 col">
-          <app-working-day-card
-            [dayName]="group.key"
-            [slots]="group.value"
-            [editingSlotId]="editingSlotId()"
-            (startingEdit)="startEdit($event)"
-            (editSchedule)="editSchedule($event)"
-            (deleteSchedule)="deleteSchedule($event)"
-          />
-        </div>
+        @for (group of groupedSchedules() | keyvalue; track group.key) {
+          <div class="col-md-6 col">
+            <app-working-day-card
+              [dayName]="group.key"
+              [slots]="group.value"
+              [editingSlotId]="editingSlotId()"
+              (startingEdit)="startEdit($event)"
+              (editSchedule)="editSchedule($event)"
+              (deleteSchedule)="deleteSchedule($event)"
+            />
+          </div>
         }
-
       </div>
     </div>
   </div>

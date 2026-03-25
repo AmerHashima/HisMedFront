@@ -66,18 +66,39 @@ export const deleteDoctorSchedule = (id: string): PartialStateUpdater<DoctorStat
     DoctorSchedules: state.DoctorSchedules.filter(d => d.oid !== id),
   });
 
+// export const deleteDetailDoctorSchedule = (id: string): PartialStateUpdater<DoctorState> =>
+//   (state) => {
+
+//     const schedule = state.selectedDoctorSchedule;
+
+//     if (!schedule) return state;
+
+//     return {
+//       selectedDoctorSchedule: {
+//         ...schedule,
+//         details: schedule.details.filter(d => d.oid !== id)
+//       }
+//     };
+//   };
+
 export const deleteDetailDoctorSchedule = (id: string): PartialStateUpdater<DoctorState> =>
   (state) => {
 
-    const schedule = state.selectedDoctorSchedule;
-
-    if (!schedule) return state;
+    const selected = state.selectedDoctorSchedule;
+    const list = state.selectedDoctorSchedules;
 
     return {
-      selectedDoctorSchedule: {
+      selectedDoctorSchedule: selected
+        ? {
+          ...selected,
+          details: selected.details.filter(d => d.oid !== id)
+        }
+        : selected,
+
+      selectedDoctorSchedules: list.map(schedule => ({
         ...schedule,
         details: schedule.details.filter(d => d.oid !== id)
-      }
+      }))
     };
   };
 
@@ -168,12 +189,22 @@ export const updateDoctorSchedules = (
 //     ],
 //   });
 
+
 export const addDoctorSchedule = (
-  schedules: APIDoctorScheduleBulk[]
+  schedules: APIDoctorScheduleBulk
 ): PartialStateUpdater<DoctorState> =>
   (state) => ({
     selectedDoctorSchedules: [
       ...state.selectedDoctorSchedules,
-      ...schedules
+      schedules
     ],
   });
+// export const addDoctorSchedule = (
+//   schedules: APIDoctorScheduleBulk[]
+// ): PartialStateUpdater<DoctorState> =>
+//   (state) => ({
+//     selectedDoctorSchedules: [
+//       ...state.selectedDoctorSchedules,
+//       ...schedules
+//     ],
+//   });
