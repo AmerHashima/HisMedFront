@@ -30,6 +30,18 @@ export const setSelectedDoctor = (
 //   selectedDoctorSchedule: schedule,
 // });
 
+export const deleteFullDoctorSchedule = (ids: string[]): PartialStateUpdater<DoctorState> =>
+  (state) => ({
+    selectedDoctorSchedules: state.selectedDoctorSchedules.filter(
+      s => !ids.includes(s.oid)
+    ),
+
+    // optional (if used elsewhere)
+    DoctorSchedules: state.DoctorSchedules.filter(
+      s => !ids.includes(s.oid)
+    )
+  });
+  
 export const setSelectedDoctoSchedule = (
   schedule: APIDoctorScheduleBulk
 ): PartialStateUpdater<DoctorState> => () => ({

@@ -28,6 +28,7 @@ import {
   deleteDetailDoctorSchedule,
   updateDoctorSchedules,
   updateDetailDoctorSchedule,
+  deleteFullDoctorSchedule,
 } from './doctor.updater';
 import { Doctor } from '../models/doctor';
 import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
@@ -631,6 +632,69 @@ export const DoctorStore = signalStore(
             }),
           )
         )
+      )
+    ),
+    deleteFullSchedulePeriod: rxMethod<{
+      oid: string;
+      details: string[];
+    }>(
+      pipe(
+        tap(() => {
+          patchState(store, activateLoading);
+          loader.start();
+        }),
+
+        switchMap(({ oid, details }) => {
+
+          const deleteDetails$ = details.length
+            ? forkJoin(
+              details.map(id =>
+                service.deleteDetailDoctoSchedule(id).pipe(
+                  catchError(err => {
+                    console.error('Detail delete failed:', id, err);
+                    return of(null);
+                  })
+                )
+              )
+            )
+            : of([]);
+
+          return deleteDetails$.pipe(
+
+            switchMap(() =>
+              service.deleteMasterDoctoSchedule(oid)
+            ),
+
+            // ✅ SUCCESS
+            tap(() => {
+              patchState(store, deleteFullDoctorSchedule([oid]));
+              toast.showToast('Schedule period deleted successfully', 'success');
+
+              // 🔥 STOP LOADER HERE
+              patchState(store, deactivateLoading);
+              loader.stop();
+            })
+          );
+        }),
+
+        // ❌ ERROR
+        catchError(err => {
+          const error = err.error?.errors;
+
+          patchState(store, setError(error ?? 'Failed to delete schedule'));
+          toast.showToast('Failed to delete schedule', 'error');
+
+          // 🔥 STOP LOADER HERE TOO
+          patchState(store, deactivateLoading);
+          loader.stop();
+
+          return of(null);
+        }),
+
+        // 🛡️ fallback safety (optional)
+        finalize(() => {
+          loader.stop(); // just in case
+        })
       )
     ),
     updateDoctorScheduleFull: rxMethod<{

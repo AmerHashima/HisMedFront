@@ -22,10 +22,12 @@
     <!-- <app-doctor-form [hidden]="!hidden()" (cancalEvent)="onCancal()" [oid]="oid"/> -->
          <app-doctor-form [hidden]="viewMode() !== 'doctorForm'"
           (cancalEvent)="onCancal()"
-          [oid]="oid" (addWorkingDay)="addWorkingDay()"/>
+          [oid]="oid"
+          (addWorkingDay)="addWorkingDay()"
+          (editScheduleEmitter)="onEditSchedule($event)"/>
 
   </div>
-   <!-- <div>
-      <app-doctor-schedule-form [hidden]="viewMode() !== 'scheduleForm'" (cancalEvent)="onCancelSchedule()" />
-  </div> -->
+   <div>
+      <app-doctor-schedule-form [hidden]="viewMode() !== 'scheduleForm'" (cancalEvent)="onCancelSchedule()" [oid]="scheduleOid"/>
+  </div>
 </div>

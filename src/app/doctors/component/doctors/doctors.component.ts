@@ -99,6 +99,17 @@ export class DoctorsComponent {
     ]);
   }
 
+  onEditSchedule(scheduleOid:any){
+    this.scheduleOid = scheduleOid
+    console.log('schedikle', scheduleOid);
+    this.viewMode.set('scheduleForm');
+    // this.toggleHidden();
+    this.breadcrumb.setBreadcrumbs([
+      { label: 'Doctors Schedule', url: '/doctors/schedule' },
+      { label: 'Edit Schedule', url: '' }
+    ]);
+  }
+
   handleDelete(row: any) {
     this.store.deleteDoctor(row.oid)
   }
@@ -140,11 +151,11 @@ export class DoctorsComponent {
     ]);
   }
 
-  // onCancelSchedule(){
-  //   console.log('in cancel schedule');
-  //   this.viewMode.set('doctorForm');
-  //   // this.oid = "";
-  //   // this.store.clearSelectedItem();
-  //   // this.breadcrumb.resetToRoute();
-  // }
+  onCancelSchedule(){
+    this.viewMode.set('doctorForm');
+    this.scheduleOid='';
+    // this.oid = "";
+    // this.store.clearSelectedItem();
+    // this.breadcrumb.resetToRoute();
+  }
 }

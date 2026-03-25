@@ -8,7 +8,7 @@ import { InputComponent } from 'src/app/common/input/input.component';
 import { UsersStore } from 'src/app/management/user/userStore/userStore';
 import { SpkNgSelectComponent } from 'src/app/common/spk-ng-select/spk-ng-select.component';
 import { LookupService } from 'src/app/common/service/lookup.service';
-import { AsyncPipe, KeyValuePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, KeyValuePipe } from '@angular/common';
 import { HospitalBranchService } from 'src/app/Hospital/Services/hospital-branch.service';
 import { SpecialityService } from 'src/app/Hospital/Services/speciality.service';
 import { ValidationErrorService } from 'src/app/common/service/validation-error.service';
@@ -25,7 +25,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 @Component({
   selector: 'app-doctor-form',
   imports: [ButtonComponent, ToggleBtnComponent, InputComponent,DoctorScheduleFormComponent,KeyValuePipe,
-    SpkNgSelectComponent, SpkFlatpickrComponent ,ReactiveFormsModule, AsyncPipe, WorkingDayCardComponent],
+    DatePipe,SpkNgSelectComponent, SpkFlatpickrComponent ,ReactiveFormsModule, AsyncPipe,
+    WorkingDayCardComponent],
   templateUrl: './doctor-form.component.html',
   styleUrl: './doctor-form.component.scss',
   providers: [UsersStore, SpecialityStore]
@@ -35,6 +36,7 @@ export class DoctorFormComponent {
   @Output() cancalEvent = new EventEmitter<any>();
   oid = input<string>('');
   addWorkingDay = output<void>();
+  editScheduleEmitter = output<string>();
   shared=inject(SharedService);
   fb = inject(FormBuilder);
   store = inject(DoctorStore);
@@ -59,31 +61,77 @@ export class DoctorFormComponent {
   showScheduleForm = signal(false);
   editingSlotId = signal<string | null>(null);
   firstTimeToggle=signal(true);
-doctor: DoctorVM | null=null;
+  doctor: DoctorVM | null=null;
+
+  // groupedSchedules = computed(() => {
+
+  //   const groups: Record<string, (APIDoctorScheduleItem & { masterId: string })[]> = {};
+
+  //   const schedules = this.doctorSchedules();
+  //   schedules.forEach(s => {
+  //     s.details?.forEach(detail => {
+  //       const day = detail.dayOfWeekNameEn;
+
+  //       if (!day) return;
+
+  //       if (!groups[day]) {
+  //         groups[day] = [];
+  //       }
+
+  //       groups[day].push({
+  //         ...detail,
+  //         masterId: s.oid
+  //       });
+  //     });
+  //   });
+  //   console.log('groups',groups);
+  //   return groups;
+  // });
   groupedSchedules = computed(() => {
-
-    const groups: Record<string, (APIDoctorScheduleItem & { masterId: string })[]> = {};
-
     const schedules = this.doctorSchedules();
+
+    const periodMap: Record<string, {
+      oid:string,
+      startDate: string;
+      endDate: string;
+      days: Record<string, (APIDoctorScheduleItem & { masterId: string })[]>;
+    }> = {};
+
     schedules.forEach(s => {
+      const startDate = s.startDate;
+      const endDate = s.endDate;
+
+      const periodKey = `${startDate}_${endDate}`;
+
+      if (!periodMap[periodKey]) {
+        periodMap[periodKey] = {
+          oid: s.oid,
+          startDate,
+          endDate,
+          days: {}
+        };
+      }
+
       s.details?.forEach(detail => {
         const day = detail.dayOfWeekNameEn;
-
         if (!day) return;
 
-        if (!groups[day]) {
-          groups[day] = [];
+        if (!periodMap[periodKey].days[day]) {
+          periodMap[periodKey].days[day] = [];
         }
 
-        groups[day].push({
+        periodMap[periodKey].days[day].push({
           ...detail,
           masterId: s.oid
         });
       });
     });
-    console.log('groups',groups);
-    return groups;
+
+    return Object.values(periodMap).filter(period =>
+      Object.keys(period.days).length > 0
+    );
   });
+
   form = this.fb.group({
     userId: ['', Validators.required],
     firstNameAr: ['', Validators.required],
@@ -159,11 +207,9 @@ doctor: DoctorVM | null=null;
       this.store.getDoctor(oid);
     });
 
-
-
-
     effect(() => {
       const doctor = this.store.selectedDoctor();
+      console.log('doctpr',doctor);
       this.doctor=doctor;
       if (doctor) {
         // this.doctor=doctor
@@ -200,6 +246,7 @@ doctor: DoctorVM | null=null;
 
     effect(() => {
       const error = this.store.error();
+      console.log('error', error);
 
       if (!error) {
         this.validationErrorService.clearErrors(this.form, this.apiFieldErrors);
@@ -369,6 +416,28 @@ doctor: DoctorVM | null=null;
       this.editingSlotId.set(slot.oid);
     else this.editingSlotId.set(null);
 
+  }
+
+  editPeriod(period: any) {
+    console.log('Edit period', period);
+    this.editScheduleEmitter.emit(period.oid);
+    // Example: open schedule form with this period
+    // this.newSchedule.set(false);
+    // this.showScheduleForm.set(true);
+
+    // // You can store selected period if needed
+  }
+  deletePeriod(period: any) {
+    if (!confirm('Are you sure you want to delete this period?')) return;
+
+    const allDetails = Object.values(period.days)
+      .flat()
+      .map((slot: any) => slot.oid);
+
+    this.store.deleteFullSchedulePeriod({
+      oid: period.oid,
+      details: allDetails
+    });
   }
 }
 

@@ -51,14 +51,12 @@ import { DoctorVM } from '../../models/doctor-vm';
 export class DoctorScheduleFormComponent {
   oid = input<string>('');
   doctor = input<DoctorVM | null>(null);
-
   editingSchedule = signal<APIDoctorScheduleBulk | null>(null);
   editingSlotId = signal<string | null>(null);
   showTitle = input<boolean>(true);
   selectedSchedules = signal<any[]>([]);
   originalSchedules = signal<any[]>([]);
   @Output() cancalEvent = new EventEmitter<void>();
-
   private fb = inject(FormBuilder);
   private shared = inject(SharedService);
   private lookupService = inject(LookupService);
@@ -560,26 +558,26 @@ export class DoctorScheduleFormComponent {
 
   }
 
-  private buildSchedulePayload(): DoctorSchedule {
+  // private buildSchedulePayload(): DoctorSchedule {
 
-    const schedule = this.selectedSchedules()[0];
+  //   const schedule = this.selectedSchedules()[0];
 
-    return {
-      doctorId: schedule.doctorId,
-      statusId: schedule.statusId,
-      branchId: schedule.branchId,
-      specialtyId: schedule.specialtyId,
-      dayOfWeekId: schedule.dayOfWeekId,
-      startTime: schedule.startTime,
-      endTime: schedule.endTime,
-      slotDurationMinutes: Number(schedule.slotDurationMinutes),
-      isActive: true,
-      isPriority: false,
-      startDate: this.shared.formatDateOnly(schedule.startDate),
-      endDate: this.shared.formatDateOnly(schedule.endDate),
-    };
+  //   return {
+  //     doctorId: schedule.doctorId,
+  //     statusId: schedule.statusId,
+  //     branchId: schedule.branchId,
+  //     specialtyId: schedule.specialtyId,
+  //     dayOfWeekId: schedule.dayOfWeekId,
+  //     startTime: schedule.startTime,
+  //     endTime: schedule.endTime,
+  //     slotDurationMinutes: Number(schedule.slotDurationMinutes),
+  //     isActive: true,
+  //     isPriority: false,
+  //     startDate: this.shared.formatDateOnly(schedule.startDate),
+  //     endDate: this.shared.formatDateOnly(schedule.endDate),
+  //   };
 
-  }
+  // }
 
   // getSinglePayload() {
   //   return this.buildSchedulePayload();
