@@ -2,7 +2,7 @@
 import { signalStore, withState, withMethods, withComputed, withHooks, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { inject, computed, effect } from '@angular/core';
-import { debounceTime, map,switchMap, tap, catchError, of, finalize, pipe, EMPTY, forkJoin } from 'rxjs';
+import { debounceTime, map,switchMap, tap, catchError, of, finalize, pipe, EMPTY, forkJoin, take, exhaustMap } from 'rxjs';
 import { DoctorService } from '../service/doctor.service';
 import { initialDoctorState } from './doctor.slice';
 import { createQueryRequest } from 'src/app/management/user/userStore/store.helpers';
@@ -22,18 +22,18 @@ import {
   setSelectedDoctoSchedule,
   setScheduleSuccess,
   updateDoctorSchedule,
-  addDoctorSchedule,
   deleteDoctorSchedule,
   setSelectedDoctoSchedules,
   deleteDetailDoctorSchedule,
   updateDoctorSchedules,
   updateDetailDoctorSchedule,
   deleteFullDoctorSchedule,
+  addDetailDoctorSchedules,
 } from './doctor.updater';
 import { Doctor } from '../models/doctor';
 import { ToastingMessagesService } from 'src/app/common/service/toasting.service';
 import { LoadingService } from 'src/app/common/service/loading.service';
-import { DoctorSchedule, DoctorScheduleBulk, DoctorScheduleDetail, editMasterDoctorSchedule } from '../models/doctor-schedule';
+import { APIDoctorScheduleItem, DoctorSchedule, DoctorScheduleBulk, DoctorScheduleDetail, editMasterDoctorSchedule } from '../models/doctor-schedule';
 import { DoctorVM } from '../models/doctor-vm';
 
 type UpdatePayload = {
@@ -428,6 +428,8 @@ export const DoctorStore = signalStore(
           loader.start();
         }), switchMap(id =>
           service.getMasterDoctorSchedule(id).pipe(
+            tap(d => console.log('in get doctor schedule')),
+
             tap(d => patchState(store, setSelectedDoctoSchedule(d))),
             catchError(err => {
               const error = err.error.errors;
@@ -494,7 +496,7 @@ export const DoctorStore = signalStore(
             tap((schedules) => {
               patchState(store, setScheduleSuccess(true));
               patchState(store, updateDoctorSchedules(body,schedules));
-              patchState(store, addDoctorSchedule(schedules));
+              // patchState(store, addDoctorSchedule(schedules));
 
               toast.showToast('Doctor Schedule has been added successfully', 'success');
             }),
@@ -517,7 +519,68 @@ export const DoctorStore = signalStore(
         )
       )
     ),
+    addDetailDoctorSchedulesBulk: rxMethod<DoctorScheduleDetail[]>(
+      pipe(
+        tap(() => {
+          console.log('🚀 START BULK ADD');
+          patchState(store, activateLoading);
+          loader.start();
+        }),
 
+        switchMap((details) => {
+          const requests = details.map(d =>
+            service.creatDetailDoctorSchedule(d).pipe(
+              tap(() => console.log('✅ request done', d)),
+              catchError(err => {
+                console.log('❌ request failed', d);
+                return of(null); // prevent breaking forkJoin
+              })
+            )
+          );
+
+          return forkJoin(requests);
+        }),
+
+        // ✅ SUCCESS
+        tap((results) => {
+          console.log('🔥 AFTER FORKJOIN TAP');
+
+          const validResults = results.filter(
+            (r): r is APIDoctorScheduleItem => r !== null
+          );
+
+          patchState(store, addDetailDoctorSchedules(validResults));
+
+          // ✅ 🔥 PUT TOAST HERE
+          if (validResults.length) {
+            toast.showToast('Slots added successfully', 'success');
+          } else {
+            toast.showToast('No slots were added', 'warning');
+          }
+
+          patchState(store, deactivateLoading);
+          loader.stop();
+
+          console.log('🟢 STORE LOADING = FALSE');
+        }),
+
+        // ❌ ERROR
+        catchError(err => {
+          console.log('❌ GLOBAL ERROR', err);
+
+          patchState(store, setError(err?.error?.errors));
+
+          // ✅ 🔥 ERROR TOAST HERE
+          toast.showToast('Failed to add slots', 'error');
+
+          patchState(store, deactivateLoading);
+          loader.stop();
+
+          return of([]);
+        })
+      )
+    ),
+  
     updateDoctorSchedule: rxMethod<UpdateSchedulePayload>(
       pipe(
         tap(() => {
@@ -528,7 +591,7 @@ export const DoctorStore = signalStore(
             // tap(() => patchState(store, setError(''))),
             tap((schedule) => {
               // patchState(store, setScheduleSuccess(true));
-              patchState(store, updateDoctorSchedule(schedule));
+              patchState(store, updateDoctorSchedule(body,schedule));
               toast.showToast('Doctor slot has been updated successfully', 'success');
 
               // store.queryDoctors(store.queryRequest());
@@ -694,134 +757,6 @@ export const DoctorStore = signalStore(
         // 🛡️ fallback safety (optional)
         finalize(() => {
           loader.stop(); // just in case
-        })
-      )
-    ),
-    updateDoctorScheduleFull: rxMethod<{
-      master: UpdateSchedulePayload,
-      newDetails: DoctorScheduleDetail[],
-      updatedDetails: DoctorScheduleDetail[],
-      deletedDetails: string[]
-    }>(
-      pipe(
-        tap(() => {
-          patchState(store, activateLoading);
-          loader.start();
-        }),
-
-        switchMap(({ master, newDetails, updatedDetails, deletedDetails }) => {
-
-          const master$ = service.updateMasterDoctorSchedule(master.id, master.body);
-
-          const add$ = newDetails.length
-            ? forkJoin(newDetails.map(d => service.creatDetailDoctorSchedule(d)))
-            : of([]);
-
-          const update$ = updatedDetails.length
-            ? forkJoin(
-              updatedDetails
-                .filter(d => !!d.oid)
-                .map(d =>
-                  service.updateDetailDoctorSchedule(d.oid!, d)
-                )
-            )
-            : of([]);
-
-          const delete$ = deletedDetails.length
-            ? forkJoin(deletedDetails.map(id =>
-              service.deleteDetailDoctoSchedule(id)
-            ))
-            : of([]);
-
-          return forkJoin([master$, add$, update$, delete$]);
-        }),
-
-        tap(() => {
-          patchState(store, setScheduleSuccess(true));
-          toast.showToast('Schedule updated successfully', 'success');
-        }),
-
-        catchError(err => {
-          patchState(store, setError(err.error?.errors ?? 'Failed'));
-          toast.showToast('Update failed', 'error');
-          return of(null);
-        }),
-
-        finalize(() => {
-          patchState(store, deactivateLoading);
-          loader.stop();
-        })
-      )
-    ),
-    updateDoctorScheduleWithDetails: rxMethod<{
-      master: UpdateSchedulePayload,
-      newDetails: DoctorScheduleDetail[]
-    }>(
-      pipe(
-        tap(() => {
-          patchState(store, activateLoading);
-          loader.start();
-        }),
-
-        switchMap(({ master, newDetails }) => {
-          console.log('master', master);
-          console.log('newDetails', newDetails);
-
-          // ✅ STEP 1: update master FIRST
-          return service.updateMasterDoctorSchedule(master.id, master.body).pipe(
-
-            // ✅ STEP 2: then add details
-            switchMap((updatedMaster) => {
-
-              const detailsRequests = newDetails.map(detail =>
-                service.creatDetailDoctorSchedule(detail).pipe(
-                  catchError(err => {
-                    console.error('❌ Detail failed:', detail, err);
-                    return of(null); // prevent full crash
-                  })
-                )
-              );
-
-              return (detailsRequests.length ? forkJoin(detailsRequests) : of([])).pipe(
-                map((addedDetails) => ({
-                  updatedMaster,
-                  addedDetails: addedDetails.filter(d => d !== null)
-                }))
-              );
-            })
-          );
-        }),
-
-        tap(({ updatedMaster, addedDetails }) => {
-
-          patchState(store, updateDoctorSchedule(updatedMaster));
-
-          if (addedDetails?.length) {
-            addedDetails.forEach(detail => {
-              patchState(store, updateDetailDoctorSchedule(detail));
-            });
-          }
-
-          patchState(store, setScheduleSuccess(true));
-
-          toast.showToast('Doctor schedule updated successfully', 'success');
-        }),
-
-        catchError(err => {
-          const error = err.error?.errors;
-
-          console.error('🔥 FULL ERROR:', err);
-
-          patchState(store, setError(error ?? 'Failed to update doctor schedule'));
-
-          toast.showToast('Failed to update doctor schedule', 'error');
-
-          return of(null);
-        }),
-
-        finalize(() => {
-          patchState(store, deactivateLoading);
-          loader.stop();
         })
       )
     ),

@@ -5,8 +5,18 @@ import { mapApiDoctorsToDoctorVMs, mapApiDoctorToDoctorVM, mapBulKScheduleToApiS
 import { ApiDocor } from '../models/api-docor';
 import { APIDoctorSchedule, APIDoctorScheduleBulk, APIDoctorScheduleItem, DoctorScheduleBulk } from '../models/doctor-schedule';
 
-export const activateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: true });
-export const deactivateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: false });
+// export const activateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: true });
+// export const deactivateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: false });
+
+export const activateLoading: PartialStateUpdater<DoctorState> = () => {
+  console.log('🟢 STORE LOADING = TRUE');
+  return { loading: true };
+};
+
+export const deactivateLoading: PartialStateUpdater<DoctorState> = () => {
+  console.log('🔴 STORE LOADING = FALSE');
+  return { loading: false };
+};
 
 export const setError = (error: string | null): PartialStateUpdater<DoctorState> => () => ({ error });
 
@@ -41,7 +51,7 @@ export const deleteFullDoctorSchedule = (ids: string[]): PartialStateUpdater<Doc
       s => !ids.includes(s.oid)
     )
   });
-  
+
 export const setSelectedDoctoSchedule = (
   schedule: APIDoctorScheduleBulk
 ): PartialStateUpdater<DoctorState> => () => ({
@@ -120,19 +130,87 @@ export const updateDetailDoctorSchedule = (
   (state) => {
 
     const schedule = state.selectedDoctorSchedule;
-
     if (!schedule) return state;
+
+    const exists = schedule.details.some(d => d.oid === updatedItem.oid);
 
     return {
       selectedDoctorSchedule: {
         ...schedule,
-        details: schedule.details.map(d =>
-          d.oid === updatedItem.oid ? { ...d, ...updatedItem } : d
-        )
+        details: exists
+          // ✅ UPDATE
+          ? schedule.details.map(d =>
+            d.oid === updatedItem.oid ? { ...d, ...updatedItem } : d
+          )
+          // ✅ ADD NEW
+          : [
+            updatedItem,
+            ...schedule.details
+          ]
       }
     };
   };
 
+// export const addDetailDoctorSchedules = (
+//   items: APIDoctorScheduleItem[]
+// ): PartialStateUpdater<DoctorState> =>
+//   (state) => {
+
+//     const schedule = state.selectedDoctorSchedule;
+//     if (!schedule) return state;
+
+//     return {
+//       selectedDoctorSchedule: {
+//         ...schedule,
+//         details: [
+//           ...items, // ✅ all new
+//           ...schedule.details
+//         ]
+//       }
+//     };
+//   };
+
+export const addDetailDoctorSchedules = (
+  items: APIDoctorScheduleItem[]
+): PartialStateUpdater<DoctorState> =>
+  (state) => {
+
+    const schedule = state.selectedDoctorSchedule;
+    if (!schedule) return state;
+
+    // ✅ map day name
+    const mappedItems = items.map(item => ({
+      ...item,
+      dayOfWeekNameEn:
+        schedule.details.find(d => d.dayOfWeekId === item.dayOfWeekId)?.dayOfWeekNameEn
+        || 'Unknown'
+    }));
+
+    const updatedDetails = [
+      ...mappedItems,
+      ...schedule.details
+    ];
+
+    const updatedDoctorSchedules = state.selectedDoctorSchedules.map(s =>
+      s.oid === schedule.oid
+        ? {
+          ...s,
+          details: [
+            ...mappedItems,
+            ...(s.details ?? [])
+          ]
+        }
+        : s
+    );
+
+    return {
+      selectedDoctorSchedule: {
+        ...schedule,
+        details: updatedDetails
+      },
+      selectedDoctorSchedules: updatedDoctorSchedules
+    };
+  };
 
 export const setSearchUpdater = (search: string): PartialStateUpdater<DoctorState> =>
   () => ({ search: search.trim(), page: 1 });
@@ -159,15 +237,27 @@ export const setScheduleSuccess = (success: boolean): PartialStateUpdater<Doctor
 
 
 
-
 export const updateDoctorSchedule = (
+  body:any,
   schedule: APIDoctorScheduleBulk
 ): PartialStateUpdater<DoctorState> =>
-  (state) => ({
-    selectedDoctorSchedules: state.selectedDoctorSchedules.map(s =>
-      s.oid === schedule.oid ? schedule : s
-    ),
-  });
+  (state) => {
+
+    const mapped = mapBulKScheduleToApiSchedule( body, schedule  );
+
+    return {
+      selectedDoctorSchedules: state.selectedDoctorSchedules.map(s =>
+        s.oid === schedule.oid ? schedule : s
+      ),
+
+      selectedDoctorSchedule: schedule,
+
+      DoctorSchedules: state.DoctorSchedules.map(s =>
+        s.oid === schedule.oid ? mapped : s
+      )
+    };
+  };
+
 
 
 export const updateDoctorSchedules = (
@@ -175,48 +265,32 @@ export const updateDoctorSchedules = (
   schedule: APIDoctorScheduleBulk,
 ): PartialStateUpdater<DoctorState> =>
   (state) => {
-    const mapped: APIDoctorSchedule = mapBulKScheduleToApiSchedule(body,schedule);
 
-    const filtered = state.DoctorSchedules.filter(
-      s => s.oid !== schedule.oid
-    );
+    const mapped = mapBulKScheduleToApiSchedule(body, schedule);
 
     return {
       DoctorSchedules: [
-        ...filtered,
-        mapped
-      ]
+        mapped,
+        ...state.DoctorSchedules
+      ],
+      selectedDoctorSchedules: [
+        ...state.selectedDoctorSchedules,
+        schedule
+      ],
     };
   };
 
 
 
+
+
 // export const addDoctorSchedule = (
-//   schedules: APIDoctorSchedule[]
+//   schedules: APIDoctorScheduleBulk
 // ): PartialStateUpdater<DoctorState> =>
 //   (state) => ({
 //     selectedDoctorSchedules: [
 //       ...state.selectedDoctorSchedules,
-//       ...schedules
+//       schedules
 //     ],
 //   });
 
-
-export const addDoctorSchedule = (
-  schedules: APIDoctorScheduleBulk
-): PartialStateUpdater<DoctorState> =>
-  (state) => ({
-    selectedDoctorSchedules: [
-      ...state.selectedDoctorSchedules,
-      schedules
-    ],
-  });
-// export const addDoctorSchedule = (
-//   schedules: APIDoctorScheduleBulk[]
-// ): PartialStateUpdater<DoctorState> =>
-//   (state) => ({
-//     selectedDoctorSchedules: [
-//       ...state.selectedDoctorSchedules,
-//       ...schedules
-//     ],
-//   });

@@ -12,4 +12,5 @@ export class PageHeaderComponent {
   @Input() title!: string;
   @Input() items!: any[];
   @Input() active_item!: string;
+  
 }

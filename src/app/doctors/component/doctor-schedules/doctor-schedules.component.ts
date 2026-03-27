@@ -17,8 +17,8 @@ type ViewMode = 'table' | 'doctorScheduleForm';
 export class DoctorSchedulesComponent {
   private breadcrumb = inject(BreadcrumbService);
   private store = inject(DoctorStore);
-  schedules = computed(() => this.store.DoctorSchedules());
-  total = computed(() => this.store.total());
+  schedules = computed(() => [...this.store.DoctorSchedules()]);
+    total = computed(() => this.store.total());
   pageSize = computed(() => this.store.pageSize());
   loading = computed(() => this.store.loading());
   oid: string = '';
@@ -96,7 +96,8 @@ export class DoctorSchedulesComponent {
     this.oid = row.oid;
     this.viewMode.set('doctorScheduleForm');
     this.breadcrumb.setBreadcrumbs([
-      { label: 'Doctors Schedules', url: '/doctors/schedules' },
+      { label: 'Doctors', url: '/doctors' },
+      { label: 'Schedules', url: '/doctors/schedules' },
       { label: 'Edit Doctor Schedule', url: '' }
     ]);
   }
@@ -110,14 +111,16 @@ export class DoctorSchedulesComponent {
     this.viewMode.set('doctorScheduleForm');
 
     this.breadcrumb.setBreadcrumbs([
-      { label: 'Doctors Schedules', url: '/doctors/schedules' },
+      { label: 'Doctors', url: '/doctors' },
+      { label: 'Schedules', url: '/doctors/schedules' },
       { label: 'Doctor Schedule Details', url: '' }
     ]);
   }
   handleAddNew() {
     this.viewMode.set('doctorScheduleForm');
     this.breadcrumb.setBreadcrumbs([
-      { label: 'Doctors Schedules', url: '/doctors/schedules' },
+      { label: 'Doctors', url: '/doctors' },
+      { label: 'Schedules', url: '/doctors/schedules' },
       { label: 'Add Doctor Schedule', url: '' }
     ]);
   }

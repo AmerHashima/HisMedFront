@@ -101,8 +101,8 @@ export class DoctorsComponent {
 
   onEditSchedule(scheduleOid:any){
     this.scheduleOid = scheduleOid
-    console.log('schedikle', scheduleOid);
     this.viewMode.set('scheduleForm');
+    console.log('in edit doctor scheduke');
     // this.toggleHidden();
     this.breadcrumb.setBreadcrumbs([
       { label: 'Doctors Schedule', url: '/doctors/schedule' },
@@ -152,6 +152,7 @@ export class DoctorsComponent {
   }
 
   onCancelSchedule(){
+    console.log('in cancal schedule');
     this.viewMode.set('doctorForm');
     this.scheduleOid='';
     // this.oid = "";

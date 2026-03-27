@@ -52,12 +52,12 @@ export class DoctorFormComponent {
   departments$ = this.lookupService.getDepartment();
   genders$ = this.lookupService.getGender();
   activeStatus$=this.lookupService.getActiveStatus();
-  licenseTypes$ = this.lookupService.getLookUpByCode('LICENSE_TYPE');
-  subSpecialties$ = this.lookupService.getLookUpByCode('SUB_SPECIALTY');
+  licenseTypes$ = this.lookupService.getLicenseTypes();
+  subSpecialties$ = this.lookupService.getSubSpeciality();
   branches$ = this.branchService.getBranches();
   specialities$ = this.specialityService.getSpecialities();
   // editingSchedule = signal<APIDoctorSchedule | null>(null);
-  newSchedule=signal<boolean  > (false);
+  // newSchedule=signal<boolean  > (false);
   showScheduleForm = signal(false);
   editingSlotId = signal<string | null>(null);
   firstTimeToggle=signal(true);
@@ -89,7 +89,6 @@ export class DoctorFormComponent {
   // });
   groupedSchedules = computed(() => {
     const schedules = this.doctorSchedules();
-
     const periodMap: Record<string, {
       oid:string,
       startDate: string;
@@ -132,6 +131,7 @@ export class DoctorFormComponent {
     );
   });
 
+  scheduleOid:string='';
   form = this.fb.group({
     userId: ['', Validators.required],
     firstNameAr: ['', Validators.required],
@@ -202,6 +202,7 @@ export class DoctorFormComponent {
       const oid = this.oid();
       if (!oid) {
         this.form.reset();
+        this.store.clearSelectedItem();
         return;
       }
       this.store.getDoctor(oid);
@@ -267,6 +268,9 @@ export class DoctorFormComponent {
       this.store.setSuccess(false);
     });
 
+  }
+
+  addAnotherWorkingHours(){
   }
 
   toggleWorkingHours() {
@@ -361,16 +365,13 @@ export class DoctorFormComponent {
     this.cancalEvent.emit();
   }
 
-  // addAnotherWorkingHours() {
-  //   this.addWorkingDay.emit();
-  //  }
 
 
-  addAnotherWorkingHours() {
-    // if (this.editingSchedule()) this.editingSchedule.set(null);
-    this.newSchedule.set(true);
-    this.showScheduleForm.set(true);
-}
+//   addAnotherWorkingHours() {
+//     // if (this.editingSchedule()) this.editingSchedule.set(null);
+//     // this.newSchedule.set(true);
+//     this.showScheduleForm.set(true);
+// }
 
 
    //handle Schedule
@@ -406,8 +407,8 @@ export class DoctorFormComponent {
     this.showScheduleForm.set(false);
     // if (this.editingSchedule())
     // this.editingSchedule.set(null);
-  if(this.newSchedule())
-    this.newSchedule.set(false);
+  // if(this.newSchedule())
+  //   this.newSchedule.set(false);
 
   }
 
@@ -417,15 +418,13 @@ export class DoctorFormComponent {
     else this.editingSlotId.set(null);
 
   }
-
+  addSlot(period:any){
+    this.scheduleOid=period.oid;
+    this.showScheduleForm.set(true);
+  }
   editPeriod(period: any) {
     console.log('Edit period', period);
     this.editScheduleEmitter.emit(period.oid);
-    // Example: open schedule form with this period
-    // this.newSchedule.set(false);
-    // this.showScheduleForm.set(true);
-
-    // // You can store selected period if needed
   }
   deletePeriod(period: any) {
     if (!confirm('Are you sure you want to delete this period?')) return;

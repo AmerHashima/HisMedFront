@@ -83,6 +83,7 @@ export class AllBranchesComponent {
     this.oid = row.oid;
     this.toggleHidden();
     this.breadcrumb.setBreadcrumbs([
+      { label: 'Hospital', url: '/hospital' },
       { label: 'Branches', url: '/hospital/branches' },
       { label: 'Edit Branch', url: '' }
     ]);
@@ -96,13 +97,15 @@ export class AllBranchesComponent {
     this.oid = row.oid;
     this.toggleHidden();
     this.breadcrumb.setBreadcrumbs([
+      { label: 'Hospital', url: '/hospital' },
       { label: 'Branches', url: '/hospital/branches' },
-      { label: 'Branch Details', url: '' }
+            { label: 'Branch Details', url: '' }
     ]);
   }
   handleAddNew() {
     this.toggleHidden();
     this.breadcrumb.setBreadcrumbs([
+      { label: 'Hospital', url: '/hospital' },
       { label: 'Branches', url: '/hospital/branches' },
       { label: 'Add Branch', url: '' }
     ]);

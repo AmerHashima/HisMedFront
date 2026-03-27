@@ -23,10 +23,12 @@ export const LOOKUP_CODES = {
   APPOINTMENT_REASON:'APPOINTMENT_REASON',
   WEEK_DAYS:'Days',
   Day_Hours:"WORKING_HOURS",
-    SLOT_DURATION: "SLOT_DURATION",
+  SLOT_DURATION: "SLOT_DURATION",
   ACTIVE_STATUS:"ACTIVE_STATUS",
   SCHEDULE_STATUS:"SCHEDULE_STATUS",
-  PIRORITY:"PIRORITY"
+  PIRORITY:"PIRORITY",
+  LICENSE_TYPE:"LICENSE_TYPE",
+  SUB_SPECIALTY:"SUB_SPECIALTY"
 } as const;
 
 @Injectable({
@@ -146,6 +148,14 @@ export class LookupService {
   }
   getPirority() {
     return this.getLookUpByCode(LOOKUP_CODES.PIRORITY);
+  }
+
+  getLicenseTypes() {
+    return this.getLookUpByCode(LOOKUP_CODES.LICENSE_TYPE);
+  }
+
+  getSubSpeciality() {
+    return this.getLookUpByCode(LOOKUP_CODES.SUB_SPECIALTY);
   }
 }
 
