@@ -954,7 +954,7 @@ export class DoctorScheduleFormComponent {
   private isFullFormInvalid(): boolean {
     return this.form.invalid;
   }
-  
+
   addSchedule() {
     // if (this.form.invalid) {
     //   this.logFormIssues();
@@ -1204,5 +1204,11 @@ export class DoctorScheduleFormComponent {
     this.form.reset();
     this.selectedSchedules.set([]);
     this.cancalEvent.emit();
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    console.log('in form destory')
   }
 }

@@ -34,53 +34,53 @@ export const NAV_MENU_ITEMS: Menu[] = [
         title: 'Users',
         path: '/users',
         dirchange: false,
-        type: 'sub',
+        type: 'link',
         active: false,
-        children: [
-          // {
-          //   path: '/users',
-          //   title: 'All Users',
-          //   dirchange: false,
-          //   type: 'link',
-          //   active: false,
-          //   selected: false,
-          // },
-          {
-            path: '/users/create',
-            title: 'Add New Uer',
-            dirchange: false,
-            type: 'link',
-            active: false,
-            selected: false,
-          },
+        // children: [
+        //   // {
+        //   //   path: '/users',
+        //   //   title: 'All Users',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
+        //   // {
+        //   //   path: '/users/create',
+        //   //   title: 'Add New Uer',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
 
-        ],
+        // ],
       },
       {
         title: 'Looks UP',
         path: '/looks-up',
         dirchange: false,
-        type: 'sub',
+        type: 'link',
         active: false,
-        children: [
-          // {
-          //   path: '/looks-up',
-          //   title: 'All Looks UP',
-          //   dirchange: false,
-          //   type: 'link',
-          //   active: false,
-          //   selected: false,
-          // },
-          {
-            path: '/looks-up/create',
-            title: 'Add New Look UP',
-            dirchange: false,
-            type: 'link',
-            active: false,
-            selected: false,
-          },
+        // children: [
+        //   // {
+        //   //   path: '/looks-up',
+        //   //   title: 'All Looks UP',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
+        //   // {
+        //   //   path: '/looks-up/create',
+        //   //   title: 'Add New Look UP',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
 
-        ],
+        // ],
       },
     ],
   },
@@ -162,45 +162,47 @@ export const NAV_MENU_ITEMS: Menu[] = [
       //   active: false,
       //   path: '/doctors',
       // },
-      {
-        title: 'Add New Doctor',
-        dirchange: false,
-        type: 'link',
-        active: false,
-        path: '/doctors/create',
-      },
+      // {
+      //   title: 'Add New Doctor',
+      //   dirchange: false,
+      //   type: 'link',
+      //   active: false,
+      //   path: '/doctors/create',
+      // },
       {
         title: 'Schedules',
         path: '/doctors/schedules',
         dirchange: false,
-        type: 'sub',
+        // type: 'sub',
+        type: 'link',
+
         active: false,
-        children: [
-          {
-            title: 'Add New Schedule',
-            path: '/doctors/schedules/create',
-            dirchange: false,
-            type: 'link',
-            active: false,
-            selected: false,
-          }
-        ]
+        // children: [
+        //   {
+        //     title: 'Add New Schedule',
+        //     path: '/doctors/schedules/create',
+        //     dirchange: false,
+        //     type: 'link',
+        //     active: false,
+        //     selected: false,
+        //   }
+        // ]
       },
       {
         title: 'Exceptions',
         path: '/doctors/exceptions',
-        type: 'sub',
+        type: 'link',
         dirchange: false,
         active: false,
-        children: [
-          {
-            title: 'Add Doctor Exception',
-            dirchange: false,
-            type: 'link',
-            active: false,
-            path: '/doctors/exceptions/create',
-          }
-        ]
+        // children: [
+        //   {
+        //     title: 'Add Doctor Exception',
+        //     dirchange: false,
+        //     type: 'link',
+        //     active: false,
+        //     path: '/doctors/exceptions/create',
+        //   }
+        // ]
       },
     ],
   },
@@ -216,79 +218,79 @@ export const NAV_MENU_ITEMS: Menu[] = [
         title: 'Appointment',
         path: '/hospital/appointments',
         dirchange: false,
-        type: 'sub',
+        type: 'link',
         active: false,
-        children: [
-          // {
-          //   path: '/hospital/appointments',
-          //   title: 'All Appointments',
-          //   dirchange: false,
-          //   type: 'link',
-          //   active: false,
-          //   selected: false,
-          // },
-          {
-            path: '/hospital/appointments/create',
-            title: 'Add New Appointment',
-            dirchange: false,
-            type: 'link',
-            active: false,
-            selected: false,
-          },
+        // children: [
+        //   // {
+        //   //   path: '/hospital/appointments',
+        //   //   title: 'All Appointments',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
+        //   {
+        //     path: '/hospital/appointments/create',
+        //     title: 'Add New Appointment',
+        //     dirchange: false,
+        //     type: 'link',
+        //     active: false,
+        //     selected: false,
+        //   },
 
-        ],
+        // ],
       },
       {
         title: 'Branches',
         path: '/hospital/branches',
         dirchange: false,
-        type: 'sub',
+        type: 'link',
         active: false,
-        children: [
-          // {
-          //   path: '/hospital/branches',
-          //   title: 'All Branches',
-          //   dirchange: false,
-          //   type: 'link',
-          //   active: false,
-          //   selected: false,
-          // },
-          {
-            path: '/hospital/branches/create',
-            title: 'Add New branch',
-            dirchange: false,
-            type: 'link',
-            active: false,
-            selected: false,
-          },
+        // children: [
+        //   // {
+        //   //   path: '/hospital/branches',
+        //   //   title: 'All Branches',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
+        //   // {
+        //   //   path: '/hospital/branches/create',
+        //   //   title: 'Add New branch',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
 
-        ],
+        // ],
       },
       {
         title: 'Speciality',
         path: '/hospital/specialities',
         dirchange: false,
-        type: 'sub',
+        type: 'link',
         active: false,
-        children: [
-          // {
-          //   path: '/hospital/specialities',
-          //   title: 'All Specialities',
-          //   dirchange: false,
-          //   type: 'link',
-          //   active: false,
-          //   selected: false,
-          // },
-          {
-            path: '/hospital/specialities/create',
-            title: 'Add New Speciality',
-            dirchange: false,
-            type: 'link',
-            active: false,
-            selected: false,
-          },
+        // children: [
+        //   // {
+        //   //   path: '/hospital/specialities',
+        //   //   title: 'All Specialities',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
+        //   // {
+        //   //   path: '/hospital/specialities/create',
+        //   //   title: 'Add New Speciality',
+        //   //   dirchange: false,
+        //   //   type: 'link',
+        //   //   active: false,
+        //   //   selected: false,
+        //   // },
 
-        ],
+        // ],
       },
     ],
   },

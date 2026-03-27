@@ -15,13 +15,13 @@ export const DOCTOR_ROUTES: Routes = [
           import('./component/doctors/doctors.component')
             .then(m => m.DoctorsComponent),
       },
-      {
-        path: 'create',
-        loadComponent: () =>
-          import('./component/create-doctor/create-doctor.component')
-            .then(m => m.CreateDoctorComponent),
-        data: { breadcrumb: 'Add Doctor' }
-      },
+      // {
+      //   path: 'create',
+      //   loadComponent: () =>
+      //     import('./component/create-doctor/create-doctor.component')
+      //       .then(m => m.CreateDoctorComponent),
+      //   data: { breadcrumb: 'Add Doctor' }
+      // },
       {
         path: 'schedules',
         data: { breadcrumb: 'Schedules' },
@@ -33,13 +33,13 @@ export const DOCTOR_ROUTES: Routes = [
                 .then(m => m.DoctorSchedulesComponent),
           },
 
-          {
-            path: 'create',
-            loadComponent: () =>
-              import('./component/doctor-schedule/doctor-schedule.component')
-                .then(m => m.DoctorScheduleComponent),
-            data: { breadcrumb: 'Add Schedule' }
-          }
+          // {
+          //   path: 'create',
+          //   loadComponent: () =>
+          //     import('./component/doctor-schedule/doctor-schedule.component')
+          //       .then(m => m.DoctorScheduleComponent),
+          //   data: { breadcrumb: 'Add Schedule' }
+          // }
 
         ]
       },
@@ -56,13 +56,13 @@ export const DOCTOR_ROUTES: Routes = [
                 .then(m => m.DoctorScheduleExceptionListComponent),
           },
 
-          {
-            path: 'create',
-            loadComponent: () =>
-              import('./component/doctor-schedule-exception/doctor-schedule-exception.component')
-                .then(m => m.DoctorScheduleExceptionComponent),
-            data: { breadcrumb: 'Add Exception' }
-          }
+          // {
+          //   path: 'create',
+          //   loadComponent: () =>
+          //     import('./component/doctor-schedule-exception/doctor-schedule-exception.component')
+          //       .then(m => m.DoctorScheduleExceptionComponent),
+          //   data: { breadcrumb: 'Add Exception' }
+          // }
 
         ]
       }

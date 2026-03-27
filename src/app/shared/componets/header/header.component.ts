@@ -75,7 +75,14 @@ export class HeaderComponent implements OnInit {
   }
 
   onBreadcrumbClick(crumb: BreadcrumbItem) {
-    this.breadcrumbService.notifyBreadcrumbClick(crumb);
+    console.log('CLICKED', crumb);
+    if (crumb.label === 'Hospital') {
+      return;
+    }
+    if (crumb.url) {
+      this.router.navigateByUrl(crumb.url);
+    }
+    // this.breadcrumbService.notifyBreadcrumbClick(crumb);
   }
   localStorageBackUp() {
     let styleId = document.querySelector('#style');
