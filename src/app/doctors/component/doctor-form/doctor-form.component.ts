@@ -15,12 +15,12 @@ import { ValidationErrorService } from 'src/app/common/service/validation-error.
 import { SpecialityStore } from 'src/app/Hospital/Store/Speciality/speciality.store';
 import { WorkingDayCardComponent } from '../doctor-schedule-form/working-day-card/working-day-card.component';
 import SpkFlatpickrComponent from 'src/app/common/spk-flatpickr/spk-flatpickr.component';
-import { APIDoctorSchedule, APIDoctorScheduleBulk, APIDoctorScheduleItem, DoctorScheduleDetail, GroupedSchedule } from '../../models/doctor-schedule';
+import {  APIDoctorScheduleItem, DoctorScheduleDetail, GroupedSchedule } from '../../models/doctor-schedule';
 import { DoctorScheduleFormComponent } from '../doctor-schedule-form/doctor-schedule-form.component';
-import { Speciality } from '../../../Hospital/models/speciality';
 import { DoctorVM } from '../../models/doctor-vm';
 import { Filter, RequestWrapper } from 'src/app/common/Models/request';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-doctor-form',
@@ -38,6 +38,7 @@ export class DoctorFormComponent {
   addWorkingDay = output<void>();
   editScheduleEmitter = output<string>();
   shared=inject(SharedService);
+  private router = inject(Router);
   fb = inject(FormBuilder);
   store = inject(DoctorStore);
   userStore = inject(UsersStore);
@@ -63,30 +64,6 @@ export class DoctorFormComponent {
   firstTimeToggle=signal(true);
   doctor: DoctorVM | null=null;
 
-  // groupedSchedules = computed(() => {
-
-  //   const groups: Record<string, (APIDoctorScheduleItem & { masterId: string })[]> = {};
-
-  //   const schedules = this.doctorSchedules();
-  //   schedules.forEach(s => {
-  //     s.details?.forEach(detail => {
-  //       const day = detail.dayOfWeekNameEn;
-
-  //       if (!day) return;
-
-  //       if (!groups[day]) {
-  //         groups[day] = [];
-  //       }
-
-  //       groups[day].push({
-  //         ...detail,
-  //         masterId: s.oid
-  //       });
-  //     });
-  //   });
-  //   console.log('groups',groups);
-  //   return groups;
-  // });
   groupedSchedules = computed(() => {
     const schedules = this.doctorSchedules();
     const periodMap: Record<string, {
@@ -163,7 +140,6 @@ export class DoctorFormComponent {
   weekDays$ = this.lookupService.getDays();
   weekDaysSnapshot: any[] = [];
 
-  // doctor: DoctorVM | null=null ;
   private backendErrorKeyMap: Record<string, string[]> = {
     userId: ['userId'],
     firstNameAr: ['firstNameAr'],
@@ -210,10 +186,8 @@ export class DoctorFormComponent {
 
     effect(() => {
       const doctor = this.store.selectedDoctor();
-      console.log('doctpr',doctor);
       this.doctor=doctor;
       if (doctor) {
-        // this.doctor=doctor
         this.form.patchValue({
           userId: doctor.userId,
           firstNameAr: doctor.firstNameAr,
@@ -269,8 +243,13 @@ export class DoctorFormComponent {
     });
 
   }
-
   addAnotherWorkingHours(){
+    this.router.navigate(['/doctors/schedules'], {
+      queryParams: {
+        mode: 'doctor-create',
+        doctorId:this.oid()
+      }
+    });
   }
 
   toggleWorkingHours() {
@@ -366,15 +345,6 @@ export class DoctorFormComponent {
   }
 
 
-
-//   addAnotherWorkingHours() {
-//     // if (this.editingSchedule()) this.editingSchedule.set(null);
-//     // this.newSchedule.set(true);
-//     this.showScheduleForm.set(true);
-// }
-
-
-   //handle Schedule
 
   editSchedule(schedule: any) {
       this.updateSchedule(schedule);

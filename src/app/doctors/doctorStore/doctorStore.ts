@@ -154,19 +154,6 @@ export const DoctorStore = signalStore(
               console.log('d', d);
             }),
 
-            // switchMap(d => {
-            //   const filters: Filter[] = [{
-            //     propertyName: "doctorId",
-            //     value: d.oid,
-            //     operation: 0
-            //   }];
-
-            //   return service.getDoctorSchedules(filters);
-            // }),
-
-            // tap(schedules => {
-            //   patchState(store, setSelectedDoctoSchedules(schedules));
-            // }),
 
             catchError(err => {
               const error = err.error.errors;
@@ -580,7 +567,7 @@ export const DoctorStore = signalStore(
         })
       )
     ),
-  
+
     updateDoctorSchedule: rxMethod<UpdateSchedulePayload>(
       pipe(
         tap(() => {

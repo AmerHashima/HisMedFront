@@ -100,50 +100,38 @@ export class BreadcrumbService {
     const routeURL = route.url.map(s => s.path).join('/');
     if (routeURL) url += `/${routeURL}`;
 
-    if (route.data['breadcrumb']) {
-      crumbs.push({
-        label: route.data['breadcrumb'],
-        url
-      });
+    const label = route.data['breadcrumb'];
+
+    if (label) {
+      // ✅ prevent duplicate labels
+      if (!crumbs.length || crumbs[crumbs.length - 1].label !== label) {
+        crumbs.push({ label, url });
+      }
     }
 
-    // 🔥 ADD THIS PART
+    // 🔥 handle last level (query params)
     if (!route.firstChild) {
-      const queryParams = route.queryParams;
+      const mode = route.queryParams['mode'];
 
-      if (queryParams['mode']) {
-        let label = '';
+      let lastLabel = '';
 
-        switch (queryParams['mode']) {
-          case 'create':
-            label = 'Add';
-            break;
+      switch (mode) {
+        case 'create':
+          lastLabel = 'Add';
+          break;
+        case 'edit':
+          lastLabel = 'Edit';
+          break;
+        case 'details':
+          lastLabel = 'Details';
+          break;
+        case 'schedule':
+          lastLabel = 'Schedule';
+          break;
+      }
 
-          case 'edit':
-            label = 'Edit';
-            break;
-
-          case 'details':
-            label = 'Details';
-            break;
-
-          case 'master':
-            label = queryParams['code']
-              ? 'Edit Lookup'
-              : 'Add Lookup';
-            break;
-
-          case 'schedule':
-            label = 'Schedule';
-            break;
-        }
-
-        if (label) {
-          crumbs.push({
-            label,
-            url: ''
-          });
-        }
+      if (lastLabel) {
+        crumbs.push({ label: lastLabel, url: '' });
       }
     }
 

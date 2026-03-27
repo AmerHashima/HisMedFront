@@ -204,8 +204,6 @@ export class DoctorsComponent {
   viewMode = signal<ViewMode>('table');
   oid: string = '';
   scheduleOid: string = '';
-
-  // 🔹 table columns
   columns = [
     { field: 'username', header: 'Username', type: 'text' },
     { field: 'doctorFullName', header: 'Doctor Name', type: 'text' },
@@ -238,6 +236,7 @@ export class DoctorsComponent {
       const mode = params['mode'];
       const id = params['id'];
       const scheduleId = params['scheduleId'];
+
 
       if (!mode) {
         this.viewMode.set('table');

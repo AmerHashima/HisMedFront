@@ -5,18 +5,10 @@ import { mapApiDoctorsToDoctorVMs, mapApiDoctorToDoctorVM, mapBulKScheduleToApiS
 import { ApiDocor } from '../models/api-docor';
 import { APIDoctorSchedule, APIDoctorScheduleBulk, APIDoctorScheduleItem, DoctorScheduleBulk } from '../models/doctor-schedule';
 
-// export const activateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: true });
-// export const deactivateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: false });
+export const activateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: true });
+export const deactivateLoading: PartialStateUpdater<DoctorState> = () => ({ loading: false });
 
-export const activateLoading: PartialStateUpdater<DoctorState> = () => {
-  console.log('🟢 STORE LOADING = TRUE');
-  return { loading: true };
-};
 
-export const deactivateLoading: PartialStateUpdater<DoctorState> = () => {
-  console.log('🔴 STORE LOADING = FALSE');
-  return { loading: false };
-};
 
 export const setError = (error: string | null): PartialStateUpdater<DoctorState> => () => ({ error });
 
@@ -34,11 +26,6 @@ export const setSelectedDoctor = (
   selectedDoctor: mapApiDoctorToDoctorVM(doctor),
 });
 
-// export const setSelectedDoctoSchedule = (
-//   schedule: APIDoctorSchedule
-// ): PartialStateUpdater<DoctorState> => () => ({
-//   selectedDoctorSchedule: schedule,
-// });
 
 export const deleteFullDoctorSchedule = (ids: string[]): PartialStateUpdater<DoctorState> =>
   (state) => ({
@@ -46,7 +33,6 @@ export const deleteFullDoctorSchedule = (ids: string[]): PartialStateUpdater<Doc
       s => !ids.includes(s.oid)
     ),
 
-    // optional (if used elsewhere)
     DoctorSchedules: state.DoctorSchedules.filter(
       s => !ids.includes(s.oid)
     )
@@ -59,11 +45,6 @@ export const setSelectedDoctoSchedule = (
 });
 
 
-// export const setSelectedDoctoSchedules = (
-//   schedules: APIDoctorSchedule[]
-// ): PartialStateUpdater<DoctorState> => () => ({
-//   selectedDoctorSchedules: schedules,
-// });
 
 export const setSelectedDoctoSchedules = (
   schedules: APIDoctorScheduleBulk[]
@@ -88,20 +69,6 @@ export const deleteDoctorSchedule = (id: string): PartialStateUpdater<DoctorStat
     DoctorSchedules: state.DoctorSchedules.filter(d => d.oid !== id),
   });
 
-// export const deleteDetailDoctorSchedule = (id: string): PartialStateUpdater<DoctorState> =>
-//   (state) => {
-
-//     const schedule = state.selectedDoctorSchedule;
-
-//     if (!schedule) return state;
-
-//     return {
-//       selectedDoctorSchedule: {
-//         ...schedule,
-//         details: schedule.details.filter(d => d.oid !== id)
-//       }
-//     };
-//   };
 
 export const deleteDetailDoctorSchedule = (id: string): PartialStateUpdater<DoctorState> =>
   (state) => {
@@ -151,24 +118,7 @@ export const updateDetailDoctorSchedule = (
     };
   };
 
-// export const addDetailDoctorSchedules = (
-//   items: APIDoctorScheduleItem[]
-// ): PartialStateUpdater<DoctorState> =>
-//   (state) => {
 
-//     const schedule = state.selectedDoctorSchedule;
-//     if (!schedule) return state;
-
-//     return {
-//       selectedDoctorSchedule: {
-//         ...schedule,
-//         details: [
-//           ...items, // ✅ all new
-//           ...schedule.details
-//         ]
-//       }
-//     };
-//   };
 
 export const addDetailDoctorSchedules = (
   items: APIDoctorScheduleItem[]

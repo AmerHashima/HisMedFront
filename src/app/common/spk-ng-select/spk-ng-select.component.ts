@@ -132,16 +132,20 @@ export class SpkNgSelectComponent implements ControlValueAccessor {
       return this.getFriendlyError(key, err);
     });
   }
-
   private getFriendlyError(key: string, errorObj: any): string {
     switch (key) {
       case 'required':
         return 'Selection is required';
+
       case 'duplicateDay':
         return 'This day is already scheduled for the doctor';
 
       case 'invalidTimeRange':
         return 'End time must be after start time';
+
+      case 'invalidPeriod': // 🔥 ADD THIS
+        return 'Cannot cross AM/PM in same schedule';
+
       default:
         return 'Invalid selection';
     }

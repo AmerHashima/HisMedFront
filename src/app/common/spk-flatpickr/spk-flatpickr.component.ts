@@ -17,6 +17,7 @@ import { NgControl } from '@angular/forms';
 })
 export default class SpkFlatpickrComponent implements ControlValueAccessor {
   // ─── Input Signals ────────────────────────────────────────────────
+
   label = input<string>('');
   altInput = input<boolean>(false);
   convertModelValue = input<boolean>(true);
@@ -122,6 +123,8 @@ export default class SpkFlatpickrComponent implements ControlValueAccessor {
           return `This field is required`;
         case 'notInFuture':
           return `Date must be in the past`;
+        case 'invalidDateRange':
+          return 'End date must be after start date';
         default:
           return `${key} error`;
       }

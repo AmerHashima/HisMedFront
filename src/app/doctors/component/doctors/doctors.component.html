@@ -28,6 +28,9 @@
 
   </div>
    <div>
-      <app-doctor-schedule-form [hidden]="viewMode() !== 'scheduleForm'" (cancalEvent)="onCancelSchedule()" [oid]="scheduleOid"/>
+      <app-doctor-schedule-form [hidden]="viewMode() !== 'scheduleForm'"
+       (cancalEvent)="onCancelSchedule()"
+       [oid]="scheduleOid"
+      />
   </div>
 </div>

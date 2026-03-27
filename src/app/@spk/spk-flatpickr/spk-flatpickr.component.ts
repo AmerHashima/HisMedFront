@@ -14,50 +14,59 @@ import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
   styleUrl: './spk-flatpickr.component.scss'
 })
 export class SpkFlatpickrComponent {
-  @Input() altInput: boolean = false; 
+  @Input() altInput: boolean = false;
   @Input() convertModelValue: boolean = true;
-  @Input() enableTime: boolean = true; 
-  @Input() noCalendar: boolean = false; 
-  @Input() inline: boolean = false; 
-  @Input() class: string = ''; 
-  @Input() dateFormat: string = ''; 
-  @Input() placeholder: string = ''; 
-  @Input() mode: any = ''; 
+  @Input() enableTime: boolean = true;
+  @Input() noCalendar: boolean = false;
+  @Input() inline: boolean = false;
+  @Input() class: string = '';
+  @Input() dateFormat: string = '';
+  @Input() placeholder: string = '';
+  @Input() mode: any = '';
 
   inlineDatePicker: boolean = false;
   weekNumbers!: true
-  // selectedDate: Date | null = null; 
+  // selectedDate: Date | null = null;
   flatpickrOptions: any = {
     inline: true,
   disableMobile: true
   };
-  rangeValue: any = new Date(); // Default to a single date value
+  rangeValue: any = new Date();
 
-
-  // flatpickrOptions: FlatpickrOptions;
-  // rangeValue: { from: Date; to: Date } = {
-  //   from: new Date(),
-  //   to: (new Date() as any)['fp_incr'](10)
-  // };
+  @Input() minDate?: any;
+  @Input() maxDate?: any;
   constructor() {}
+
+  // ngOnInit() {
+  //   this.flatpickrOptions = {
+  //     enableTime: true,
+  //     noCalendar: true,
+  //     dateFormat: 'H:i',
+  //     disableMobile: true
+  //   }
+
+  //   flatpickr('#inlinetime', this.flatpickrOptions);
+
+  //     this.flatpickrOptions = {
+  //       enableTime: true,
+  //       dateFormat: 'Y-m-d H:i', // Specify the format you want
+  //       defaultDate: '2023-11-07 14:30', // Set the default/preloaded time (adjust this to your desired time)
+  //       disableMobile: true
+  //     };
+
+  //     flatpickr('#pretime', this.flatpickrOptions);
+  // }
 
   ngOnInit() {
     this.flatpickrOptions = {
-      enableTime: true,
-      noCalendar: true,
-      dateFormat: 'H:i',
-      disableMobile: true
-    }
-   
-    flatpickr('#inlinetime', this.flatpickrOptions);
+      enableTime: this.enableTime,
+      noCalendar: this.noCalendar,
+      dateFormat: this.dateFormat || 'Y-m-d',
+      disableMobile: true,
 
-      this.flatpickrOptions = {
-        enableTime: true,
-        dateFormat: 'Y-m-d H:i', // Specify the format you want
-        defaultDate: '2023-11-07 14:30', // Set the default/preloaded time (adjust this to your desired time)
-        disableMobile: true
-      };
-
-      flatpickr('#pretime', this.flatpickrOptions);
+      // ✅ Only applied if passed
+      ...(this.minDate ? { minDate: this.minDate } : {}),
+      ...(this.maxDate ? { maxDate: this.maxDate } : {})
+    };
   }
 }
